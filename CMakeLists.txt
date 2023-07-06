@@ -14,9 +14,13 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        userui.cpp
-        userui.h
-        userui.ui
+        usergui.cpp
+        usergui.hpp
+        usergui.ui
+        ApplicationConstant/ApplicationConstant.hpp
+        ApplicationConstant/ApplicationConstant.cpp
+        ExceptionHandling/ModbusException/ModbusException.hpp
+        ExceptionHandling/ModbusException/ModbusException.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
