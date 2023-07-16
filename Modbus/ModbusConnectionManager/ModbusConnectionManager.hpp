@@ -16,7 +16,7 @@ public:
 public slots:
     void Start();
     void SendData(const QModbusDataUnit &cData);
-    void Disconnect();
+    void CloseConnection();
 
 private:
     ModbusStrategy *_modbusStrategy;

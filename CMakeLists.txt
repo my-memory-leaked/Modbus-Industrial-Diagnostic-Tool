@@ -26,6 +26,7 @@ include_directories(
     ExceptionHandling/ModbusException
     Modbus/ModbusConnectionParameters
     Modbus/ModbusStrategy
+    Modbus/RTUStrategy
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -37,6 +38,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ExceptionHandling/ModbusException/ModbusException.hpp ExceptionHandling/ModbusException/ModbusException.cpp
         Modbus/ModbusConnectionParameters/ModbusConnectionParameters.hpp Modbus/ModbusConnectionParameters/ModbusConnectionParameters.cpp
         Modbus/ModbusStrategy/ModbusStrategy.hpp Modbus/ModbusStrategy/ModbusStrategy.cpp
+        Modbus/RTUStrategy/RTUStrategy.hpp Modbus/RTUStrategy/RTUStrategy.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Modbus-Industrial-Diagnostic-Tool APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

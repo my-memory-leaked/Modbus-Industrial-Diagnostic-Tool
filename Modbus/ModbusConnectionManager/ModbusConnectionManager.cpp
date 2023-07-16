@@ -19,7 +19,7 @@ void ModbusConnectionManager::SendData(const QModbusDataUnit &data)
     _modbusStrategy->SendData(data);
 }
 
-void ModbusConnectionManager::Disconnect()
+void ModbusConnectionManager::CloseConnection()
 {
-    _modbusStrategy->disconnect();
+    _modbusStrategy->CloseConnection();
 }
