@@ -14,6 +14,9 @@ public:
     UserGUI(QWidget *parent = nullptr);
     ~UserGUI();
 
+private slots:
+    void on__modbusConnectPushButton_clicked();
+
 private:
     Ui::UserGUI *ui;
 };

@@ -11,22 +11,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS SerialBus)
 
 set(PROJECT_SOURCES
         main.cpp
         usergui.cpp
         usergui.hpp
         usergui.ui
-        ApplicationConstant/ApplicationConstant.hpp
-        ApplicationConstant/ApplicationConstant.cpp
-        ExceptionHandling/ModbusException/ModbusException.hpp
-        ExceptionHandling/ModbusException/ModbusException.cpp
+)
+include_directories(
+    ApplicationConstant
+    Modbus
+    Modbus/ModbusConnectionManager
+    ExceptionHandling/ModbusException
+    Modbus/ModbusConnectionParameters
+    Modbus/ModbusStrategy
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Modbus-Industrial-Diagnostic-Tool
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ApplicationConstant/ApplicationConstant.hpp ApplicationConstant/ApplicationConstant.cpp
+        Modbus/ModbusConnectionManager/ModbusConnectionManager.hpp Modbus/ModbusConnectionManager/ModbusConnectionManager.cpp
+        ExceptionHandling/ModbusException/ModbusException.hpp ExceptionHandling/ModbusException/ModbusException.cpp
+        Modbus/ModbusConnectionParameters/ModbusConnectionParameters.hpp Modbus/ModbusConnectionParameters/ModbusConnectionParameters.cpp
+        Modbus/ModbusStrategy/ModbusStrategy.hpp Modbus/ModbusStrategy/ModbusStrategy.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Modbus-Industrial-Diagnostic-Tool APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -47,6 +57,7 @@ else()
 endif()
 
 target_link_libraries(Modbus-Industrial-Diagnostic-Tool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Modbus-Industrial-Diagnostic-Tool PRIVATE Qt6::SerialBus)
 
 set_target_properties(Modbus-Industrial-Diagnostic-Tool PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
