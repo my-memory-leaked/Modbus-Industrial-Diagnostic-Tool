@@ -1,11 +1,11 @@
-#include "userui.h"
+#include "usergui.hpp"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    UserUI w;
-    w.show();
-    return a.exec();
+    QApplication application(argc, argv);
+    UserGUI userGui;
+    userGui.show();
+    return application.exec();
 }
