@@ -11,15 +11,9 @@ ModbusConnectionManager::~ModbusConnectionManager()
 
 void ModbusConnectionManager::Start()
 {
-    _modbusStrategy->Start();
+    _modbusStrategy->Connect();
 }
-
-void ModbusConnectionManager::SendData(const QModbusDataUnit &data)
-{
-    _modbusStrategy->SendData(data);
-}
-
 void ModbusConnectionManager::CloseConnection()
 {
-    _modbusStrategy->CloseConnection();
+    _modbusStrategy->Disconnect();
 }

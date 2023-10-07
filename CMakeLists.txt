@@ -21,6 +21,9 @@ set(PROJECT_SOURCES
 )
 include_directories(
     ApplicationConstant
+    SystemResult
+    Singleton
+    DeviceInterface
     Modbus
     Modbus/ModbusConnectionManager
     ExceptionHandling/ModbusException
@@ -33,12 +36,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Modbus-Industrial-Diagnostic-Tool
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        ApplicationConstant/ApplicationConstant.hpp ApplicationConstant/ApplicationConstant.cpp
+        ApplicationConstant/ApplicationConstant.hpp
         Modbus/ModbusConnectionManager/ModbusConnectionManager.hpp Modbus/ModbusConnectionManager/ModbusConnectionManager.cpp
         ExceptionHandling/ModbusException/ModbusException.hpp ExceptionHandling/ModbusException/ModbusException.cpp
         Modbus/ModbusConnectionParameters/ModbusConnectionParameters.hpp Modbus/ModbusConnectionParameters/ModbusConnectionParameters.cpp
         Modbus/ModbusStrategy/ModbusStrategy.hpp Modbus/ModbusStrategy/ModbusStrategy.cpp
-        Modbus/RTUStrategy/RTUStrategy.hpp Modbus/RTUStrategy/RTUStrategy.cpp
+        Singleton/Singleton.hpp Singleton/Singleton.cpp
+        SystemResult/SystemResult.hpp
+        DeviceInterface/DeviceInterface.hpp
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Modbus-Industrial-Diagnostic-Tool APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

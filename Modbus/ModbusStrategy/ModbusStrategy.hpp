@@ -2,19 +2,22 @@
 
 #include <QObject>
 #include <QModbusDataUnit>
-#include "ModbusConnectionParameters.hpp"
+#include <SystemResult.hpp>
+#include <ModbusConnectionParameters.hpp>
+#include <DeviceInterface.hpp>
 
-class ModbusStrategy : public QObject
+class ModbusStrategy : public QObject, public DeviceInterface
 {
     Q_OBJECT
-
 public:
-    explicit ModbusStrategy(const ModbusConnectionParameters &cConnectionParams, QObject *parent = nullptr);
+    ModbusStrategy(QObject *parent = nullptr);
     virtual ~ModbusStrategy() {}
 
-    virtual void Start() = 0;
-    virtual void SendData(const QModbusDataUnit &cData) = 0;
-    virtual void CloseConnection() = 0;
+    virtual SystemResult SetConnectionParameters(const ModbusConnectionParameters &cConnectionParameters) = 0;
+
+    virtual SystemResult ReadData(const QModbusDataUnit &cData) = 0;
+    virtual SystemResult WriteData(const QModbusDataUnit &cData) = 0;
 protected:
-    ModbusConnectionParameters _connectionParams;
+    ModbusConnectionParameters _connectionParameters;
+
 };
