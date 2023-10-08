@@ -11,7 +11,7 @@ class ModbusStrategy : public QObject, public DeviceInterface
     Q_OBJECT
 public:
     ModbusStrategy(QObject *parent = nullptr);
-    virtual ~ModbusStrategy() {}
+    virtual ~ModbusStrategy();
 
     virtual SystemResult SetConnectionParameters(const ModbusConnectionParameters &cConnectionParameters) = 0;
 

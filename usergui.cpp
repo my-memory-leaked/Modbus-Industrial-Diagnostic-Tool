@@ -4,7 +4,6 @@
 #include "QMessageBox"
 
 #include "QModbusRtuSerialClient"
-#include "ModbusConnectionManager.hpp"
 
 UserGUI::UserGUI(QWidget *parent)
     : QMainWindow(parent)

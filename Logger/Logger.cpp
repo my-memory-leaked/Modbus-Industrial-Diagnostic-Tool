@@ -4,11 +4,11 @@
 
 const QString Logger::TIME_STAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.zzz";
 
-const QString Logger::DEBUG_TAG = "[DEBUG] ";
-const QString Logger::INFO_TAG = "[INFO] ";
-const QString Logger::WARNING_TAG = "[WARNING] ";
-const QString Logger::CRITICAL_TAG = "[CRITICAL] ";
-const QString Logger::FATAL_TAG = "[FATAL] ";
+const QString Logger::DEBUG_TAG = "[DEBUG]";
+const QString Logger::INFO_TAG = "[INFO]";
+const QString Logger::WARNING_TAG = "[WARNING]";
+const QString Logger::CRITICAL_TAG = "[CRITICAL]";
+const QString Logger::FATAL_TAG = "[FATAL]";
 
 
 Logger::Logger() {}
