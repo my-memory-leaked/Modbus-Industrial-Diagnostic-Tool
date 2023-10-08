@@ -74,3 +74,6 @@ CMakeLists.txt.user*
 
 # Visual studio code files
 .vscode
+
+# Build files
+build
