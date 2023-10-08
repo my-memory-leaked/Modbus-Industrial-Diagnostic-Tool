@@ -26,12 +26,13 @@ include_directories(
     DeviceInterface
     Logger
     Modbus
-    Modbus/ModbusController
-    Modbus/ModbusConnectionManager
-    ExceptionHandling/ModbusException
-    Modbus/ModbusConnectionParameters
     Modbus/ModbusStrategy
-    Modbus/RTUStrategy
+    Modbus/ModbusConnectionParameters
+    Modbus/ModbusController
+    Modbus/ModbusTCPClient
+
+    ExceptionHandling/ModbusException
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -46,9 +47,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Singleton/Singleton.hpp
         SystemResult/SystemResult.hpp
         DeviceInterface/DeviceInterface.hpp
-
         Modbus/ModbusController/ModbusController.hpp Modbus/ModbusController/ModbusController.cpp
         Logger/Logger.hpp Logger/Logger.cpp
+        Modbus/ModbusTCPClient/ModbusTCPClient.hpp Modbus/ModbusTCPClient/ModbusTCPClient.cpp
 
 
     )
