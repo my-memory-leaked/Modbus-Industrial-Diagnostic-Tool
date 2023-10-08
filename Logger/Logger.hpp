@@ -18,12 +18,12 @@ private:
     ~Logger();
 
     QString _currentTime;
-    static constexpr const char* TIME_STAMP_FORMAT {"yyyy-MM-dd HH:mm:ss.zzz"};
+    static const QString TIME_STAMP_FORMAT;
 
-    static constexpr const char* DEBUG_TAG {"[Debug]"};
-    static constexpr const char* INFO_TAG {"[INFO]"};
-    static constexpr const char* WARNING_TAG {"[WARNING]"};
-    static constexpr const char* CRITICAL_TAG {"[CRITICAL]"};
-    static constexpr const char* FATAL_TAG {"[FATAL]"};
+    static const QString DEBUG_TAG;
+    static const QString INFO_TAG;
+    static const QString WARNING_TAG;
+    static const QString CRITICAL_TAG;
+    static const QString FATAL_TAG;
 };
 
