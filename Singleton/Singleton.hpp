@@ -17,7 +17,11 @@ public:
      *
      * @return A reference to the singleton instance.
      */
-    static T& GetInstance();
+    static T& GetInstance()
+    {
+        static T instance;
+        return instance;
+    }
 
     /**
      * @brief Delete the copy constructor to prevent copying of the instance.
@@ -43,10 +47,10 @@ protected:
     /**
      * @brief Protected constructor to prevent instantiation from outside.
      */
-    Singleton();
+    Singleton() {}
 
     /**
      * @brief Destructor is left non-virtual to prevent derived classes from overriding it.
      */
-    ~Singleton();
+    virtual ~Singleton() {}
 };

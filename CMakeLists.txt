@@ -24,7 +24,9 @@ include_directories(
     SystemResult
     Singleton
     DeviceInterface
+    Logger
     Modbus
+    Modbus/ModbusController
     Modbus/ModbusConnectionManager
     ExceptionHandling/ModbusException
     Modbus/ModbusConnectionParameters
@@ -41,9 +43,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ExceptionHandling/ModbusException/ModbusException.hpp ExceptionHandling/ModbusException/ModbusException.cpp
         Modbus/ModbusConnectionParameters/ModbusConnectionParameters.hpp Modbus/ModbusConnectionParameters/ModbusConnectionParameters.cpp
         Modbus/ModbusStrategy/ModbusStrategy.hpp Modbus/ModbusStrategy/ModbusStrategy.cpp
-        Singleton/Singleton.hpp Singleton/Singleton.cpp
+        Singleton/Singleton.hpp
         SystemResult/SystemResult.hpp
         DeviceInterface/DeviceInterface.hpp
+
+        Modbus/ModbusController/ModbusController.hpp Modbus/ModbusController/ModbusController.cpp
+        Logger/Logger.hpp Logger/Logger.cpp
+
 
     )
 # Define target properties for Android with Qt 6 as:
