@@ -9,17 +9,17 @@ ModbusTCPClient::~ModbusTCPClient()
 
 }
 
-SystemResult SetConnectionParameters(const ModbusConnectionParameters &cConnectionParameters)
+SystemResult ModbusTCPClient::SetConnectionParameters(const ModbusConnectionParameters &cConnectionParameters)
 {
     return SystemResult::SYSTEM_ERROR;
 }
 
-SystemResult ReadData(const QModbusDataUnit &cData)
+SystemResult ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 {
     return SystemResult::SYSTEM_ERROR;
 }
 
-SystemResult WriteData(const QModbusDataUnit &cData)
+SystemResult ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
 {
     return SystemResult::SYSTEM_ERROR;
 }

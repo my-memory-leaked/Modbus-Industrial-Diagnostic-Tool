@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QModbusDataUnit>
-#include <SystemResult.hpp>
-#include <ModbusConnectionParameters.hpp>
 #include <DeviceInterface.hpp>
+#include <SystemResult.hpp>
+#include <QModbusDataUnit>
+#include <ModbusConnectionParameters.hpp>
 
 class ModbusStrategy : public DeviceInterface
 {
