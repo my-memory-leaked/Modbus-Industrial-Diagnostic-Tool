@@ -3,6 +3,7 @@
 #include <memory>
 #include <QModbusTcpClient>
 #include <QVariant>
+#include <ModbusRegisterTypeMapper.hpp>
 
 
 static auto* logger = &Singleton<Logger>::GetInstance();
@@ -79,12 +80,18 @@ SystemResult ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
     if (! cData.isValid() )
         retVal = SystemResult::SYSTEM_INVALID_ARGUMENT;
     else
-        logger->LogDebug( CLASS_TAG, "Invalid modbus data query!" );
+        logger->LogDebug( CLASS_TAG, "Invalid QModbusDataUnit!" );
 
 
     if (SystemResult::SYSTEM_OK == retVal)
     {
-//        _modbusClient->sendReadRequest(cData);
+        _modbusClient->sendReadRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
+
+        logger->LogDebug( CLASS_TAG,
+                          "Requested reading: RegisterType: " +
+                          ModbusRegisterTypeMapper::RegisterTypeToString(cData.registerType()) +
+                          " Address: " + QString::number(cData.startAddress()) +
+                          " IP Address: " + GetConnectionParameters().GetIpAddress());
     }
 
 

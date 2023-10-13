@@ -31,6 +31,7 @@ include_directories(
     Modbus/ModbusController
     Modbus/ModbusClientStrategy
     Modbus/ModbusTCPClient
+    Modbus/ModbusRegisterTypeMapper
 
 
     ExceptionHandling/ModbusException
@@ -54,6 +55,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusTCPClient/ModbusTCPClient.hpp Modbus/ModbusTCPClient/ModbusTCPClient.cpp
         DeviceInterface/DeviceInterface.cpp
         Modbus/ModbusClientStrategy/ModbusClientStrategy.hpp Modbus/ModbusClientStrategy/ModbusClientStrategy.cpp
+        Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.hpp Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.cpp
 
 
     )

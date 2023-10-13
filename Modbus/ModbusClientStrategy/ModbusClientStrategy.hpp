@@ -7,7 +7,7 @@ class ModbusClientStrategy : public ModbusStrategy
 {
 public:
     ModbusClientStrategy();
-    ~ModbusClientStrategy();
+    virtual ~ModbusClientStrategy();
 
 protected:
     std::unique_ptr<QModbusClient> _modbusClient;
