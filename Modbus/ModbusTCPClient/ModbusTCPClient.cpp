@@ -2,11 +2,21 @@
 
 ModbusTCPClient::ModbusTCPClient()
 {
-
+    this->SetDeviceName(MODBUS_TCP_DEVICE_NAME);
 }
 ModbusTCPClient::~ModbusTCPClient()
 {
 
+}
+
+SystemResult ModbusTCPClient::Connect()
+{
+    return SystemResult::SYSTEM_ERROR;
+}
+
+SystemResult ModbusTCPClient::Disconnect()
+{
+    return SystemResult::SYSTEM_ERROR;
 }
 
 SystemResult ModbusTCPClient::SetConnectionParameters(const ModbusConnectionParameters &cConnectionParameters)

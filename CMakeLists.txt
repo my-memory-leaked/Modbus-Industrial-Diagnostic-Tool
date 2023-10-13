@@ -50,6 +50,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusController/ModbusController.hpp Modbus/ModbusController/ModbusController.cpp
         Logger/Logger.hpp Logger/Logger.cpp
         Modbus/ModbusTCPClient/ModbusTCPClient.hpp Modbus/ModbusTCPClient/ModbusTCPClient.cpp
+        DeviceInterface/DeviceInterface.cpp
 
 
     )
