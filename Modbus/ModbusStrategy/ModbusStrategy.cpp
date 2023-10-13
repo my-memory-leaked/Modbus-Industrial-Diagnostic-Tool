@@ -9,3 +9,8 @@ SystemResult ModbusStrategy::SetConnectionParameters(const ModbusConnectionParam
     _connectionParameters = cConnectionParameters;
     return SystemResult::SYSTEM_OK;
 }
+
+ModbusConnectionParameters ModbusStrategy::GetConnectionParameters() const
+{
+    return _connectionParameters;
+}

@@ -12,6 +12,7 @@ public:
     virtual ~ModbusStrategy();
 
     virtual SystemResult SetConnectionParameters(const ModbusConnectionParameters &cConnectionParameters);
+    virtual ModbusConnectionParameters GetConnectionParameters() const;
 
     virtual SystemResult ReadData(const QModbusDataUnit &cData) = 0;
     virtual SystemResult WriteData(const QModbusDataUnit &cData) = 0;
