@@ -29,7 +29,9 @@ include_directories(
     Modbus/ModbusStrategy
     Modbus/ModbusConnectionParameters
     Modbus/ModbusController
+    Modbus/ModbusClientStrategy
     Modbus/ModbusTCPClient
+
 
     ExceptionHandling/ModbusException
 
@@ -51,6 +53,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Logger/Logger.hpp Logger/Logger.cpp
         Modbus/ModbusTCPClient/ModbusTCPClient.hpp Modbus/ModbusTCPClient/ModbusTCPClient.cpp
         DeviceInterface/DeviceInterface.cpp
+        Modbus/ModbusClientStrategy/ModbusClientStrategy.hpp Modbus/ModbusClientStrategy/ModbusClientStrategy.cpp
 
 
     )

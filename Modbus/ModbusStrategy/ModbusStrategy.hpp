@@ -18,5 +18,4 @@ public:
     virtual SystemResult WriteData(const QModbusDataUnit &cData) = 0;
 protected:
     ModbusConnectionParameters _connectionParameters;
-
 };

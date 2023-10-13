@@ -1,11 +1,7 @@
 #pragma once
-#include <QObject>
-#include <ModbusStrategy.hpp>
-#include <QModbusTcpClient>
-#include <memory>
+#include <ModbusClientStrategy.hpp>
 
-
-class ModbusTCPClient : public ModbusStrategy
+class ModbusTCPClient : public ModbusClientStrategy
 {
 public:
     ModbusTCPClient();
@@ -20,7 +16,6 @@ public:
 private:
     static constexpr const char* const MODBUS_TCP_DEVICE_NAME {"ModbusTCPDevice"};
     static constexpr const char* const CLASS_TAG {"[ModbusTCPClient]"};
-    std::unique_ptr<QModbusTcpClient> _modbusTCPClient;
 };
 
 
