@@ -1,12 +1,13 @@
 #pragma once
 
+#include <QObject>
 #include <DeviceInterface.hpp>
 #include <SystemResult.hpp>
 #include <QModbusDataUnit>
 #include <ModbusConnectionParameters.hpp>
-
 class ModbusStrategy : public DeviceInterface
 {
+    Q_OBJECT
 public:
     ModbusStrategy();
     virtual ~ModbusStrategy();

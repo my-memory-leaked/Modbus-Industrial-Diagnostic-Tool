@@ -5,6 +5,13 @@
 
 #include "QModbusRtuSerialClient"
 
+#include <ModbusTCPClient.hpp>
+#include <ModbusConnectionParameters.hpp>
+
+ModbusConnectionParameters params;
+ModbusTCPClient client;
+
+
 UserGUI::UserGUI(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::UserGUI)
@@ -29,6 +36,13 @@ void UserGUI::on__modbusConnectPushButton_clicked()
     msgWarning.setWindowTitle("Caution");
     msgWarning.exec();
 
+    params.SetIpAddress("127.0.0.1");
+    params.SetPort(502);
+    client.SetConnectionParameters(params);
+
+
+
+    client.Connect();
 //    ModbusConnectionManager modbusConnectionManager(new QModbusRtuSerialClient);
 
 }

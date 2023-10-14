@@ -1,9 +1,11 @@
 #pragma once
+#include <QObject>
 #include <SystemResult.hpp>
 #include <qstring.h>
 
-class DeviceInterface
+class DeviceInterface : public QObject
 {
+    Q_OBJECT
 public:
     virtual SystemResult Connect() = 0;
     virtual SystemResult Disconnect() = 0;

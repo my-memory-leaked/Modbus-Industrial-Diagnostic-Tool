@@ -10,18 +10,18 @@ static auto* logger = &Singleton<Logger>::GetInstance();
 
 ModbusTCPClient::ModbusTCPClient()
 {
-    this->SetDeviceName(MODBUS_TCP_DEVICE_NAME);
-    _modbusClient = std::make_unique<QModbusTcpClient>();
+    initializeModbusClient();
+    connectSignalsAndSlots();
 
     logger->LogInfo( CLASS_TAG, "Created object with ID: " + QString::number(GetDeviceID()) );
 }
 
 ModbusTCPClient::~ModbusTCPClient()
 {
-    logger->LogInfo( CLASS_TAG, "Destroyed object with ID: " + QString::number(GetDeviceID()) );
-
     if (_modbusClient)
         _modbusClient->disconnectDevice();
+
+    logger->LogInfo( CLASS_TAG, "Destroyed object with ID: " + QString::number(GetDeviceID()) );
 }
 
 SystemResult ModbusTCPClient::Connect()
@@ -47,7 +47,8 @@ SystemResult ModbusTCPClient::Connect()
         else
             logger->LogInfo( CLASS_TAG, "Connected to device ID: " + QString::number(GetDeviceID())
                              + " IP: " + GetConnectionParameters().GetIpAddress()
-                             + " Port: " + GetConnectionParameters().GetPort() );
+                             + " Port: " + QString::number(GetConnectionParameters().GetPort()) );
+        _isConnected = true;
     }
 
     return retVal;
@@ -64,6 +65,7 @@ SystemResult ModbusTCPClient::Disconnect()
         logger->LogInfo( CLASS_TAG, "Disconnected device ID: " + QString::number(GetDeviceID())
                                        + " IP: " + GetConnectionParameters().GetIpAddress()
                                        + " Port: " + GetConnectionParameters().GetPort() );
+        _isConnected = false;
     }
     else
     {
@@ -74,6 +76,7 @@ SystemResult ModbusTCPClient::Disconnect()
     return retVal;
 }
 
+#warning TODO GET THE REPLY!!!
 SystemResult ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
@@ -94,11 +97,53 @@ SystemResult ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
                           " IP Address: " + GetConnectionParameters().GetIpAddress());
     }
 
-
     return retVal;
 }
 
+#warning TODO IMPLEMENT!!!!
 SystemResult ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
 {
     return SystemResult::SYSTEM_ERROR;
+}
+
+
+void ModbusTCPClient::onModbusConnectionStateChanged(QModbusDevice::State state)
+{
+    QString stateString;
+
+    switch (state)
+    {
+    case QModbusDevice::UnconnectedState:
+        stateString = "Disconnected";
+        break;
+    case QModbusDevice::ConnectingState:
+        stateString = "Connecting";
+        break;
+    case QModbusDevice::ConnectedState:
+        stateString = "Connected";
+        break;
+    case QModbusDevice::ClosingState:
+        stateString = "Closing";
+        break;
+    default:
+        stateString = "Unknown state";
+        break;
+    }
+
+    logger->LogInfo(CLASS_TAG, "Modbus device ID: " + QString::number(GetDeviceID()) +
+                                   " IP: " + GetConnectionParameters().GetIpAddress() +
+                                   " Port: " + QString::number(GetConnectionParameters().GetPort()) +
+                                   " State changed: " + stateString);
+}
+
+void ModbusTCPClient::initializeModbusClient()
+{
+    this->SetDeviceName(MODBUS_TCP_DEVICE_NAME);
+    _modbusClient = std::make_unique<QModbusTcpClient>();
+}
+
+void ModbusTCPClient::connectSignalsAndSlots() const
+{
+    connect(_modbusClient.get(), &QModbusTcpClient::stateChanged, this, &ModbusTCPClient::onModbusConnectionStateChanged);
+
 }
