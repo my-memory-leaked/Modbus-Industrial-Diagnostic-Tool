@@ -3,17 +3,24 @@
 #include <Singleton.hpp>
 #include <SystemResult.hpp>
 #include <ModbusStrategy/ModbusStrategy.hpp>
+#include <QThread>
 
-class ModbusController : public Singleton<ModbusController>
+class ModbusController : public QThread, public Singleton<ModbusController>
 {
+    Q_OBJECT
     friend class Singleton<ModbusController>;
 public:
 
     SystemResult AddInterface(ModbusStrategy* modbusStrategyPtr);
     SystemResult RemoveInterface(ModbusStrategy* modbusStrategyPtr);
 
-    QModbusDataUnit ReadRegister(QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
-    QModbusDataUnit WriteRegister(QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
+    void InitializeInterfaces();
+
+    SystemResult SetInterfaceParameters(ModbusStrategy* modbusStrategyPtr, const ModbusConnectionParameters &cConnectionParameters);
+
+public slots:
+    void start(Priority priority = InheritPriority);
+    void terminate();
 
 
 private:
@@ -22,8 +29,11 @@ private:
 
     QList<ModbusStrategy*> _modbusInterfacesList;
 
-    static constexpr const char* TAG {"ModbusController"};
+    static constexpr const char* TAG {"[ModbusController]"};
     static constexpr const char* NULL_PTR_MESSAGE {"Nullptr occured!"};
+
+    SystemResult readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
+    SystemResult writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
 
 };
 

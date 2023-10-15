@@ -80,11 +80,20 @@ SystemResult ModbusTCPClient::Disconnect()
 SystemResult ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
+
+
     if (! cData.isValid() )
         retVal = SystemResult::SYSTEM_INVALID_ARGUMENT;
     else
         logger->LogDebug( CLASS_TAG, "Invalid QModbusDataUnit!" );
 
+
+    if ( !IsConnected() )
+    {
+        retVal = SystemResult::SYSTEM_ERROR;
+        logger->LogCritical( CLASS_TAG, "Trying to read data from disconnected device: "
+                             + QString::number( GetDeviceID() ) );
+    }
 
     if (SystemResult::SYSTEM_OK == retVal)
     {
