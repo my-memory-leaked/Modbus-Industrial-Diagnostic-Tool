@@ -19,6 +19,7 @@ UserGUI::UserGUI(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle(ApplicationConstant::MAIN_APPLICATION_NAME);
 
+    // ui->actionConnection->trigger(); // Get the connection to slot here
 }
 
 UserGUI::~UserGUI()

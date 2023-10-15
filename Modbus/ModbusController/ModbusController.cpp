@@ -105,8 +105,8 @@ void ModbusController::terminate()
 {
     for (auto & interface : _modbusInterfacesList)
     {
-        if(interface->IsConnected())
-            (void) interface->Disconnect();
+        if ( interface->IsConnected() )
+             (void) interface->Disconnect();
     }
 }
 

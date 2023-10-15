@@ -81,7 +81,6 @@ SystemResult ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
 
-
     if (! cData.isValid() )
         retVal = SystemResult::SYSTEM_INVALID_ARGUMENT;
     else
@@ -97,23 +96,62 @@ SystemResult ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 
     if (SystemResult::SYSTEM_OK == retVal)
     {
-        _modbusClient->sendReadRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
+        //TODO add parser emit
+        auto* modbusReply = _modbusClient->sendReadRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
 
         logger->LogDebug( CLASS_TAG,
                           "Requested reading: RegisterType: " +
                           ModbusRegisterTypeMapper::RegisterTypeToString(cData.registerType()) +
                           " Address: " + QString::number(cData.startAddress()) +
                           " IP Address: " + GetConnectionParameters().GetIpAddress());
+
+        // ( modbusReply->isFinished() ) ?
+
+        //     // connect(modbusReply, &QModbusReply::finished, this, &MainWindow::onReadReady);
+        // : delete modbusReply;
+
     }
 
     return retVal;
 }
 
-#warning TODO IMPLEMENT!!!!
+#warning TODO GET THE REPLY!!!
 SystemResult ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
 {
-    return SystemResult::SYSTEM_ERROR;
+    SystemResult result = SystemResult::SYSTEM_OK;
+
+    /* Check the validity of the provided data unit */
+    if (!cData.isValid())
+    {
+        logger->LogDebug(CLASS_TAG, "Invalid QModbusDataUnit provided for writing!");
+        result = SystemResult::SYSTEM_INVALID_ARGUMENT;
+    }
+
+    /* Check if the client is connected */
+    if (!IsConnected() && SystemResult::SYSTEM_OK == result)
+    {
+        logger->LogCritical(CLASS_TAG,
+                            "Trying to write data to a disconnected device: " +
+                                QString::number(GetDeviceID()));
+        result = SystemResult::SYSTEM_ERROR;
+    }
+
+    if (SystemResult::SYSTEM_OK == result)
+    {
+        /* Send the write request */
+        _modbusClient->sendWriteRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
+
+        /* Log the write request */
+        logger->LogDebug(CLASS_TAG,
+                         "Requested writing: RegisterType: " +
+                             ModbusRegisterTypeMapper::RegisterTypeToString(cData.registerType()) +
+                             " Address: " + QString::number(cData.startAddress()) +
+                             " IP Address: " + GetConnectionParameters().GetIpAddress());
+    }
+
+    return result;
 }
+
 
 
 void ModbusTCPClient::onModbusConnectionStateChanged(QModbusDevice::State state)
