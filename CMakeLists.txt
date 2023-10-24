@@ -15,18 +15,18 @@ find_package(Qt6 REQUIRED COMPONENTS SerialBus)
 
 set(PROJECT_SOURCES
         main.cpp
-        usergui.cpp
-        usergui.hpp
-        usergui.ui
 )
 include_directories(
+    GUI/MainGUI
+    GUI/AddModbusDeviceGUI
+
     ApplicationConstant
     SystemResult
     Singleton
     DeviceInterface
     Logger
     Modbus
-    AddModbusDeviceGUI
+
     Modbus/ModbusStrategy
     Modbus/ModbusConnectionParameters
     Modbus/ModbusController
@@ -45,6 +45,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Modbus-Industrial-Diagnostic-Tool
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        GUI/MainGUI/MainGUI.hpp GUI/MainGUI/MainGUI.cpp GUI/MainGUI/MainGUI.ui
+        GUI/AddModbusDeviceGUI/AddModbusDeviceGUI.hpp GUI/AddModbusDeviceGUI/AddModbusDeviceGUI.cpp GUI/AddModbusDeviceGUI/AddModbusDeviceGUI.ui
+
+
         ApplicationConstant/ApplicationConstant.hpp
 
         ExceptionHandling/ModbusException/ModbusException.hpp ExceptionHandling/ModbusException/ModbusException.cpp
@@ -61,8 +65,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.hpp Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.cpp
         Modbus/ModbusParser/ModbusParser.hpp Modbus/ModbusParser/ModbusParser.cpp
         Modbus/ModbusCommandList/ModbusCommandList.hpp Modbus/ModbusCommandList/ModbusCommandList.cpp
-        AddModbusDeviceGUI/AddModbusDeviceGUI.hpp AddModbusDeviceGUI/AddModbusDeviceGUI.cpp AddModbusDeviceGUI/AddModbusDeviceGUI.ui
-
 
 
     )

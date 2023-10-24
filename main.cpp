@@ -1,4 +1,4 @@
-#include "usergui.hpp"
+#include <MainGUI.hpp>
 
 #include <QApplication>
 #include <Logger.hpp>
@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     logger->LogInfo("[Main]", "Application starting!");
     QApplication application(argc, argv);
-    UserGUI userGui;
-    userGui.show();
+    MainGUI mainGUI;
+    mainGUI.show();
     return application.exec();
 }
