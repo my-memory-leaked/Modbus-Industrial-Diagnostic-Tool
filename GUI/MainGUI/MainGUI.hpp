@@ -21,11 +21,14 @@ public:
 
 private slots:
 
-    void on_addDevice_clicked();
+    void handleAddDeviceClick();
 
 private:
     Ui::MainGUI *ui;
 
     ModbusConnectionParameters _mbParams;
     static Singleton<ModbusController> _mbController;
+
+
+    void connectSignalsAndSlots() const;
 };

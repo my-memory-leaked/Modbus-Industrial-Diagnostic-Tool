@@ -17,8 +17,11 @@ MainGUI::MainGUI(QWidget *parent)
     , ui(new Ui::MainGUI)
 {
     ui->setupUi(this);
+    connectSignalsAndSlots();
+
     setWindowTitle(ApplicationConstant::MAIN_APPLICATION_NAME);
     _mbParams.SetDefaultValues();
+
 }
 
 MainGUI::~MainGUI()
@@ -45,7 +48,7 @@ MainGUI::~MainGUI()
 // }
 
 
-void MainGUI::on_addDevice_clicked()
+void MainGUI::handleAddDeviceClick()
 {
     AddModbusDeviceGUI modbusDialog(this);
     if(modbusDialog.exec() == QDialog::Accepted)
@@ -58,3 +61,7 @@ void MainGUI::on_addDevice_clicked()
     }
 }
 
+void MainGUI::connectSignalsAndSlots() const
+{
+    connect(ui->AddDevice, &QPushButton::clicked, this, &MainGUI::handleAddDeviceClick);
+}
