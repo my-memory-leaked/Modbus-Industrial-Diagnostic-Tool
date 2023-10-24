@@ -1,10 +1,12 @@
 #pragma once
 
 #include <QObject>
+#include <QModbusDataUnit>
+#include <QModbusReply>
 #include <DeviceInterface.hpp>
 #include <SystemResult.hpp>
-#include <QModbusDataUnit>
 #include <ModbusConnectionParameters.hpp>
+
 class ModbusStrategy : public DeviceInterface
 {
     Q_OBJECT
@@ -15,8 +17,8 @@ public:
     virtual SystemResult SetConnectionParameters(const ModbusConnectionParameters &cConnectionParameters);
     virtual ModbusConnectionParameters GetConnectionParameters() const;
 
-    virtual SystemResult ReadData(const QModbusDataUnit &cData) = 0;
-    virtual SystemResult WriteData(const QModbusDataUnit &cData) = 0;
+    virtual QModbusReply *ReadData(const QModbusDataUnit &cData) = 0;
+    virtual QModbusReply *WriteData(const QModbusDataUnit &cData) = 0;
 protected:
     ModbusConnectionParameters _connectionParameters;
 };

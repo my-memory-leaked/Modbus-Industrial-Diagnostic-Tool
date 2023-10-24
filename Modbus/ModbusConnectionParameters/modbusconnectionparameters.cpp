@@ -1,8 +1,27 @@
 #include "ModbusConnectionParameters.hpp"
 
-void ModbusConnectionParameters::SetSerialPort(const QString& serialPort)
+ModbusConnectionParameters::ModbusConnectionParameters()
 {
-    _serialPort = serialPort;
+    SetDefaultValues();
+}
+void ModbusConnectionParameters::SetDefaultValues()
+{
+    _serialPort = "COM0";
+    _baudRate = 115200;
+
+    _dataBits = QSerialPort::Data8;
+    _parity = QSerialPort::NoParity;
+    _stopBits = QSerialPort::OneStop;
+
+    _ipAddress = "127.0.0.1"; /* Localhost */
+    _port = 502;
+}
+
+
+
+void ModbusConnectionParameters::SetSerialPort(const QString& cSerialPort)
+{
+    _serialPort = cSerialPort;
 }
 
 QString ModbusConnectionParameters::GetSerialPort() const
@@ -32,7 +51,7 @@ QSerialPort::DataBits ModbusConnectionParameters::GetDataBits() const
 
 void ModbusConnectionParameters::SetParity(const QSerialPort::Parity cParity)
 {
-    _parity = _parity;
+    _parity = cParity;
 }
 
 QSerialPort::Parity ModbusConnectionParameters::GetParity() const

@@ -112,10 +112,9 @@ void ModbusController::terminate()
 
 
 
-
-SystemResult ModbusController::readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
+QModbusReply *ModbusController::readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
 {
-    SystemResult result = SystemResult::SYSTEM_ERROR;
+    QModbusReply * result = nullptr;
 
     QModbusDataUnit query(cDataUnit, startingAddress, numberOfRegisters);
 
@@ -126,7 +125,7 @@ SystemResult ModbusController::readRegister(ModbusStrategy* modbusStrategyPtr, Q
 
 
 #warning TODO INPLEMENT!!!
-SystemResult ModbusController::writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
+QModbusReply *ModbusController::writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
 {
-    return SystemResult::SYSTEM_ERROR;;
+    return nullptr;
 }

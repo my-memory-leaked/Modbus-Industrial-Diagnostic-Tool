@@ -12,8 +12,8 @@ public:
     SystemResult Connect() override;
     SystemResult Disconnect() override;
 
-    SystemResult ReadData(const QModbusDataUnit &cData) override;
-    SystemResult WriteData(const QModbusDataUnit &cData) override;
+    QModbusReply *ReadData(const QModbusDataUnit &cData) override;
+    QModbusReply *WriteData(const QModbusDataUnit &cData) override;
 
     static constexpr const char* const MODBUS_TCP_DEVICE_NAME {"ModbusTCPDevice"};
 private slots:

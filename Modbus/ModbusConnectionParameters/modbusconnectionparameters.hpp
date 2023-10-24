@@ -7,6 +7,10 @@
 class ModbusConnectionParameters
 {
 public:
+    ModbusConnectionParameters();
+
+    void SetDefaultValues();
+
     void SetSerialPort(const QString& serialPort);
     QString GetSerialPort() const;
 

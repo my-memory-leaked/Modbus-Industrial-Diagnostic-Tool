@@ -4,6 +4,7 @@
 #include <QModbusTcpClient>
 #include <QVariant>
 #include <ModbusRegisterTypeMapper.hpp>
+#include <ModbusParser.hpp>
 
 
 static auto* logger = &Singleton<Logger>::GetInstance();
@@ -76,49 +77,42 @@ SystemResult ModbusTCPClient::Disconnect()
     return retVal;
 }
 
-#warning TODO GET THE REPLY!!!
-SystemResult ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
+QModbusReply *ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 {
-    SystemResult retVal = SystemResult::SYSTEM_OK;
+    QModbusReply* retVal = nullptr;
+    SystemResult result = SystemResult::SYSTEM_ERROR;
 
     if (! cData.isValid() )
-        retVal = SystemResult::SYSTEM_INVALID_ARGUMENT;
+        result = SystemResult::SYSTEM_INVALID_ARGUMENT;
     else
         logger->LogDebug( CLASS_TAG, "Invalid QModbusDataUnit!" );
 
 
     if ( !IsConnected() )
     {
-        retVal = SystemResult::SYSTEM_ERROR;
+        result = SystemResult::SYSTEM_ERROR;
         logger->LogCritical( CLASS_TAG, "Trying to read data from disconnected device: "
                              + QString::number( GetDeviceID() ) );
     }
 
-    if (SystemResult::SYSTEM_OK == retVal)
+    if (SystemResult::SYSTEM_OK == result)
     {
-        //TODO add parser emit
-        auto* modbusReply = _modbusClient->sendReadRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
+        retVal = _modbusClient->sendReadRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
 
         logger->LogDebug( CLASS_TAG,
                           "Requested reading: RegisterType: " +
                           ModbusRegisterTypeMapper::RegisterTypeToString(cData.registerType()) +
                           " Address: " + QString::number(cData.startAddress()) +
                           " IP Address: " + GetConnectionParameters().GetIpAddress());
-
-        // ( modbusReply->isFinished() ) ?
-
-        //     // connect(modbusReply, &QModbusReply::finished, this, &MainWindow::onReadReady);
-        // : delete modbusReply;
-
     }
 
     return retVal;
 }
 
-#warning TODO GET THE REPLY!!!
-SystemResult ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
+QModbusReply *ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
 {
-    SystemResult result = SystemResult::SYSTEM_OK;
+    QModbusReply* retVal = nullptr;
+    SystemResult result = SystemResult::SYSTEM_ERROR;
 
     /* Check the validity of the provided data unit */
     if (!cData.isValid())
@@ -139,7 +133,7 @@ SystemResult ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
     if (SystemResult::SYSTEM_OK == result)
     {
         /* Send the write request */
-        _modbusClient->sendWriteRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
+        retVal = _modbusClient->sendWriteRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
 
         /* Log the write request */
         logger->LogDebug(CLASS_TAG,
@@ -149,7 +143,7 @@ SystemResult ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
                              " IP Address: " + GetConnectionParameters().GetIpAddress());
     }
 
-    return result;
+    return retVal;
 }
 
 
@@ -192,5 +186,4 @@ void ModbusTCPClient::initializeModbusClient()
 void ModbusTCPClient::connectSignalsAndSlots() const
 {
     connect(_modbusClient.get(), &QModbusTcpClient::stateChanged, this, &ModbusTCPClient::onModbusConnectionStateChanged);
-
 }

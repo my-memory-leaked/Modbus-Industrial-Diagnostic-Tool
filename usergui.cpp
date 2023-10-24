@@ -5,12 +5,11 @@
 
 #include "QModbusRtuSerialClient"
 
-#include <ModbusTCPClient.hpp>
-#include <ModbusConnectionParameters.hpp>
+#include <AddModbusDeviceUI.hpp>
 
-ModbusConnectionParameters params;
 ModbusTCPClient client;
 
+// Singleton<ModbusController> UserGUI::_mbController = Singleton<ModbusController>::GetInstance();
 
 UserGUI::UserGUI(QWidget *parent)
     : QMainWindow(parent)
@@ -18,8 +17,7 @@ UserGUI::UserGUI(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle(ApplicationConstant::MAIN_APPLICATION_NAME);
-
-    // ui->actionConnection->trigger(); // Get the connection to slot here
+    _mbParams.SetDefaultValues();
 }
 
 UserGUI::~UserGUI()
@@ -29,7 +27,7 @@ UserGUI::~UserGUI()
 
 void UserGUI::on__modbusConnectPushButton_clicked()
 {
-    // TODO Open modbus connection
+    SystemResult status = SystemResult::SYSTEM_ERROR;
 
     QMessageBox msgWarning;
     msgWarning.setText("Slots Working");
@@ -37,14 +35,28 @@ void UserGUI::on__modbusConnectPushButton_clicked()
     msgWarning.setWindowTitle("Caution");
     msgWarning.exec();
 
-    params.SetIpAddress("127.0.0.1");
-    params.SetPort(502);
-    client.SetConnectionParameters(params);
+    // _mbController
+    (void) client.SetConnectionParameters(_mbParams);
+    status = client.Connect();
+    //if(SystemResult::SYSTEM_OK != result)
+    // callback do ikonki połącznia zajeb debila przynajmniej jest spokój ale odklejka
 
 
 
-    client.Connect();
-//    ModbusConnectionManager modbusConnectionManager(new QModbusRtuSerialClient);
+}
+
+void UserGUI::on__addDeviceButton_clicked()
+{
+
+    AddModbusDeviceUI modbusDialog(this);
+    if(modbusDialog.exec() == QDialog::Accepted)
+    {
+        // Use getters to get data from the dialog
+        // QString parameter1 = modbusDialog.getParameter1();
+        // Handle the rest of the parameters...
+
+        // Now you can process or use the Modbus parameters as needed
+    }
 
 }
 
