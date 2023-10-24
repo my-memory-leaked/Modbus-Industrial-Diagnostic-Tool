@@ -14,6 +14,9 @@ public:
     explicit AddModbusDeviceGUI(QWidget *parent = nullptr);
     ~AddModbusDeviceGUI();
 
+private slots:
+    void onConnectionInterfaceComboBox(int index);
+
 private:
     Ui::AddModbusDeviceGUI *ui;
 };
