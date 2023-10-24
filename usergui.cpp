@@ -1,11 +1,11 @@
 #include "usergui.hpp"
-#include "./ui_usergui.h"
+#include "ui_usergui.h"
 #include "ApplicationConstant/ApplicationConstant.hpp"
 #include "QMessageBox"
 
 #include "QModbusRtuSerialClient"
 
-#include <AddModbusDeviceUI.hpp>
+#include <AddModbusDeviceGUI.hpp>
 
 ModbusTCPClient client;
 
@@ -48,7 +48,7 @@ void UserGUI::on__modbusConnectPushButton_clicked()
 void UserGUI::on__addDeviceButton_clicked()
 {
 
-    AddModbusDeviceUI modbusDialog(this);
+    AddModbusDeviceGUI modbusDialog(this);
     if(modbusDialog.exec() == QDialog::Accepted)
     {
         // Use getters to get data from the dialog

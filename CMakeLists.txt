@@ -26,7 +26,7 @@ include_directories(
     DeviceInterface
     Logger
     Modbus
-    AddModbusDeviceUI
+    AddModbusDeviceGUI
     Modbus/ModbusStrategy
     Modbus/ModbusConnectionParameters
     Modbus/ModbusController
@@ -61,8 +61,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.hpp Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.cpp
         Modbus/ModbusParser/ModbusParser.hpp Modbus/ModbusParser/ModbusParser.cpp
         Modbus/ModbusCommandList/ModbusCommandList.hpp Modbus/ModbusCommandList/ModbusCommandList.cpp
-        AddModbusDeviceUI/AddModbusDeviceUI.hpp AddModbusDeviceUI/AddModbusDeviceUI.cpp AddModbusDeviceUI/AddModbusDeviceUI.ui
-
+        AddModbusDeviceGUI/AddModbusDeviceGUI.hpp AddModbusDeviceGUI/AddModbusDeviceGUI.cpp AddModbusDeviceGUI/AddModbusDeviceGUI.ui
 
 
 
