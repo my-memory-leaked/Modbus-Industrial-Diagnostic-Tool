@@ -1,16 +1,30 @@
 #pragma once
 #include <QObject>
-#include <ModbusStrategy.hpp>
+#include <ModbusClientStrategy.hpp>
 
-
-class ModbusTCPClient : public ModbusStrategy
+class ModbusTCPClient : public ModbusClientStrategy
 {
+    Q_OBJECT
 public:
     ModbusTCPClient();
     ~ModbusTCPClient();
 
-    SystemResult ReadData(const QModbusDataUnit &cData) override;
-    SystemResult WriteData(const QModbusDataUnit &cData) override;
+    SystemResult Connect() override;
+    SystemResult Disconnect() override;
+
+    QModbusReply *ReadData(const QModbusDataUnit &cData) override;
+    QModbusReply *WriteData(const QModbusDataUnit &cData) override;
+
+    static constexpr const char* const MODBUS_TCP_DEVICE_NAME {"ModbusTCPDevice"};
+private slots:
+    void onModbusConnectionStateChanged(QModbusDevice::State state); // Slot to handle state changes
+
+private:
+    static constexpr const char* const CLASS_TAG {"[ModbusTCPClient]"};
+
+    void initializeModbusClient();
+    void connectSignalsAndSlots() const;
+
 };
 
 

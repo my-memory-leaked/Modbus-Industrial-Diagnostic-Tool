@@ -1,18 +1,22 @@
 #pragma once
+#include <QObject>
 #include <SystemResult.hpp>
 #include <qstring.h>
 
-class DeviceInterface
+class DeviceInterface : public QObject
 {
+    Q_OBJECT
 public:
     virtual SystemResult Connect() = 0;
     virtual SystemResult Disconnect() = 0;
-    virtual bool IsConnected() const = 0;
+    virtual bool IsConnected() const;
 
-    virtual QString GetDeviceName() const = 0;
-    virtual quint32 GetDeviceID() const = 0;
+    virtual void SetDeviceName(const QString& newName);
+    virtual QString GetDeviceName() const;
+    virtual quint32 GetDeviceID() const;
 
-    virtual ~DeviceInterface() {}
+    DeviceInterface();
+    virtual ~DeviceInterface();
 
 protected:
     bool _isConnected = false;
