@@ -3,8 +3,8 @@
 #include <QModbusDataUnit>
 #include <QModbusDataUnitMap>
 
-class ModbusCommandList
-{
-public:
-    ModbusCommandList();
-};
+// class ModbusCommandList
+// {
+// public:
+//     ModbusCommandList();
+// };
