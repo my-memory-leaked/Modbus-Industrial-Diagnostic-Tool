@@ -11,8 +11,18 @@ AddModbusDeviceGUI::AddModbusDeviceGUI(QWidget *parent)
 {
     ui->setupUi(this);
 
+    /* IP Address Validator */
+    QRegularExpressionValidator* ipAddressValidator = new QRegularExpressionValidator(
+        QRegularExpression("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"),
+        this
+        );
+    ui->IPAddressLineEdit->setValidator(ipAddressValidator);
+
+    /* Port Validator */
+    QIntValidator* portValidator = new QIntValidator(1, 65535, this);
+    ui->PortLineEdit->setValidator(portValidator);
+
     connect(ui->ConnectionInterfaceComboBox, &QComboBox::currentIndexChanged, this, &AddModbusDeviceGUI::onConnectionInterfaceComboBox);
-    // connect(ui->ButtonBox, &QDialogButtonBox::rejected, this , &QDialog::reject);
 }
 
 AddModbusDeviceGUI::~AddModbusDeviceGUI()
@@ -25,12 +35,13 @@ void AddModbusDeviceGUI::onConnectionInterfaceComboBox(int index)
     if (ui->ConnectionInterfaceComboBox->currentText() == "TCP")
     {
         ui->TCPInterfaceGroupBox->setVisible(true);
-        // ui->groupBoxRTU->setVisible(false);
     }
     else if (ui->ConnectionInterfaceComboBox->currentText() == "RTU")
     {
         ui->TCPInterfaceGroupBox->setVisible(false);
-        // ui->groupBoxRTU->setVisible(true);
+    }
+    else if (ui->ConnectionInterfaceComboBox->currentText() == "ASCII")
+    {
     }
 }
 void AddModbusDeviceGUI::accept()
@@ -49,13 +60,14 @@ void AddModbusDeviceGUI::accept()
 
         mbController->AddInterface(std::move(mbTCP));
 
-    }
+    } /* Interfaces below may be implemented in future */
     else if (ui->ConnectionInterfaceComboBox->currentText() == "RTU")
     {
-        // ui->TCPInterfaceGroupBox->setVisible(false);
-        // ui->groupBoxRTU->setVisible(true);
+    }
+    else if(ui->ConnectionInterfaceComboBox->currentText() == "ASCII")
+    {
     }
 
-    // mbController->AddInterface()
-
+    /* Close the ui */
+    QDialog::accept();
 }
