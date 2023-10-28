@@ -1,11 +1,10 @@
-#include "MainGUI.hpp"
-#include "ui_MainGUI.h"
+#include <MainGUI.hpp>
+#include <ui_MainGUI.h>
 
-#include "ApplicationConstant.hpp"
-#include "QMessageBox"
+#include <QMessageBox>
+#include <QModbusRtuSerialClient>
 
-#include "QModbusRtuSerialClient"
-
+#include <ApplicationConstant.hpp>
 #include <AddModbusDeviceGUI.hpp>
 
 MainGUI::MainGUI(QWidget *parent)
@@ -30,11 +29,11 @@ void MainGUI::handleAddDeviceClick()
     AddModbusDeviceGUI modbusDialog(this);
     if(modbusDialog.exec() == QDialog::Accepted)
     {
-        // Use getters to get data from the dialog
-        // QString parameter1 = modbusDialog.getParameter1();
-        // Handle the rest of the parameters...
+        ui->tableWidget->setColumnCount(3);
+        QStringList headers = {"Device Name", "IP Address", "Port"};
+        ui->tableWidget->setHorizontalHeaderLabels(headers);
 
-        // Now you can process or use the Modbus parameters as needed
+        _mbController->ListAllAvailableDevices(ui->tableWidget);
     }
 }
 

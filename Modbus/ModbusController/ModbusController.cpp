@@ -81,11 +81,26 @@ void ModbusController::InitializeInterfaces()
     }
 }
 
-void ModbusController::startController()
+void ModbusController::ListAllAvailableDevices(QTableWidget* tablewidget)
 {
-    // Startup actions if required
-    InitializeInterfaces();
+    /* Clear any previous data */
+    tablewidget->setRowCount(0);
+
+    for (const auto& entry : _modbusInterfacesMap)
+    {
+        ModbusStrategy* interface = entry.second.get();
+
+        /* Insert a new row at the end */
+        int newRow = tablewidget->rowCount();
+        tablewidget->insertRow(newRow);
+
+        /* Populate the row with device details */
+        tablewidget->setItem(newRow, 0, new QTableWidgetItem(interface->GetDeviceName()));
+        tablewidget->setItem(newRow, 1, new QTableWidgetItem(interface->GetConnectionParameters().GetIpAddress()));
+        tablewidget->setItem(newRow, 2, new QTableWidgetItem(QString::number(interface->GetConnectionParameters().GetPort())));
+    }
 }
+
 
 void ModbusController::terminateController()
 {
