@@ -29,13 +29,10 @@ void MainGUI::handleAddDeviceClick()
     AddModbusDeviceGUI modbusDialog(this);
     if(modbusDialog.exec() == QDialog::Accepted)
     {
-        ui->tableWidget->setColumnCount(3);
-        QStringList headers = {"Device Name", "IP Address", "Port"};
-        ui->tableWidget->setHorizontalHeaderLabels(headers);
-
-        _mbController->ListAllAvailableDevices(ui->tableWidget);
+        _mbController->ListAllAvailableDevices(ui->DevicesListWidget);
     }
 }
+
 
 void MainGUI::connectSignalsAndSlots() const
 {

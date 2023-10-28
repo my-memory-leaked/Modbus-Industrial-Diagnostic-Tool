@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QTableWidget>
+#include <QListWidget>
 
 #include <Singleton.hpp>
 #include <SystemResult.hpp>
@@ -21,7 +21,7 @@ public:
 
     void InitializeInterfaces();
 
-    void ListAllAvailableDevices(QTableWidget* tablewidget);
+    void ListAllAvailableDevices(QListWidget* listWidget);
 
 private:
     ModbusController();

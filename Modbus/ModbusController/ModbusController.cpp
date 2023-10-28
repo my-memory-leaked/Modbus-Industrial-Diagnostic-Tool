@@ -81,25 +81,25 @@ void ModbusController::InitializeInterfaces()
     }
 }
 
-void ModbusController::ListAllAvailableDevices(QTableWidget* tablewidget)
+void ModbusController::ListAllAvailableDevices(QListWidget* listWidget)
 {
-    /* Clear any previous data */
-    tablewidget->setRowCount(0);
+    ModbusStrategy* interface = nullptr;
 
-    for (const auto& entry : _modbusInterfacesMap)
+    listWidget->clear();
+
+    for (auto& entry : _modbusInterfacesMap)
     {
-        ModbusStrategy* interface = entry.second.get();
+        interface = entry.second.get();
 
-        /* Insert a new row at the end */
-        int newRow = tablewidget->rowCount();
-        tablewidget->insertRow(newRow);
+        QString deviceInfo = QString("Device Name: %1 | IP Address: %2 | Port: %3")
+                                 .arg(interface->GetDeviceName())
+                                 .arg(interface->GetConnectionParameters().GetIpAddress())
+                                 .arg(interface->GetConnectionParameters().GetPort());
 
-        /* Populate the row with device details */
-        tablewidget->setItem(newRow, 0, new QTableWidgetItem(interface->GetDeviceName()));
-        tablewidget->setItem(newRow, 1, new QTableWidgetItem(interface->GetConnectionParameters().GetIpAddress()));
-        tablewidget->setItem(newRow, 2, new QTableWidgetItem(QString::number(interface->GetConnectionParameters().GetPort())));
+        listWidget->addItem(deviceInfo); // Add the information string to the list widget
     }
 }
+
 
 
 void ModbusController::terminateController()
