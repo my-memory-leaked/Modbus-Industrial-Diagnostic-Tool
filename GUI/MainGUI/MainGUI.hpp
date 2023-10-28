@@ -26,8 +26,7 @@ private slots:
 private:
     Ui::MainGUI *ui;
 
-    ModbusConnectionParameters _mbParams;
-    static Singleton<ModbusController> _mbController;
+    ModbusController *_mbController;
 
 
     void connectSignalsAndSlots() const;
