@@ -21,6 +21,6 @@ private slots:
 
 private:
     std::unique_ptr<Ui::AddModbusDeviceGUI> ui;
-
+    static constexpr const char CLASS_TAG[] {"[AddModbusDeviceGUI]"};
     static const QRegularExpression _ipAddressRegex;
 };

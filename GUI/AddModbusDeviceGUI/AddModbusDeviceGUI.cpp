@@ -7,8 +7,11 @@
 #include <ModbusConnectionParameters.hpp>
 #include <ModbusController.hpp>
 #include <ModbusTCPClient.hpp>
+#include <Logger.hpp>
 
 const QRegularExpression AddModbusDeviceGUI::_ipAddressRegex("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+
+static auto* logger = &Singleton<Logger>::GetInstance();
 
 AddModbusDeviceGUI::AddModbusDeviceGUI(QWidget *parent)
     : QDialog(parent)
@@ -16,6 +19,9 @@ AddModbusDeviceGUI::AddModbusDeviceGUI(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle(ApplicationConstant::ADD_DEVICE_GUI_NAME);
+
+    /* Logging GUI initialization */
+    logger->LogInfo(CLASS_TAG, "Initializing Modbus Device GUI...");
 
     /* There won't be memory leak because we pass this object as parent */
     /* IP Address Validator */
@@ -50,6 +56,7 @@ void AddModbusDeviceGUI::onConnectionInterfaceComboBox(int index)
     else if (ui->ConnectionInterfaceComboBox->currentText() == "ASCII")
     {
     }
+    logger->LogDebug(CLASS_TAG, QString("Changed connection interface to %1").arg(ui->ConnectionInterfaceComboBox->currentText()));
 }
 void AddModbusDeviceGUI::accept()
 {
@@ -57,43 +64,56 @@ void AddModbusDeviceGUI::accept()
 
     if (ui->ConnectionInterfaceComboBox->currentText() == "TCP")
     {
-        /* Validate the IP address */
-        if (!_ipAddressRegex.match(ui->IPAddressLineEdit->text()).hasMatch())
+        bool validInputs = true;
+
+        if (ui->ConnectionInterfaceComboBox->currentText() == "TCP")
         {
-            validInputs = false;
-            QMessageBox::warning(this, "Error", "Invalid IP Address");
-        }
+            /* Validate the IP address */
+            if (!_ipAddressRegex.match(ui->IPAddressLineEdit->text()).hasMatch())
+            {
+                validInputs = false;
+                logger->LogWarning(CLASS_TAG, "Invalid IP Address input.");
+                QMessageBox::warning(this, "Error", "Invalid IP Address");
+            }
 
-        /* Validate the port */
-        bool isOk;
-        int port = ui->PortLineEdit->text().toInt(&isOk);
-        if (!isOk || port < 1 || port > 65535)
-        {
-            validInputs = false;
-            QMessageBox::warning(this, "Error", "Invalid Port");
-        }
+            /* Validate the port */
+            bool isOk;
+            int port = ui->PortLineEdit->text().toInt(&isOk);
+            if (!isOk || port < 1 || port > 65535)
+            {
+                validInputs = false;
+                logger->LogWarning(CLASS_TAG, "Invalid Port input.");
+                QMessageBox::warning(this, "Error", "Invalid Port");
+            }
 
-        if (validInputs)
-        {
-            ModbusConnectionParameters mbParams;
-            mbParams.SetIpAddress(ui->IPAddressLineEdit->text());
-            mbParams.SetPort(static_cast<quint16>(port));
+            if (validInputs)
+            {
+                logger->LogInfo(CLASS_TAG, "Adding new Modbus TCP Interface...");
 
-            std::unique_ptr<ModbusTCPClient> mbTCP = std::make_unique<ModbusTCPClient>();
-            mbTCP->SetDeviceName(ui->DeviceNameLineEdit->text());
-            mbTCP->SetConnectionParameters(mbParams);
+                ModbusConnectionParameters mbParams;
+                mbParams.SetIpAddress(ui->IPAddressLineEdit->text());
+                mbParams.SetPort(static_cast<quint16>(port));
 
-            /* Get the singleton instance of the Modbus Controller and add the interface */
-            auto* mbController = &Singleton<ModbusController>::GetInstance();
-            mbController->AddInterface(std::move(mbTCP));
+                std::unique_ptr<ModbusTCPClient> mbTCP = std::make_unique<ModbusTCPClient>();
+                mbTCP->SetDeviceName(ui->DeviceNameLineEdit->text());
+                mbTCP->SetConnectionParameters(mbParams);
+
+                /* Get the singleton instance of the Modbus Controller and add the interface */
+                auto* mbController = &Singleton<ModbusController>::GetInstance();
+                mbController->AddInterface(std::move(mbTCP));
+
+                logger->LogInfo(CLASS_TAG, QString("Successfully added Modbus TCP Interface: %1 for IP %2 and Port %3").arg(ui->DeviceNameLineEdit->text(), ui->IPAddressLineEdit->text()).arg(port));
+            }
         }
 
     } /* Interfaces below may be implemented in future */
     else if (ui->ConnectionInterfaceComboBox->currentText() == "RTU")
     {
+      logger->LogDebug(CLASS_TAG, "Selected Modbus RTU Interface (not implemented).");
     }
     else if(ui->ConnectionInterfaceComboBox->currentText() == "ASCII")
     {
+     logger->LogDebug(CLASS_TAG, "Selected Modbus ASCII Interface (not implemented).");
     }
 
     /* Only accept and close the dialog if the inputs were valid */
