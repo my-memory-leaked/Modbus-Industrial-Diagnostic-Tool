@@ -3,37 +3,34 @@
 #include <Singleton.hpp>
 #include <SystemResult.hpp>
 #include <ModbusStrategy/ModbusStrategy.hpp>
-#include <QThread>
+#include <memory>
+#include <map>
 
-class ModbusController : public QThread, public Singleton<ModbusController>
+class ModbusController : public Singleton<ModbusController>
 {
-    Q_OBJECT
     friend class Singleton<ModbusController>;
+
 public:
 
-    SystemResult AddInterface(ModbusStrategy* modbusStrategyPtr);
-    SystemResult RemoveInterface(ModbusStrategy* modbusStrategyPtr);
+    SystemResult AddInterface(std::unique_ptr<ModbusStrategy> modbusStrategyPtr);
+    SystemResult RemoveInterface(const QString& deviceName);
+    ModbusStrategy* GetInterfaceByName(const QString& deviceName);
 
     void InitializeInterfaces();
 
-    SystemResult SetInterfaceParameters(ModbusStrategy* modbusStrategyPtr, const ModbusConnectionParameters &cConnectionParameters);
-
-public slots:
-    void start(Priority priority = InheritPriority);
-    void terminate();
-
+    void startController();
+    void terminateController();
 
 private:
     ModbusController();
     ~ModbusController();
+    QModbusReply* readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
+    QModbusReply* writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
 
-    QList<ModbusStrategy*> _modbusInterfacesList;
+    std::map<QString, std::unique_ptr<ModbusStrategy>> _modbusInterfacesMap;
 
     static constexpr const char* TAG {"[ModbusController]"};
-    static constexpr const char* NULL_PTR_MESSAGE {"Nullptr occured!"};
-
-    QModbusReply *readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
-    QModbusReply *writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
-
+    static constexpr const char* NULL_PTR_MESSAGE {"Nullptr occurred!"};
 };
+
 

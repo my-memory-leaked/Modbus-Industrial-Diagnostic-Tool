@@ -1,131 +1,114 @@
 #include <ModbusController.hpp>
 #include <Logger.hpp>
 #include <ModbusTCPClient.hpp>
-
+#include <utility>
 
 static auto* logger = &Singleton<Logger>::GetInstance();
 
-ModbusController::ModbusController() {}
-ModbusController::~ModbusController()
+ModbusController::ModbusController()
 {
-    terminate();
 }
 
-
-SystemResult ModbusController::SetInterfaceParameters(ModbusStrategy* modbusStrategyPtr, const ModbusConnectionParameters &cConnectionParameters)
+ModbusController::~ModbusController()
 {
-    SystemResult retVal = SystemResult::SYSTEM_ERROR;
+    terminateController();
+}
 
-    retVal = modbusStrategyPtr->SetConnectionParameters(cConnectionParameters);
+SystemResult ModbusController::AddInterface(std::unique_ptr<ModbusStrategy> modbusStrategyPtr)
+{
+    SystemResult status = SystemResult::SYSTEM_OK;
 
-    if ( SystemResult::SYSTEM_ERROR == retVal )
+    if(!modbusStrategyPtr)
     {
-        /* If the object is TCP Client type log only IP address and port. */
-        /* If any new modbus connection occurs add the corresponding logging there */
-        if( dynamic_cast<ModbusTCPClient*>(modbusStrategyPtr) )
+        logger->LogCritical(TAG, NULL_PTR_MESSAGE);
+        status = SystemResult::SYSTEM_ERROR;
+    }
+
+    if(SystemResult::SYSTEM_OK == status)
+    {
+        QString deviceName = modbusStrategyPtr->GetDeviceName();
+        if(_modbusInterfacesMap.find(deviceName) != _modbusInterfacesMap.end())
         {
-            logger->LogCritical( TAG,
-                                 "Unable to initialize " + modbusStrategyPtr->GetDeviceName() +
-                                 " ID: " + QString::number(modbusStrategyPtr->GetDeviceID()) +
-                                 " IP: " + cConnectionParameters.GetIpAddress() +
-                                 " Port: " + QString::number(cConnectionParameters.GetPort()) );
+            logger->LogCritical(TAG, "Interface with device name " + deviceName + " already exists!");
+            status = SystemResult::SYSTEM_ERROR;
         }
-        else /* If unknown log all of them */
+        else
         {
-            logger->LogCritical( TAG,
-                                 "Unable to initialize " + modbusStrategyPtr->GetDeviceName() +
-                                 " ID: " + QString::number(modbusStrategyPtr->GetDeviceID()) +
-                                 " Parameters: SerialPort: " + cConnectionParameters.GetSerialPort() +
-                                 " BaudRate: " + QString::number(cConnectionParameters.GetBaudRate()) +
-                                 " DataBits: " + QString::number(cConnectionParameters.GetDataBits()) +
-                                 " Parity: " + QString::number(cConnectionParameters.GetParity()) +
-                                 " StopBits: " + QString::number(cConnectionParameters.GetStopBits()) +
-                                 " IpAddress: " + cConnectionParameters.GetIpAddress() +
-                                 " Port: " + QString::number(cConnectionParameters.GetPort()) );
+            _modbusInterfacesMap.emplace(deviceName, std::move(modbusStrategyPtr));
         }
     }
 
-    return retVal;
+    return status;
+}
+
+SystemResult ModbusController::RemoveInterface(const QString& deviceName)
+{
+    SystemResult status = SystemResult::SYSTEM_OK;
+
+    if(_modbusInterfacesMap.erase(deviceName) == 0) // `erase` returns the number of elements removed
+    {
+        logger->LogCritical(TAG, "Interface with device name " + deviceName + " does not exist!");
+        status = SystemResult::SYSTEM_ERROR;
+    }
+
+    return status;
+}
+
+ModbusStrategy* ModbusController::GetInterfaceByName(const QString& deviceName)
+{
+    ModbusStrategy* interfacePtr = nullptr;
+
+    auto it = _modbusInterfacesMap.find(deviceName);
+    if(it != _modbusInterfacesMap.end())
+    {
+        interfacePtr = it->second.get();
+    }
+    else
+    {
+        logger->LogWarning(TAG, "Interface with device name " + deviceName + " not found!");
+    }
+
+    return interfacePtr;
 }
 
 void ModbusController::InitializeInterfaces()
 {
-    for ( auto* interface : _modbusInterfacesList)
+    for (auto& entry : _modbusInterfacesMap)
     {
-        if ( !interface->IsConnected() )
+        ModbusStrategy* interface = entry.second.get();
+        if (!interface->IsConnected())
             (void)interface->Connect();
     }
 }
 
-
-SystemResult ModbusController::AddInterface(ModbusStrategy* modbusStrategyPtr)
+void ModbusController::startController()
 {
-    SystemResult retVal = SystemResult::SYSTEM_OK;
-
-    if(!modbusStrategyPtr)
-        retVal = SystemResult::SYSTEM_ERROR;
-
-    if(SystemResult::SYSTEM_OK != retVal)
-        logger->LogCritical(TAG, NULL_PTR_MESSAGE);
-
-    if(SystemResult::SYSTEM_OK == retVal)
-        _modbusInterfacesList.append(modbusStrategyPtr);
-
-    if(SystemResult::SYSTEM_OK != retVal && modbusStrategyPtr)
-        logger->LogCritical(TAG, "Adding interface " + modbusStrategyPtr->GetDeviceName() + " failed!");
-
-    return retVal;
+    // Startup actions if required
+    InitializeInterfaces();
 }
 
-SystemResult ModbusController::RemoveInterface(ModbusStrategy* modbusStrategyPtr)
+void ModbusController::terminateController()
 {
-    SystemResult retVal = SystemResult::SYSTEM_OK;
-
-    if(!modbusStrategyPtr)
-        retVal = SystemResult::SYSTEM_ERROR;
-
-    if(SystemResult::SYSTEM_OK != retVal)
-        logger->LogCritical(TAG, NULL_PTR_MESSAGE);
-
-    if(SystemResult::SYSTEM_OK == retVal)
-        _modbusInterfacesList.removeAt(modbusStrategyPtr->GetDeviceID());
-
-    if(SystemResult::SYSTEM_OK != retVal && modbusStrategyPtr)
-        logger->LogCritical(TAG, "Removing interface " + modbusStrategyPtr->GetDeviceName() + " failed!");
-
-    return retVal;
-}
-
-void ModbusController::start(Priority priority)
-{
-
-}
-
-void ModbusController::terminate()
-{
-    for (auto & interface : _modbusInterfacesList)
+    for (auto& entry : _modbusInterfacesMap)
     {
-        if ( interface->IsConnected() )
-             (void) interface->Disconnect();
+        ModbusStrategy* interface = entry.second.get();
+        if (interface->IsConnected())
+            (void)interface->Disconnect();
     }
 }
 
-
-
-QModbusReply *ModbusController::readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
+QModbusReply* ModbusController::readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
 {
-    QModbusReply * result = nullptr;
+    QModbusReply* result = nullptr;
 
     QModbusDataUnit query(cDataUnit, startingAddress, numberOfRegisters);
-
     result = modbusStrategyPtr->ReadData(query);
 
     return result;
 }
 
-
-#warning TODO INPLEMENT!!!
-QModbusReply *ModbusController::writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
+QModbusReply* ModbusController::writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
 {
+    // TODO: Implement as per your requirements
     return nullptr;
 }
