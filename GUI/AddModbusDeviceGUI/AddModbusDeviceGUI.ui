@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>474</width>
-    <height>428</height>
+    <width>385</width>
+    <height>246</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="ButtonBox">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>390</y>
+     <x>10</x>
+     <y>190</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -45,8 +45,8 @@
   <widget class="QLineEdit" name="DeviceNameLineEdit">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>60</y>
+     <x>140</x>
+     <y>10</y>
      <width>191</width>
      <height>31</height>
     </rect>
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>120</y>
+     <y>60</y>
      <width>151</width>
      <height>16</height>
     </rect>
@@ -68,8 +68,8 @@
   <widget class="QComboBox" name="ConnectionInterfaceComboBox">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>160</y>
+     <x>160</x>
+     <y>50</y>
      <width>72</width>
      <height>24</height>
     </rect>
@@ -89,9 +89,9 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>210</y>
-     <width>251</width>
-     <height>161</height>
+     <y>90</y>
+     <width>191</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="title">

@@ -1,6 +1,7 @@
 #include <AddModbusDeviceGUI.hpp>
 #include <ui_AddModbusDeviceGUI.h>
 
+#include <ApplicationConstant.hpp>
 #include <ModbusConnectionParameters.hpp>
 #include <ModbusController.hpp>
 #include <ModbusTCPClient.hpp>
@@ -10,7 +11,9 @@ AddModbusDeviceGUI::AddModbusDeviceGUI(QWidget *parent)
     , ui(std::make_unique<Ui::AddModbusDeviceGUI>())
 {
     ui->setupUi(this);
+    setWindowTitle(ApplicationConstant::ADD_DEVICE_GUI_NAME);
 
+    /* There won't be memory leak because we pass this object as parent */
     /* IP Address Validator */
     QRegularExpressionValidator* ipAddressValidator = new QRegularExpressionValidator(
         QRegularExpression("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"),
