@@ -29,12 +29,19 @@ void MainGUI::handleAddDeviceClick()
     AddModbusDeviceGUI modbusDialog(this);
     if(modbusDialog.exec() == QDialog::Accepted)
     {
-        _mbController->ListAllAvailableDevices(ui->DevicesListWidget);
+        _mbController->UpdateDeviceList(ui->DevicesListWidget);
     }
 }
 
+void MainGUI::handleTestButtonClick()
+{
+
+
+}
 
 void MainGUI::connectSignalsAndSlots() const
 {
     connect(ui->AddDevice, &QPushButton::clicked, this, &MainGUI::handleAddDeviceClick);
+    connect(ui->TestButton, &QPushButton::clicked, this, &MainGUI::handleTestButtonClick);
+
 }

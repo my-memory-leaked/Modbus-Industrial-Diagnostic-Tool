@@ -11,7 +11,7 @@ ModbusController::ModbusController()
 
 ModbusController::~ModbusController()
 {
-    terminateController();
+    DisconnectAllInterfaces();
 }
 
 SystemResult ModbusController::AddInterface(std::unique_ptr<ModbusStrategy> modbusStrategyPtr)
@@ -71,17 +71,62 @@ ModbusStrategy* ModbusController::GetInterfaceByName(const QString& deviceName)
     return interfacePtr;
 }
 
-void ModbusController::InitializeInterfaces()
+void ModbusController::ConnectAllInterfaces()
 {
     for (auto& entry : _modbusInterfacesMap)
     {
         ModbusStrategy* interface = entry.second.get();
         if (!interface->IsConnected())
-            (void)interface->Connect();
+        {
+            if (SystemResult::SYSTEM_OK != interface->Connect())
+            {
+                logger->LogWarning(TAG, QString("Failed to initialize interface: %1").arg(interface->GetDeviceName()));
+            }
+        }
     }
 }
 
-void ModbusController::ListAllAvailableDevices(QListWidget* listWidget)
+void ModbusController::DisconnectAllInterfaces()
+{
+    for (auto& entry : _modbusInterfacesMap)
+    {
+        ModbusStrategy* interface = entry.second.get();
+        if (interface->IsConnected())
+        {
+            if (SystemResult::SYSTEM_OK != interface->Disconnect())
+            {
+                logger->LogWarning(TAG, QString("Failed to deinitialize interface: %1").arg(interface->GetDeviceName()));
+            }
+        }
+    }
+}
+
+void ModbusController::ConnectInterface(const QString& cDeviceName)
+{
+    ModbusStrategy* modbusStrategyPtr = GetInterfaceByName(cDeviceName);
+    if (modbusStrategyPtr && !modbusStrategyPtr->IsConnected())
+    {
+        if (SystemResult::SYSTEM_OK != modbusStrategyPtr->Connect())
+        {
+            logger->LogWarning(TAG, QString("Failed to initialize interface: %1").arg(cDeviceName));
+        }
+    }
+}
+
+void ModbusController::DisconnectInterface(const QString& cDeviceName)
+{
+    ModbusStrategy* modbusStrategyPtr = GetInterfaceByName(cDeviceName);
+    if (modbusStrategyPtr && modbusStrategyPtr->IsConnected())
+    {
+        if (SystemResult::SYSTEM_OK != modbusStrategyPtr->Disconnect())
+        {
+            logger->LogWarning(TAG, QString("Failed to deinitialize interface: %1").arg(cDeviceName));
+        }
+    }
+}
+
+
+void ModbusController::UpdateDeviceList(QListWidget* listWidget)
 {
     ModbusStrategy* interface = nullptr;
 
@@ -97,18 +142,6 @@ void ModbusController::ListAllAvailableDevices(QListWidget* listWidget)
                                  .arg(interface->GetConnectionParameters().GetPort());
 
         listWidget->addItem(deviceInfo); // Add the information string to the list widget
-    }
-}
-
-
-
-void ModbusController::terminateController()
-{
-    for (auto& entry : _modbusInterfacesMap)
-    {
-        ModbusStrategy* interface = entry.second.get();
-        if (interface->IsConnected())
-            (void)interface->Disconnect();
     }
 }
 

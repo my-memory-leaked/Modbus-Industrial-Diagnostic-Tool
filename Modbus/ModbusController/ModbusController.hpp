@@ -19,16 +19,18 @@ public:
     SystemResult RemoveInterface(const QString& cDeviceName);
     ModbusStrategy* GetInterfaceByName(const QString& cDeviceName);
 
-    void InitializeInterfaces();
+    void ConnectAllInterfaces();
+    void DisconnectAllInterfaces();
+    void ConnectInterface(const QString& cDeviceName);
+    void DisconnectInterface(const QString& cDeviceName);
 
-    void ListAllAvailableDevices(QListWidget* listWidget);
+    void UpdateDeviceList(QListWidget* listWidget);
 
 private:
     ModbusController();
     ~ModbusController();
     QModbusReply* readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
     QModbusReply* writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
-    void terminateController();
 
     std::map<QString, std::unique_ptr<ModbusStrategy>> _modbusInterfacesMap;
 

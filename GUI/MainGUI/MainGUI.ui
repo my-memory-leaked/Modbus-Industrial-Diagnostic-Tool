@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="AddDevice">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>300</y>
+      <x>60</x>
+      <y>140</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -35,6 +35,19 @@
       <width>621</width>
       <height>91</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="TestButton">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>150</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test</string>
     </property>
    </widget>
   </widget>

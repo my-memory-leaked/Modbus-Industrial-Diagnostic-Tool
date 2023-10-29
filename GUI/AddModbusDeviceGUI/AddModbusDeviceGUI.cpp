@@ -95,12 +95,17 @@ void AddModbusDeviceGUI::accept()
                 mbParams.SetPort(static_cast<quint16>(port));
 
                 std::unique_ptr<ModbusTCPClient> mbTCP = std::make_unique<ModbusTCPClient>();
-                mbTCP->SetDeviceName(ui->DeviceNameLineEdit->text());
+
+                QString deviceName = ui->DeviceNameLineEdit->text();
+                mbTCP->SetDeviceName(deviceName);
                 mbTCP->SetConnectionParameters(mbParams);
 
                 /* Get the singleton instance of the Modbus Controller and add the interface */
                 auto* mbController = &Singleton<ModbusController>::GetInstance();
                 mbController->AddInterface(std::move(mbTCP));
+
+                /* Connect to device */
+                mbController->ConnectInterface(deviceName);
 
                 logger->LogInfo(CLASS_TAG, QString("Successfully added Modbus TCP Interface: %1 for IP %2 and Port %3").arg(ui->DeviceNameLineEdit->text(), ui->IPAddressLineEdit->text()).arg(port));
             }

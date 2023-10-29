@@ -22,6 +22,7 @@ public:
 private slots:
 
     void handleAddDeviceClick();
+    void handleTestButtonClick();
 
 private:
     Ui::MainGUI *ui;
