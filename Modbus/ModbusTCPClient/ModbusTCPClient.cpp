@@ -161,16 +161,16 @@ void ModbusTCPClient::onModbusConnectionStateChanged(QModbusDevice::State state)
         ( void )reconnect();
         break;
     case QModbusDevice::ConnectingState:
-        emit ModbusStateUpdated(GetDeviceName(), state);
+        emitModbusStateUpdated(state);
         break;
     case QModbusDevice::ConnectedState:
-        emit ModbusStateUpdated(GetDeviceName(), state);
+        emitModbusStateUpdated(state);
         break;
     case QModbusDevice::ClosingState:
-        emit ModbusStateUpdated(GetDeviceName(), state);
+        emitModbusStateUpdated(state);
         break;
     default:
-        emit ModbusStateUpdated(GetDeviceName(), state);
+        emitModbusStateUpdated(state);
         break;
     }
 

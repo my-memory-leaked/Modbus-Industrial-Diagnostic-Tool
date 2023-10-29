@@ -24,12 +24,16 @@ private slots:
     void handleAddDeviceClick();
     void handleTestButtonClick();
 
+    void handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState);
+
 private:
     Ui::MainGUI *ui;
 
     ModbusController *_mbController;
 
     void connectSignalsAndSlots() const;
+    QString createDeviceInfoString(const ModbusStrategy* cInterface) const;
+
     void updateDevicesList();
 
 

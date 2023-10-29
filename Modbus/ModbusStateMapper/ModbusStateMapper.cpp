@@ -2,14 +2,14 @@
 
 /* Initialize the mappings */
 std::unordered_map<QModbusDevice::State, QString> ModbusStateMapper::_stateToStringMap = {
-    {QModbusDevice::UnconnectedState, "Unconnected"},
+    {QModbusDevice::UnconnectedState, "Disconnected"},
     {QModbusDevice::ConnectingState, "Connecting"},
     {QModbusDevice::ConnectedState, "Connected"},
     {QModbusDevice::ClosingState, "Closing"}
 };
 
 std::unordered_map<QString, QModbusDevice::State> ModbusStateMapper::_stringToStateMap = {
-    {"Unconnected", QModbusDevice::UnconnectedState},
+    {"Disconnected", QModbusDevice::UnconnectedState},
     {"Connecting", QModbusDevice::ConnectingState},
     {"Connected", QModbusDevice::ConnectedState},
     {"Closing", QModbusDevice::ClosingState}

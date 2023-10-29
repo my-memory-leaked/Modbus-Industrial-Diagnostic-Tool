@@ -14,9 +14,6 @@ public:
     QModbusReply *ReadData(const QModbusDataUnit &cData) override;
     QModbusReply *WriteData(const QModbusDataUnit &cData) override;
 
-signals:
-    void ModbusStateUpdated(const QString& cDeviceName, const QModbusDevice::State& cState);
-
 private slots:
     void onModbusConnectionStateChanged(QModbusDevice::State state);
 
