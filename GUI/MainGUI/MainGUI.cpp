@@ -94,11 +94,12 @@ QString MainGUI::createDeviceInfoString(const ModbusStrategy* cInterface) const
     {
     case ModbusStrategy::ModbusInterfaceType::TCP:
         retVal = QString("Device Name: %1 | IP Address: %2 | Port: %3 | State: %4")
-                     .arg(cInterface->GetDeviceName())
-                     .arg(cInterface->GetConnectionParameters().GetIpAddress())
-                     .arg(QString::number(cInterface->GetConnectionParameters().GetPort()))
-                     .arg(ModbusStateMapper::GetInstance().StateToString(cInterface->GetState()));
+                     .arg(cInterface->GetDeviceName(),
+                          cInterface->GetConnectionParameters().GetIpAddress(),
+                          QString::number(cInterface->GetConnectionParameters().GetPort()),
+                          ModbusStateMapper::GetInstance().StateToString(cInterface->GetState()));
     break;
+
 
     case ModbusStrategy::ModbusInterfaceType::RTU:
         // Return RTU-specific info string
