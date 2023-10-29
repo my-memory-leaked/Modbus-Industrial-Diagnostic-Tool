@@ -1,5 +1,4 @@
 #pragma once
-#include <QObject>
 #include <ModbusClientStrategy.hpp>
 
 class ModbusTCPClient : public ModbusClientStrategy
@@ -19,7 +18,7 @@ signals:
     void ModbusStateUpdated(const QString& cDeviceName, const QModbusDevice::State& cState);
 
 private slots:
-    void onModbusConnectionStateChanged(QModbusDevice::State state); // Slot to handle state changes
+    void onModbusConnectionStateChanged(QModbusDevice::State state);
 
 private:
     static constexpr const char* const MODBUS_TCP_DEVICE_NAME {"ModbusTCPDevice"};

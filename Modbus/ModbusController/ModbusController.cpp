@@ -1,7 +1,6 @@
 #include <ModbusController.hpp>
 #include <Logger.hpp>
 #include <ModbusTCPClient.hpp>
-#include <ModbusStateMapper.hpp>
 #include <utility>
 
 static auto* logger = &Singleton<Logger>::GetInstance();
@@ -15,7 +14,7 @@ ModbusController::~ModbusController()
     DisconnectAllInterfaces();
 }
 
-SystemResult ModbusController::AddInterface(std::unique_ptr<ModbusStrategy> modbusStrategyPtr)
+SystemResult ModbusController::AddInterface(std::shared_ptr<ModbusStrategy> modbusStrategyPtr)
 {
     SystemResult status = SystemResult::SYSTEM_OK;
 
@@ -70,6 +69,11 @@ ModbusStrategy* ModbusController::GetInterfaceByName(const QString& deviceName)
     }
 
     return interfacePtr;
+}
+
+const std::map<QString, std::shared_ptr<ModbusStrategy>> &ModbusController::GetInterfacesMap() const
+{
+    return _modbusInterfacesMap;
 }
 
 void ModbusController::ConnectAllInterfaces()
@@ -127,25 +131,6 @@ void ModbusController::DisconnectInterface(const QString& cDeviceName)
 }
 
 
-void ModbusController::UpdateDeviceList(QListWidget* listWidget)
-{
-    ModbusStrategy* interface = nullptr;
-
-    listWidget->clear();
-
-    for (auto& entry : _modbusInterfacesMap)
-    {
-        interface = entry.second.get();
-
-        QString deviceInfo = QString("Device Name: %1 | IP Address: %2 | Port: %3 | State: %4")
-                                 .arg(interface->GetDeviceName())
-                                 .arg(interface->GetConnectionParameters().GetIpAddress())
-                                 .arg(interface->GetConnectionParameters().GetPort())
-                                 .arg(ModbusStateMapper::GetInstance().StateToString(interface->GetState()));
-
-        listWidget->addItem(deviceInfo); // Add the information string to the list widget
-    }
-}
 
 QModbusReply* ModbusController::readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
 {
@@ -162,3 +147,5 @@ QModbusReply* ModbusController::writeRegister(ModbusStrategy* modbusStrategyPtr,
     // TODO: Implement as per your requirements
     return nullptr;
 }
+
+

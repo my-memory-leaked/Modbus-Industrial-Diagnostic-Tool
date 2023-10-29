@@ -19,3 +19,8 @@ QModbusDevice::State ModbusStrategy::GetState() const
 {
     return _state;
 }
+
+ModbusStrategy::ModbusInterfaceType ModbusStrategy::GetInterfaceType() const
+{
+    return _type;
+}

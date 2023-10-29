@@ -184,6 +184,7 @@ void ModbusTCPClient::initializeModbusClient()
 {
     this->SetDeviceName(MODBUS_TCP_DEVICE_NAME);
     _modbusClient = std::make_unique<QModbusTcpClient>();
+    _type = ModbusStrategy::ModbusInterfaceType::TCP;
 }
 
 void ModbusTCPClient::connectSignalsAndSlots() const

@@ -29,6 +29,8 @@ private:
 
     ModbusController *_mbController;
 
-
     void connectSignalsAndSlots() const;
+    void updateDevicesList();
+
+
 };
