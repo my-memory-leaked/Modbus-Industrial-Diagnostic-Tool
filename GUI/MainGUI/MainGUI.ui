@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>770</width>
+    <height>513</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="AddDevice">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>300</y>
+      <x>60</x>
+      <y>140</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -27,14 +27,37 @@
      <string>Add device</string>
     </property>
    </widget>
+   <widget class="QListWidget" name="DevicesListWidget">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>40</y>
+      <width>621</width>
+      <height>91</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="TestButton">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>150</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>21</height>
+     <width>770</width>
+     <height>17</height>
     </rect>
    </property>
   </widget>

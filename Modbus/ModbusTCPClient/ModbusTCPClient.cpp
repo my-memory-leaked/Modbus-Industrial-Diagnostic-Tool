@@ -5,6 +5,7 @@
 #include <QVariant>
 #include <ModbusRegisterTypeMapper.hpp>
 #include <ModbusParser.hpp>
+#include <ModbusStateMapper.hpp>
 
 
 static auto* logger = &Singleton<Logger>::GetInstance();
@@ -46,7 +47,7 @@ SystemResult ModbusTCPClient::Connect()
         if(!_modbusClient->connectDevice())
             retVal = SystemResult::SYSTEM_ERROR;
         else
-            logger->LogInfo( CLASS_TAG, "Connected to device ID: " + QString::number(GetDeviceID())
+            logger->LogInfo( CLASS_TAG, "Connecting to device ID: " + QString::number(GetDeviceID())
                              + " IP: " + GetConnectionParameters().GetIpAddress()
                              + " Port: " + QString::number(GetConnectionParameters().GetPort()) );
         _isConnected = true;
@@ -63,9 +64,9 @@ SystemResult ModbusTCPClient::Disconnect()
     {
         _modbusClient->disconnectDevice();
 
-        logger->LogInfo( CLASS_TAG, "Disconnected device ID: " + QString::number(GetDeviceID())
+        logger->LogInfo( CLASS_TAG, "Disconnecing from device ID: " + QString::number(GetDeviceID())
                                        + " IP: " + GetConnectionParameters().GetIpAddress()
-                                       + " Port: " + GetConnectionParameters().GetPort() );
+                                       + " Port: " +QString::number( GetConnectionParameters().GetPort()) );
         _isConnected = false;
     }
     else
@@ -150,40 +151,64 @@ QModbusReply *ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
 
 void ModbusTCPClient::onModbusConnectionStateChanged(QModbusDevice::State state)
 {
-    QString stateString;
+    _state = state;
+    ModbusStateMapper* mbMapper = &ModbusStateMapper::GetInstance();
+    QString cStateString = mbMapper->StateToString(state);;
 
     switch (state)
     {
     case QModbusDevice::UnconnectedState:
-        stateString = "Disconnected";
+        ( void )reconnect();
         break;
     case QModbusDevice::ConnectingState:
-        stateString = "Connecting";
+        emitModbusStateUpdated(state);
         break;
     case QModbusDevice::ConnectedState:
-        stateString = "Connected";
+        emitModbusStateUpdated(state);
         break;
     case QModbusDevice::ClosingState:
-        stateString = "Closing";
+        emitModbusStateUpdated(state);
         break;
     default:
-        stateString = "Unknown state";
+        emitModbusStateUpdated(state);
         break;
     }
 
     logger->LogInfo(CLASS_TAG, "Modbus device ID: " + QString::number(GetDeviceID()) +
                                    " IP: " + GetConnectionParameters().GetIpAddress() +
                                    " Port: " + QString::number(GetConnectionParameters().GetPort()) +
-                                   " State changed: " + stateString);
+                                   " State changed: " + cStateString);
 }
 
 void ModbusTCPClient::initializeModbusClient()
 {
     this->SetDeviceName(MODBUS_TCP_DEVICE_NAME);
     _modbusClient = std::make_unique<QModbusTcpClient>();
+    _type = ModbusStrategy::ModbusInterfaceType::TCP;
 }
 
 void ModbusTCPClient::connectSignalsAndSlots() const
 {
     connect(_modbusClient.get(), &QModbusTcpClient::stateChanged, this, &ModbusTCPClient::onModbusConnectionStateChanged);
+}
+
+void ModbusTCPClient::reconnect()
+{
+    /* If the device is connected or in any other state, we first disconnect it */
+    if (this->IsConnected() ||
+        this->_modbusClient->state()!= QModbusDevice::UnconnectedState)
+    {
+        (void)this->Disconnect();
+    }
+
+    logger->LogInfo(CLASS_TAG, "Reconnecting Modbus device ID: " + QString::number(GetDeviceID()) +
+                                   " IP: " + GetConnectionParameters().GetIpAddress() +
+                                   " Port: " + QString::number(GetConnectionParameters().GetPort()));
+
+    /* Now, attempt to reconnect */
+    if (SystemResult::SYSTEM_OK != Connect())
+    {
+        logger->LogWarning(CLASS_TAG, QString("Failed to reconnect to interface: %1").arg(GetDeviceName()));
+    }
+
 }

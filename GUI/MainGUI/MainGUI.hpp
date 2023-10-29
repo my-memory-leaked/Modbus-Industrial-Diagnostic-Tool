@@ -22,13 +22,19 @@ public:
 private slots:
 
     void handleAddDeviceClick();
+    void handleTestButtonClick();
+
+    void handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState);
 
 private:
     Ui::MainGUI *ui;
 
-    ModbusConnectionParameters _mbParams;
-    static Singleton<ModbusController> _mbController;
-
+    ModbusController *_mbController;
 
     void connectSignalsAndSlots() const;
+    QString createDeviceInfoString(const ModbusStrategy* cInterface) const;
+
+    void updateDevicesList();
+
+
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <memory>
 
 namespace Ui {
 class AddModbusDeviceGUI;
@@ -16,7 +17,10 @@ public:
 
 private slots:
     void onConnectionInterfaceComboBox(int index);
+    void accept() override;
 
 private:
-    Ui::AddModbusDeviceGUI *ui;
+    std::unique_ptr<Ui::AddModbusDeviceGUI> ui;
+    static constexpr const char CLASS_TAG[] {"[AddModbusDeviceGUI]"};
+    static const QRegularExpression _ipAddressRegex;
 };

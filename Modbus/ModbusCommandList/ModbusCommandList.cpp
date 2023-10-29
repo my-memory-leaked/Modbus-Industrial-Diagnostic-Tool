@@ -1,3 +1,3 @@
 #include "ModbusCommandList.hpp"
 
-ModbusCommandList::ModbusCommandList() {}
+// ModbusCommandList::ModbusCommandList() {}
