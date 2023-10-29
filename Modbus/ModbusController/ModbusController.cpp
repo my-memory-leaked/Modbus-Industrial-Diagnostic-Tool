@@ -1,6 +1,7 @@
 #include <ModbusController.hpp>
 #include <Logger.hpp>
 #include <ModbusTCPClient.hpp>
+#include <ModbusStateMapper.hpp>
 #include <utility>
 
 static auto* logger = &Singleton<Logger>::GetInstance();
@@ -136,10 +137,11 @@ void ModbusController::UpdateDeviceList(QListWidget* listWidget)
     {
         interface = entry.second.get();
 
-        QString deviceInfo = QString("Device Name: %1 | IP Address: %2 | Port: %3")
+        QString deviceInfo = QString("Device Name: %1 | IP Address: %2 | Port: %3 | State: %4")
                                  .arg(interface->GetDeviceName())
                                  .arg(interface->GetConnectionParameters().GetIpAddress())
-                                 .arg(interface->GetConnectionParameters().GetPort());
+                                 .arg(interface->GetConnectionParameters().GetPort())
+                                 .arg(ModbusStateMapper::GetInstance().StateToString(interface->GetState()));
 
         listWidget->addItem(deviceInfo); // Add the information string to the list widget
     }

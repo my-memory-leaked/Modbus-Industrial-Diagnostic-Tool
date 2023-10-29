@@ -33,6 +33,7 @@ include_directories(
     Modbus/ModbusClientStrategy
     Modbus/ModbusTCPClient
     Modbus/ModbusRegisterTypeMapper
+    Modbus/ModbusStateMapper
     Modbus/ModbusParser
 
 
@@ -63,6 +64,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusClientStrategy/ModbusClientStrategy.hpp Modbus/ModbusClientStrategy/ModbusClientStrategy.cpp
         Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.hpp Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.cpp
         Modbus/ModbusParser/ModbusParser.hpp Modbus/ModbusParser/ModbusParser.cpp
+        Modbus/ModbusStateMapper/ModbusStateMapper.hpp Modbus/ModbusStateMapper/ModbusStateMapper.cpp
 
 
 

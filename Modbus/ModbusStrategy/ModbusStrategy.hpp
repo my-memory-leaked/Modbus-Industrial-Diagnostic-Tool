@@ -17,8 +17,12 @@ public:
     virtual SystemResult SetConnectionParameters(const ModbusConnectionParameters &cConnectionParameters);
     virtual ModbusConnectionParameters GetConnectionParameters() const;
 
+    virtual QModbusDevice::State GetState() const;
+
     virtual QModbusReply *ReadData(const QModbusDataUnit &cData) = 0;
     virtual QModbusReply *WriteData(const QModbusDataUnit &cData) = 0;
 protected:
     ModbusConnectionParameters _connectionParameters;
+    QModbusDevice::State _state;
+
 };

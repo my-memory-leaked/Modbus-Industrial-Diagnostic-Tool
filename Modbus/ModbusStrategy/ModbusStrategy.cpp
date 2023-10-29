@@ -14,3 +14,8 @@ ModbusConnectionParameters ModbusStrategy::GetConnectionParameters() const
 {
     return _connectionParameters;
 }
+
+QModbusDevice::State ModbusStrategy::GetState() const
+{
+    return _state;
+}

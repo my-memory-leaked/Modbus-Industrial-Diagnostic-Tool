@@ -5,6 +5,7 @@
 #include <QVariant>
 #include <ModbusRegisterTypeMapper.hpp>
 #include <ModbusParser.hpp>
+#include <ModbusStateMapper.hpp>
 
 
 static auto* logger = &Singleton<Logger>::GetInstance();
@@ -150,32 +151,33 @@ QModbusReply *ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
 
 void ModbusTCPClient::onModbusConnectionStateChanged(QModbusDevice::State state)
 {
-    QString stateString;
+    _state = state;
+    ModbusStateMapper* mbMapper = &ModbusStateMapper::GetInstance();
+    QString cStateString = mbMapper->StateToString(state);;
 
     switch (state)
     {
     case QModbusDevice::UnconnectedState:
-        stateString = "Disconnected";
         ( void )reconnect();
         break;
     case QModbusDevice::ConnectingState:
-        stateString = "Connecting";
+        emit ModbusStateUpdated(GetDeviceName(), state);
         break;
     case QModbusDevice::ConnectedState:
-        stateString = "Connected";
+        emit ModbusStateUpdated(GetDeviceName(), state);
         break;
     case QModbusDevice::ClosingState:
-        stateString = "Closing";
+        emit ModbusStateUpdated(GetDeviceName(), state);
         break;
     default:
-        stateString = "Unknown state";
+        emit ModbusStateUpdated(GetDeviceName(), state);
         break;
     }
 
     logger->LogInfo(CLASS_TAG, "Modbus device ID: " + QString::number(GetDeviceID()) +
                                    " IP: " + GetConnectionParameters().GetIpAddress() +
                                    " Port: " + QString::number(GetConnectionParameters().GetPort()) +
-                                   " State changed: " + stateString);
+                                   " State changed: " + cStateString);
 }
 
 void ModbusTCPClient::initializeModbusClient()
