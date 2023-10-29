@@ -38,8 +38,43 @@ void MainGUI::handleAddDeviceClick()
 
 void MainGUI::handleTestButtonClick()
 {
+    ModbusStrategy* interface = _mbController->GetInterfaceByName("localhost");
+    if(!interface)
+        return;
 
+    int startAddress = 0;
+    int numberOfRegisters = 1;
 
+    QModbusDataUnit query(QModbusDataUnit::HoldingRegisters, startAddress, numberOfRegisters);
+    QModbusReply* result = interface->ReadData(query);
+
+    if(result)
+    {
+        connect(result, &QModbusReply::finished, this, &MainGUI::handleModbusReply);
+    }
+}
+
+void MainGUI::handleModbusReply()
+{
+    QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
+    if(!reply)
+        return;
+
+    if(reply->error() == QModbusDevice::NoError)
+    {
+        const QModbusDataUnit unit = reply->result();
+        for (uint i = 0; i < unit.valueCount(); i++)
+        {
+            int value = unit.value(i);
+            qDebug() << "Register address:" << unit.startAddress() + i << "Value:" << value;
+        }
+    }
+    else
+    {
+        qDebug() << "Error reading modbus registers:" << reply->errorString();
+    }
+
+    reply->deleteLater();  // Cleanup the reply object
 }
 
 void MainGUI::handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState)

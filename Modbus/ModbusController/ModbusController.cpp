@@ -132,20 +132,3 @@ void ModbusController::DisconnectInterface(const QString& cDeviceName)
 
 
 
-QModbusReply* ModbusController::readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
-{
-    QModbusReply* result = nullptr;
-
-    QModbusDataUnit query(cDataUnit, startingAddress, numberOfRegisters);
-    result = modbusStrategyPtr->ReadData(query);
-
-    return result;
-}
-
-QModbusReply* ModbusController::writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters)
-{
-    // TODO: Implement as per your requirements
-    return nullptr;
-}
-
-

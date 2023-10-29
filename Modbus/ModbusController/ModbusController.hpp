@@ -33,8 +33,6 @@ private:
     static constexpr const char* TAG {"[ModbusController]"};
     static constexpr const char* NULL_PTR_MESSAGE {"Nullptr occurred!"};
 
-    QModbusReply* readRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
-    QModbusReply* writeRegister(ModbusStrategy* modbusStrategyPtr, QModbusDataUnit::RegisterType cDataUnit, int startingAddress, quint16 numberOfRegisters);
 };
 
 

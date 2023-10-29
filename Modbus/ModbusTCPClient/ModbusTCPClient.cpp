@@ -81,12 +81,13 @@ SystemResult ModbusTCPClient::Disconnect()
 QModbusReply *ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 {
     QModbusReply* retVal = nullptr;
-    SystemResult result = SystemResult::SYSTEM_ERROR;
+    SystemResult result = SystemResult::SYSTEM_OK;
 
     if (! cData.isValid() )
+    {
         result = SystemResult::SYSTEM_INVALID_ARGUMENT;
-    else
         logger->LogDebug( CLASS_TAG, "Invalid QModbusDataUnit!" );
+    }
 
 
     if ( !IsConnected() )
