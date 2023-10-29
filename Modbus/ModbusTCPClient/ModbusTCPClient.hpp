@@ -24,6 +24,7 @@ private:
 
     void initializeModbusClient();
     void connectSignalsAndSlots() const;
+    void reconnect();
 
 };
 
