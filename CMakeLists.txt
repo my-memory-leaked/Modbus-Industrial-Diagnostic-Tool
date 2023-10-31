@@ -27,6 +27,8 @@ include_directories(
     Logger
     Modbus
 
+    JSON
+
     Modbus/ModbusStrategy
     Modbus/ModbusConnectionParameters
     Modbus/ModbusController
@@ -65,7 +67,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.hpp Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.cpp
         Modbus/ModbusParser/ModbusParser.hpp Modbus/ModbusParser/ModbusParser.cpp
         Modbus/ModbusStateMapper/ModbusStateMapper.hpp Modbus/ModbusStateMapper/ModbusStateMapper.cpp
-
+        JSON/JsonToModbusConverter.hpp JSON/JsonToModbusConverter.cpp
+        JSON/TestData.json
 
 
     )

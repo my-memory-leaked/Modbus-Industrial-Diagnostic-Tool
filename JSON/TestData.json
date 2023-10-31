@@ -1,0 +1,19 @@
+{
+    "DiscreteInputs": [
+        {"address": 10001, "value": 1, "delay": 1000},
+        {"address": 10002, "value": 0, "delay": 5000},
+        {"address": 10003, "value": 1, "delay": 7000}
+    ],
+    "Coils": [
+        {"address": 1, "value": 0, "delay": 2000},
+        {"address": 2, "value": 1, "delay": 6000}
+    ],
+    "InputRegisters": [
+        {"address": 30001, "value": 1234, "delay": 1500},
+        {"address": 30002, "value": 5678, "delay": 3500}
+    ],
+    "HoldingRegisters": [
+        {"address": 40001, "value": 4321, "delay": 2500},
+        {"address": 40002, "value": 8765, "delay": 4500}
+    ]
+}
