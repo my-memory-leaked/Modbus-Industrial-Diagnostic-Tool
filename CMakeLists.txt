@@ -23,12 +23,14 @@ include_directories(
     ApplicationConstant
     SystemResult
     Singleton
+    Device
     DeviceInterface
     Logger
     Modbus
 
-    JSON
 
+    JSON
+    Modbus/ModbusRegister
     Modbus/ModbusStrategy
     Modbus/ModbusConnectionParameters
     Modbus/ModbusController
@@ -69,6 +71,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusStateMapper/ModbusStateMapper.hpp Modbus/ModbusStateMapper/ModbusStateMapper.cpp
         JSON/JsonToModbusConverter.hpp JSON/JsonToModbusConverter.cpp
         JSON/TestData.json
+        Device/Device.hpp Device/Device.cpp
+        Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
 
 
     )
