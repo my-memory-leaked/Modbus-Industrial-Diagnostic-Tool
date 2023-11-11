@@ -32,3 +32,20 @@ SystemResult Device::AddRegister(const ModbusRegister& cModbusRegister)
 
     return result;
 }
+
+ModbusRegister Device::GetRegisterByName(const QString& cRegisterName)
+{
+    ModbusRegister retVal;
+    logger->LogInfo(TAG, "Requested to get register " + cRegisterName);
+
+    for (ModbusRegister& existingRegister : _deviceRegisters)
+    {
+        if (existingRegister.GetName() == cRegisterName)
+        {
+            retVal = existingRegister;
+            logger->LogInfo(TAG, "Found register " + cRegisterName);
+        }
+    }
+
+    return retVal;
+}

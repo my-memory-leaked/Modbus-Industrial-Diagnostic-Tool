@@ -12,6 +12,7 @@ public:
     Device(const QString& cDeviceName);
 
     SystemResult AddRegister(const ModbusRegister& cModbusRegister);
+    ModbusRegister GetRegisterByName(const QString& cRegisterName);
 
 private:
     QString _deviceName;
