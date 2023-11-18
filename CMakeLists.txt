@@ -39,7 +39,10 @@ include_directories(
     Modbus/ModbusRegisterTypeMapper
     Modbus/ModbusStateMapper
     Modbus/ModbusParser
+    Modbus/ModbusDeviceInterface
 
+    Tests
+    Tests/TestInterface
 
     ExceptionHandling/ModbusException
 
@@ -71,8 +74,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusStateMapper/ModbusStateMapper.hpp Modbus/ModbusStateMapper/ModbusStateMapper.cpp
         JSON/JsonToModbusConverter.hpp JSON/JsonToModbusConverter.cpp
         JSON/TestData.json
-        Device/Device.hpp Device/Device.cpp
+
         Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
+        Tests/TestInterface/TestInterface.hpp Tests/TestInterface/TestInterface.cpp
+        Modbus/ModbusDeviceInterface/ModbusDeviceInterface.hpp Modbus/ModbusDeviceInterface/ModbusDeviceInterface.cpp
+
 
 
     )

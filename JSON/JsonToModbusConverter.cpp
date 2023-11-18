@@ -2,6 +2,8 @@
 #include <ModbusRegisterTypeMapper.hpp>
 #include <Logger.hpp>
 
+static auto* logger = &Singleton<Logger>::GetInstance();
+
 JsonToModbusConverter::JsonToModbusConverter() {}
 
 JsonToModbusConverter::~JsonToModbusConverter() {}

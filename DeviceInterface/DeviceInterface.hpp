@@ -19,7 +19,7 @@ public:
     virtual ~DeviceInterface();
 
 protected:
-    bool _isConnected = false;
+    bool _isConnected;
     QString _deviceName;
     quint32 _deviceID;
 };

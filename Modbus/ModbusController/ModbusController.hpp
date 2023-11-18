@@ -26,7 +26,7 @@ public:
     void ConnectInterface(const QString& cDeviceName);
     void DisconnectInterface(const QString& cDeviceName);
 
-private:
+protected:
     ModbusController();
     ~ModbusController();
     std::map<QString, std::shared_ptr<ModbusStrategy>> _modbusInterfacesMap;

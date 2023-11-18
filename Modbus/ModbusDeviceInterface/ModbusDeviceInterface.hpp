@@ -1,22 +1,14 @@
 #pragma once
-#include <QString>
-#include <QVector>
-#include <SystemResult.hpp>
+#include <DeviceInterface.hpp>
 #include <ModbusRegister.hpp>
 
-
-class Device
+class ModbusDeviceInterface: public DeviceInterface
 {
 public:
-
-    Device(const QString& cDeviceName);
-
     SystemResult AddRegister(const ModbusRegister& cModbusRegister);
     ModbusRegister GetRegisterByName(const QString& cRegisterName);
-
-private:
-    QString _deviceName;
+protected:
     QVector<ModbusRegister> _deviceRegisters;
 
-    static constexpr const char TAG[] {"[Device]"};
+    static constexpr const char TAG[] {"[ModbusDeviceInterface]"};
 };

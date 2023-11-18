@@ -1,13 +1,10 @@
-#include <Device.hpp>
+#include <ModbusDeviceInterface.hpp>
 #include <Logger.hpp>
 
 auto* logger = &Logger::GetInstance();
 
-Device::Device(const QString& cDeviceName) : _deviceName(cDeviceName)
-{
-}
 
-SystemResult Device::AddRegister(const ModbusRegister& cModbusRegister)
+SystemResult ModbusDeviceInterface::AddRegister(const ModbusRegister& cModbusRegister)
 {
     SystemResult result = SystemResult::SYSTEM_OK;
 
@@ -33,7 +30,7 @@ SystemResult Device::AddRegister(const ModbusRegister& cModbusRegister)
     return result;
 }
 
-ModbusRegister Device::GetRegisterByName(const QString& cRegisterName)
+ModbusRegister ModbusDeviceInterface::GetRegisterByName(const QString& cRegisterName)
 {
     ModbusRegister retVal;
     logger->LogInfo(TAG, "Requested to get register " + cRegisterName);

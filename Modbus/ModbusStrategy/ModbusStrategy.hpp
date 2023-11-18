@@ -7,7 +7,11 @@
 #include <SystemResult.hpp>
 #include <ModbusConnectionParameters.hpp>
 
-class ModbusStrategy : public DeviceInterface
+
+#include <ModbusDeviceInterface.hpp>
+
+
+class ModbusStrategy : public ModbusDeviceInterface
 {
     Q_OBJECT
 public:

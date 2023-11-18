@@ -18,4 +18,5 @@ public:
 private:
     JsonToModbusConverter();
     ~JsonToModbusConverter();
+    static constexpr const char TAG[] = "[JsonToModbusConverter]";
 };

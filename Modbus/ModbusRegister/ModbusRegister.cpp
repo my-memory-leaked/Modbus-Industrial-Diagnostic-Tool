@@ -16,6 +16,14 @@ ModbusRegister::ModbusRegister(const ModbusRegister& cModbusRegister)
 {
 }
 
+bool ModbusRegister::operator==(const ModbusRegister& other) const
+{
+    return this->_registerName == other._registerName
+           && this->_qModbusDataUnit.registerType() == other._qModbusDataUnit.registerType()
+           && this->_qModbusDataUnit.startAddress() == other._qModbusDataUnit.startAddress()
+           && this->_qModbusDataUnit.values() == other._qModbusDataUnit.values();
+}
+
 void ModbusRegister::SetName(const QString& cName)
 {
     if(!cName.isEmpty())
@@ -33,11 +41,7 @@ QString ModbusRegister::GetName() const
     return _registerName;
 }
 
-
-bool ModbusRegister::operator==(const ModbusRegister& other) const
+QModbusDataUnit ModbusRegister::GetQModbusdataUnit() const
 {
-    return this->_registerName == other._registerName
-           && this->_qModbusDataUnit.registerType() == other._qModbusDataUnit.registerType()
-           && this->_qModbusDataUnit.startAddress() == other._qModbusDataUnit.startAddress()
-           && this->_qModbusDataUnit.values() == other._qModbusDataUnit.values();
+    return _qModbusDataUnit;
 }
