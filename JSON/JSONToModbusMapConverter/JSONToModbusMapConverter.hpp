@@ -8,15 +8,15 @@
 #include <Singleton.hpp>
 
 
-class JsonToModbusConverter : public Singleton<JsonToModbusConverter>
+class JsonToModbusMapConverter : public Singleton<JsonToModbusMapConverter>
 {
-    friend class Singleton<JsonToModbusConverter>;
+    friend class Singleton<JsonToModbusMapConverter>;
 public:
     QModbusDataUnitMap FromJson(const QByteArray &cJsonData);
     QModbusDataUnitMap FromJsonFile(const QString &cFilePath);
 
 private:
-    JsonToModbusConverter();
-    ~JsonToModbusConverter();
+    JsonToModbusMapConverter();
+    ~JsonToModbusMapConverter();
     static constexpr const char TAG[] = "[JsonToModbusConverter]";
 };

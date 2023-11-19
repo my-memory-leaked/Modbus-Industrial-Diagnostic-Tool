@@ -1,14 +1,14 @@
-#include <JsonToModbusConverter.hpp>
+#include <JsonToModbusMapConverter.hpp>
 #include <ModbusRegisterTypeMapper.hpp>
 #include <Logger.hpp>
 
 static auto* logger = &Singleton<Logger>::GetInstance();
 
-JsonToModbusConverter::JsonToModbusConverter() {}
+JsonToModbusMapConverter::JsonToModbusMapConverter() {}
 
-JsonToModbusConverter::~JsonToModbusConverter() {}
+JsonToModbusMapConverter::~JsonToModbusMapConverter() {}
 
-QModbusDataUnitMap JsonToModbusConverter::FromJson(const QByteArray &cJsonData)
+QModbusDataUnitMap JsonToModbusMapConverter::FromJson(const QByteArray &cJsonData)
 {
     QModbusDataUnitMap resultMap;
 
@@ -50,7 +50,7 @@ QModbusDataUnitMap JsonToModbusConverter::FromJson(const QByteArray &cJsonData)
     return resultMap;
 }
 
-QModbusDataUnitMap JsonToModbusConverter::FromJsonFile(const QString &cFilePath)
+QModbusDataUnitMap JsonToModbusMapConverter::FromJsonFile(const QString &cFilePath)
 {
     QFile file(cFilePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
