@@ -12,8 +12,8 @@ class JsonToModbusConverter : public Singleton<JsonToModbusConverter>
 {
     friend class Singleton<JsonToModbusConverter>;
 public:
-    QModbusDataUnitMap FromJson(const QByteArray &jsonData);
-    QModbusDataUnitMap FromJsonFile(const QString &filePath);
+    QModbusDataUnitMap FromJson(const QByteArray &cJsonData);
+    QModbusDataUnitMap FromJsonFile(const QString &cFilePath);
 
 private:
     JsonToModbusConverter();

@@ -8,11 +8,11 @@ JsonToModbusConverter::JsonToModbusConverter() {}
 
 JsonToModbusConverter::~JsonToModbusConverter() {}
 
-QModbusDataUnitMap JsonToModbusConverter::FromJson(const QByteArray &jsonData)
+QModbusDataUnitMap JsonToModbusConverter::FromJson(const QByteArray &cJsonData)
 {
     QModbusDataUnitMap resultMap;
 
-    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+    QJsonDocument doc = QJsonDocument::fromJson(cJsonData);
     QJsonObject root = doc.object();
 
     for (auto it = root.begin(); it != root.end(); ++it)
@@ -50,11 +50,11 @@ QModbusDataUnitMap JsonToModbusConverter::FromJson(const QByteArray &jsonData)
     return resultMap;
 }
 
-QModbusDataUnitMap JsonToModbusConverter::FromJsonFile(const QString &filePath)
+QModbusDataUnitMap JsonToModbusConverter::FromJsonFile(const QString &cFilePath)
 {
-    QFile file(filePath);
+    QFile file(cFilePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return QModbusDataUnitMap();  // handle the error as you see fit
+        return QModbusDataUnitMap();
 
     QByteArray jsonData = file.readAll();
     return FromJson(jsonData);

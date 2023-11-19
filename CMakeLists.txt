@@ -30,6 +30,8 @@ include_directories(
 
 
     JSON
+    JSON/JSONToModbusRegisterConventer
+
     Modbus/ModbusRegister
     Modbus/ModbusStrategy
     Modbus/ModbusConnectionParameters
@@ -78,6 +80,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
         Tests/TestInterface/TestInterface.hpp Tests/TestInterface/TestInterface.cpp
         Modbus/ModbusDeviceInterface/ModbusDeviceInterface.hpp Modbus/ModbusDeviceInterface/ModbusDeviceInterface.cpp
+        JSON/JSONToModbusRegisterConventer/JSONToModbusRegisterConventer.hpp JSON/JSONToModbusRegisterConventer/JSONToModbusRegisterConventer.cpp
 
 
 

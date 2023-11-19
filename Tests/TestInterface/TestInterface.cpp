@@ -1,3 +1,4 @@
-#include "TestInterface.hpp"
+#include <TestInterface.hpp>
 
 TestInterface::TestInterface() {}
+TestInterface::~TestInterface() {}

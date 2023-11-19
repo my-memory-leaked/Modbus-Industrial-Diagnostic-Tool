@@ -1,5 +1,6 @@
 #include <ModbusDeviceInterface.hpp>
 #include <Logger.hpp>
+#include <JSONToModbusRegisterConventer.hpp>
 
 auto* logger = &Logger::GetInstance();
 
@@ -43,6 +44,25 @@ ModbusRegister ModbusDeviceInterface::GetRegisterByName(const QString& cRegister
             logger->LogInfo(TAG, "Found register " + cRegisterName);
         }
     }
+
+    return retVal;
+}
+
+SystemResult ModbusDeviceInterface::LoadRegistersFromJSON(const QString& cFilePath)
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+
+    auto* jsonConventer = &JSONToModbusRegisterConventer::GetInstance();
+    QVector<ModbusRegister> registers = jsonConventer->FromJsonFile(cFilePath);
+
+    if (registers.isEmpty())
+    {
+        retVal = SystemResult::SYSTEM_ERROR;
+        logger->LogCritical(TAG, "Could not load modbus register data from JSON!");
+    }
+
+    if ( SystemResult::SYSTEM_OK == retVal )
+         _deviceRegisters = registers;
 
     return retVal;
 }
