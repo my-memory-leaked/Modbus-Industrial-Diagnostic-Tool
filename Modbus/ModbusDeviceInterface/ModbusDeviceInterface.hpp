@@ -8,6 +8,7 @@ public:
     SystemResult AddRegister(const ModbusRegister& cModbusRegister);
     ModbusRegister GetRegisterByName(const QString& cRegisterName);
 
+    QModbusDataUnit GetQModbusDataUnitByName(const QString& cRegisterName);
     SystemResult LoadRegistersFromJSON(const QString& cFilePath);
 
 protected:

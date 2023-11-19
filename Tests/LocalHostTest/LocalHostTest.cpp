@@ -1,6 +1,7 @@
 #include <LocalHostTest.hpp>
 #include <Logger.hpp>
 #include <ModbusController.hpp>
+#include <QCoreApplication>
 
 static auto* logger = &Logger::GetInstance();
 
@@ -29,8 +30,17 @@ void LocalHostTest::RunTest()
         return;
     }
 
+    QString appFilePath = QCoreApplication::applicationDirPath();
+    // QString jsonFilePath = appFilePath + "/JSON/TestData.json";
+    QString jsonFilePath = "X:\\Repositories\\Modbus-Industrial-Diagnostic-Tool\\Modbus-Industrial-Diagnostic-Tool\\JSON\\TestData.json";
+    logger->LogInfo(TAG, "Test json path: " + jsonFilePath);
+
+    mbStrategy->LoadRegistersFromJSON(jsonFilePath);
 
 
+    QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("Siema");
+
+    mbStrategy->ReadData(data);
 
 }
 

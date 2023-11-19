@@ -9,6 +9,8 @@
 #include <ModbusStateMapper.hpp>
 #include <ModbusTCPClient.hpp>
 
+#include <LocalHostTest.hpp>
+
 
 MainGUI::MainGUI(QWidget *parent)
     : QMainWindow(parent)
@@ -45,13 +47,16 @@ void MainGUI::handleTestButtonClick()
     int startAddress = 0;
     int numberOfRegisters = 1;
 
-    QModbusDataUnit query(QModbusDataUnit::HoldingRegisters, startAddress, numberOfRegisters);
-    QModbusReply* result = interface->ReadData(query);
+    // QModbusDataUnit query(QModbusDataUnit::HoldingRegisters, startAddress, numberOfRegisters);
+    // QModbusReply* result = interface->ReadData(query);
 
-    if(result)
-    {
-        connect(result, &QModbusReply::finished, this, &MainGUI::handleModbusReply);
-    }
+    // if(result)
+    // {
+    //     connect(result, &QModbusReply::finished, this, &MainGUI::handleModbusReply);
+    // }
+    LocalHostTest localhostTest;
+
+    localhostTest.RunTest();
 }
 
 void MainGUI::handleModbusReply()

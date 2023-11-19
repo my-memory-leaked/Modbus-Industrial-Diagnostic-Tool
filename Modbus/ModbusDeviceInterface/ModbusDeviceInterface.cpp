@@ -48,6 +48,26 @@ ModbusRegister ModbusDeviceInterface::GetRegisterByName(const QString& cRegister
     return retVal;
 }
 
+QModbusDataUnit ModbusDeviceInterface::GetQModbusDataUnitByName(const QString& cRegisterName)
+{
+    QModbusDataUnit retVal;
+
+    logger->LogInfo(TAG, "Attempting to retrieve Modbus data unit for register: " + cRegisterName);
+
+    retVal = GetRegisterByName(cRegisterName).GetQModbusdataUnit();
+
+    if (!retVal.isValid())
+    {
+        logger->LogWarning(TAG, "No register found with the name: " + cRegisterName);
+    }
+    else
+    {
+        logger->LogInfo(TAG, "Retrieved Modbus data unit for register: " + cRegisterName);
+    }
+
+    return retVal;
+}
+
 SystemResult ModbusDeviceInterface::LoadRegistersFromJSON(const QString& cFilePath)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
