@@ -46,6 +46,7 @@ include_directories(
 
     Tests
     Tests/TestInterface
+    Tests/LocalHostTest
 
     ExceptionHandling/ModbusException
 
@@ -78,12 +79,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.hpp JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.cpp
         JSON/TestData.json
 
+
         Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
         Tests/TestInterface/TestInterface.hpp Tests/TestInterface/TestInterface.cpp
         Modbus/ModbusDeviceInterface/ModbusDeviceInterface.hpp Modbus/ModbusDeviceInterface/ModbusDeviceInterface.cpp
         JSON/JSONToModbusRegisterConventer/JSONToModbusRegisterConventer.hpp JSON/JSONToModbusRegisterConventer/JSONToModbusRegisterConventer.cpp
-
-
+        Tests/LocalHostTest/LocalHostTest.hpp Tests/LocalHostTest/LocalHostTest.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

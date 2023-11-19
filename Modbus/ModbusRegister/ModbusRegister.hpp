@@ -1,6 +1,7 @@
 #pragma once
 #include <QString>
 #include <QModbusDataUnit>
+#include <SystemResult.hpp>
 
 class ModbusRegister
 {
@@ -10,7 +11,6 @@ public:
     ModbusRegister(const QString& cRegisterName, const QModbusDataUnit& cQModbusDataUnit);
     ModbusRegister(const ModbusRegister& cModbusRegister);
     bool operator==(const ModbusRegister& other) const;
-
 
     void SetName(const QString& cName);
     void SetModbusDataUnit(const QModbusDataUnit& cQModbusDataUnit);
