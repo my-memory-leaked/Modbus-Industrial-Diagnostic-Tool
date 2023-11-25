@@ -31,6 +31,7 @@ void LocalHostTest::RunTest()
     }
 
     QString appFilePath = QCoreApplication::applicationDirPath();
+    logger->LogInfo(TAG,appFilePath);
     // QString jsonFilePath = appFilePath + "/JSON/TestData.json";
     QString jsonFilePath = "X:\\Repositories\\Modbus-Industrial-Diagnostic-Tool\\Modbus-Industrial-Diagnostic-Tool\\JSON\\TestData.json";
     logger->LogInfo(TAG, "Test json path: " + jsonFilePath);
