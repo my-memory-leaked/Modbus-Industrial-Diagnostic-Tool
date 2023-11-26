@@ -87,6 +87,19 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Tests/LocalHostTest/LocalHostTest.hpp Tests/LocalHostTest/LocalHostTest.cpp
 
     )
+
+# Specify the source JSON file location
+set(SOURCE_JSON "${CMAKE_SOURCE_DIR}/JSON/TestData.json")
+
+# Specify the destination build directory
+set(DESTINATION_JSON "${CMAKE_BINARY_DIR}/JSON/TestData.json")
+
+# Copy the JSON file to the build directory during build
+add_custom_command(
+    TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${SOURCE_JSON} ${DESTINATION_JSON}
+)
+
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Modbus-Industrial-Diagnostic-Tool APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)

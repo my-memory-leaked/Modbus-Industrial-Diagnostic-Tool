@@ -3,6 +3,9 @@
 #include <ModbusController.hpp>
 #include <QCoreApplication>
 
+#include <QDir>
+#include <QFile>
+
 static auto* logger = &Logger::GetInstance();
 
 LocalHostTest::LocalHostTest() {}
@@ -30,11 +33,12 @@ void LocalHostTest::RunTest()
         return;
     }
 
-    QString appFilePath = QCoreApplication::applicationDirPath();
-    logger->LogInfo(TAG,appFilePath);
-    // QString jsonFilePath = appFilePath + "/JSON/TestData.json";
-    QString jsonFilePath = "X:\\Repositories\\Modbus-Industrial-Diagnostic-Tool\\Modbus-Industrial-Diagnostic-Tool\\JSON\\TestData.json";
-    logger->LogInfo(TAG, "Test json path: " + jsonFilePath);
+    QString appDirPath = QCoreApplication::applicationDirPath();
+    QString jsonFilePath = appDirPath + "/JSON/TestData.json"; // Adjust the relative path as needed
+    logger->LogInfo(TAG, jsonFilePath);
+
+    // QString jsonFilePath = "D:\\Repositories\\Modbus-Industrial-Diagnostic-Tool\\Modbus-Industrial-Diagnostic-Tool\\JSON\\TestData.json";
+    // logger->LogInfo(TAG, "Test json path: " + jsonFilePath);
 
     mbStrategy->LoadRegistersFromJSON(jsonFilePath);
 
