@@ -2,6 +2,7 @@
 #include <Logger.hpp>
 #include <ModbusController.hpp>
 #include <QCoreApplication>
+#include <ModbusRegisterTypeMapper.hpp>
 
 #include <QDir>
 #include <QFile>
@@ -41,8 +42,20 @@ void LocalHostTest::RunTest()
     QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("Siema");
     mbStrategy->ReadData(data);
 
-    QModbusDataUnit data2 = mbStrategy->GetQModbusDataUnitByName("Prędkość Obrotowa");
-    mbStrategy->ReadData(data2);
+    QModbusDataUnit powerQuery = mbStrategy->GetQModbusDataUnitByName("Moc");
+    QModbusReply* powerReply = mbStrategy->ReadData(powerQuery);
+
+    if (powerReply)
+    {
+        if(powerReply->isFinished())
+        {
+            onPowerRegisterReceived(powerReply);
+        } else
+        {
+            connect(powerReply, &QModbusReply::finished, this, [this, powerReply]() {
+                onPowerRegisterReceived(powerReply);
+            });        }
+    }
 
 }
 
@@ -51,3 +64,21 @@ QString LocalHostTest::GetDeviceName() const
 {
     return QString(_deviceName);
 }
+
+void LocalHostTest::onPowerRegisterReceived(QModbusReply* reply)
+{
+    if (reply->error() == QModbusDevice::NoError)
+    {
+        const QModbusDataUnit unit = reply->result();
+
+        logger->LogDebug(TAG, "Received data: Register Type: " + ModbusRegisterTypeMapper::RegisterTypeToString(unit.registerType()) +
+                                  " Address: " + QString::number(unit.startAddress()) +
+                                  " Value: " + QString::number(unit.value(0))); // Convert the value to a string
+    }
+    else
+    {
+        // Handle errors if necessary
+        logger->LogDebug(TAG, "Modbus reply error: " + reply->errorString());
+    }
+}
+

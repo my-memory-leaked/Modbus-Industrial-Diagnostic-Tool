@@ -30,7 +30,7 @@
         {
           "RegisterName": "Moc",
           "RegisterType": "HoldingRegisters",
-          "RegisterNumber": 40002
+          "RegisterNumber": 40001
         }
       ]
     }

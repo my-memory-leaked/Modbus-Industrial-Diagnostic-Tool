@@ -1,7 +1,9 @@
 #pragma once
+#include <QObject>
 
-class TestInterface
+class TestInterface : public QObject
 {
+    Q_OBJECT;
 public:
     TestInterface();
     virtual ~TestInterface();
