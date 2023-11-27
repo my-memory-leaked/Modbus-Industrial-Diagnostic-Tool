@@ -33,19 +33,16 @@ void LocalHostTest::RunTest()
         return;
     }
 
-    QString appDirPath = QCoreApplication::applicationDirPath();
-    QString jsonFilePath = appDirPath + "/JSON/TestData.json"; // Adjust the relative path as needed
-    logger->LogInfo(TAG, jsonFilePath);
+    QString appDirPath = QCoreApplication::applicationDirPath() + _cJsonFilePath;
 
-    // QString jsonFilePath = "D:\\Repositories\\Modbus-Industrial-Diagnostic-Tool\\Modbus-Industrial-Diagnostic-Tool\\JSON\\TestData.json";
-    // logger->LogInfo(TAG, "Test json path: " + jsonFilePath);
-
-    mbStrategy->LoadRegistersFromJSON(jsonFilePath);
-
+    logger->LogInfo(TAG, appDirPath);
+    mbStrategy->LoadRegistersFromJSON(appDirPath);
 
     QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("Siema");
-
     mbStrategy->ReadData(data);
+
+    QModbusDataUnit data2 = mbStrategy->GetQModbusDataUnitByName("Prędkość Obrotowa");
+    mbStrategy->ReadData(data2);
 
 }
 
