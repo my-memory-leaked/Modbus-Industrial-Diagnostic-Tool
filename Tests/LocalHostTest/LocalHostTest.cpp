@@ -30,7 +30,7 @@ void LocalHostTest::RunTest()
 
     if ( !mbStrategy->IsConnected() )
     {
-        logger->LogCritical(TAG, "Can't start test for disconnected device!");
+        logger->LogCritical(TAG, "Can't run test for disconnected device!");
         return;
     }
 

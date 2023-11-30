@@ -32,6 +32,7 @@ include_directories(
     JSON
     JSON/JSONToModbusRegisterConventer
     JSON/JSONToModbusMapConverter
+    JSON/JSONToDevicesConventer
 
     Modbus/ModbusRegister
     Modbus/ModbusStrategy
@@ -78,6 +79,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusStateMapper/ModbusStateMapper.hpp Modbus/ModbusStateMapper/ModbusStateMapper.cpp
         JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.hpp JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.cpp
         JSON/TestData.json
+        JSON/Devices.json
 
 
         Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
@@ -85,20 +87,28 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusDeviceInterface/ModbusDeviceInterface.hpp Modbus/ModbusDeviceInterface/ModbusDeviceInterface.cpp
         JSON/JSONToModbusRegisterConventer/JSONToModbusRegisterConventer.hpp JSON/JSONToModbusRegisterConventer/JSONToModbusRegisterConventer.cpp
         Tests/LocalHostTest/LocalHostTest.hpp Tests/LocalHostTest/LocalHostTest.cpp
+        JSON/JSONToDevicesConventer/JSONToDevicesConventer.hpp JSON/JSONToDevicesConventer/JSONToDevicesConventer.cpp
 
     )
 
-# Specify the source JSON file location
-set(SOURCE_JSON "${CMAKE_SOURCE_DIR}/JSON/TestData.json")
-
-# Specify the destination build directory
-set(DESTINATION_JSON "${CMAKE_BINARY_DIR}/JSON/TestData.json")
-
-# Copy the JSON file to the build directory during build
-add_custom_command(
-    TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${SOURCE_JSON} ${DESTINATION_JSON}
+# Define a list containing pairs of source and destination paths for each JSON file
+set(JSON_FILES
+    "${CMAKE_SOURCE_DIR}/JSON/TestData.json" "${CMAKE_BINARY_DIR}/JSON/TestData.json"
+    "${CMAKE_SOURCE_DIR}/JSON/Devices.json" "${CMAKE_BINARY_DIR}/JSON/Devices.json"
 )
+
+# Loop through the list and copy each JSON file to the build directory during build
+list(LENGTH JSON_FILES JSON_FILES_COUNT)
+math(EXPR JSON_FILES_COUNT "${JSON_FILES_COUNT} - 1")
+foreach(I RANGE 0 ${JSON_FILES_COUNT} 2)
+    math(EXPR J "${I} + 1")
+    list(GET JSON_FILES ${I} SOURCE_JSON)
+    list(GET JSON_FILES ${J} DESTINATION_JSON)
+    add_custom_command(
+        TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${SOURCE_JSON} ${DESTINATION_JSON}
+    )
+endforeach()
 
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Modbus-Industrial-Diagnostic-Tool APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

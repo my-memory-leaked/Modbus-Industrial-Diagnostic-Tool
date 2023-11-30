@@ -33,6 +33,8 @@ private:
     ModbusController *_mbController;
 
     void connectSignalsAndSlots() const;
+    void readDevicesFromFile();
+
     QString createDeviceInfoString(const ModbusStrategy* cInterface) const;
 
     void updateDevicesList();

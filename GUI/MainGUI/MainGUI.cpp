@@ -12,6 +12,8 @@
 #include <LocalHostTest.hpp>
 
 
+#include <JSONToDevicesConventer.hpp>
+
 MainGUI::MainGUI(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainGUI)
@@ -21,6 +23,7 @@ MainGUI::MainGUI(QWidget *parent)
     connectSignalsAndSlots();
 
     _mbController = &Singleton<ModbusController>::GetInstance();
+    (void)readDevicesFromFile();
 
 }
 
@@ -106,6 +109,19 @@ void MainGUI::connectSignalsAndSlots() const
 {
     connect(ui->AddDevice, &QPushButton::clicked, this, &MainGUI::handleAddDeviceClick);
     connect(ui->TestButton, &QPushButton::clicked, this, &MainGUI::handleTestButtonClick);
+}
+
+void MainGUI::readDevicesFromFile()
+{
+    auto& deviceConventer = JSONToDevicesConventer::GetInstance();
+    auto deviceList = deviceConventer.FromJsonFile("JSON/Devices.json");
+    (void)deviceList.sort();
+    for (auto device : deviceList)
+    {
+        _mbController->AddInterface(device);
+        _mbController->ConnectInterface(device->GetDeviceName());
+    }
+    updateDevicesList();
 }
 
 void MainGUI::updateDevicesList()

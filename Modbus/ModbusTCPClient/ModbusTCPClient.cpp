@@ -6,6 +6,7 @@
 #include <ModbusRegisterTypeMapper.hpp>
 #include <ModbusParser.hpp>
 #include <ModbusStateMapper.hpp>
+#include <QThread>
 
 
 static auto* logger = &Singleton<Logger>::GetInstance();
@@ -202,6 +203,8 @@ void ModbusTCPClient::reconnect()
         (void)this->Disconnect();
     }
 
+    QThread::sleep(250);
+
     logger->LogInfo(CLASS_TAG, "Reconnecting Modbus device ID: " + QString::number(GetDeviceID()) +
                                    " IP: " + GetConnectionParameters().GetIpAddress() +
                                    " Port: " + QString::number(GetConnectionParameters().GetPort()));
@@ -212,4 +215,5 @@ void ModbusTCPClient::reconnect()
         logger->LogWarning(CLASS_TAG, QString("Failed to reconnect to interface: %1").arg(GetDeviceName()));
     }
 
+    QThread::sleep(500);
 }
