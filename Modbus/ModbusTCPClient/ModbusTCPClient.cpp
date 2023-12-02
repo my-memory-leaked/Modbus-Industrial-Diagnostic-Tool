@@ -6,8 +6,7 @@
 #include <ModbusRegisterTypeMapper.hpp>
 #include <ModbusParser.hpp>
 #include <ModbusStateMapper.hpp>
-#include <QThread>
-
+#include <QTimer>
 
 static auto* logger = &Singleton<Logger>::GetInstance();
 
@@ -160,7 +159,9 @@ void ModbusTCPClient::onModbusConnectionStateChanged(QModbusDevice::State state)
     switch (state)
     {
     case QModbusDevice::UnconnectedState:
-        ( void )reconnect();
+        QTimer::singleShot(2000, this, [&](){ /* Will be executed in 2 seconds */
+            ( void )reconnect();
+        });
         break;
     case QModbusDevice::ConnectingState:
         emitModbusStateUpdated(state);
@@ -203,17 +204,16 @@ void ModbusTCPClient::reconnect()
         (void)this->Disconnect();
     }
 
-    QThread::sleep(250);
-
     logger->LogInfo(CLASS_TAG, "Reconnecting Modbus device ID: " + QString::number(GetDeviceID()) +
                                    " IP: " + GetConnectionParameters().GetIpAddress() +
                                    " Port: " + QString::number(GetConnectionParameters().GetPort()));
 
-    /* Now, attempt to reconnect */
-    if (SystemResult::SYSTEM_OK != Connect())
-    {
-        logger->LogWarning(CLASS_TAG, QString("Failed to reconnect to interface: %1").arg(GetDeviceName()));
-    }
+    QTimer::singleShot(500, this, [&](){
+      /* Now, attempt to reconnect */
+      if (SystemResult::SYSTEM_OK != Connect())
+      {
+          logger->LogWarning(CLASS_TAG, QString("Failed to reconnect to interface: %1").arg(GetDeviceName()));
+      }
+    });
 
-    QThread::sleep(500);
 }

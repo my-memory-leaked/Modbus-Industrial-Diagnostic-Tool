@@ -46,7 +46,7 @@ std::list<std::shared_ptr<ModbusStrategy>> JSONToDevicesConventer::FromJson(cons
             strategy->SetDeviceName(deviceName);
             strategy->SetConnectionParameters(connectionParams);
 
-            modbusStrategies.push_back(strategy);
+            modbusStrategies.push_back(std::move(strategy));
         }
     }
 

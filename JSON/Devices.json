@@ -12,7 +12,6 @@
         }
       ]
     },
-
     {
       "DeviceName": "Silnik Elektryczny",
       "Registers":
@@ -20,11 +19,9 @@
       	{
           "Type": "TCP",
           "IPAddress": "192.168.0.1",
-          "Port": 502
+          "Port": 5032
         }
       ]
     }
-
   ]
-
 }
