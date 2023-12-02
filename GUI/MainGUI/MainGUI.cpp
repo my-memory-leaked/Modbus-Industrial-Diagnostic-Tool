@@ -12,6 +12,7 @@
 #include <LocalHostTest.hpp>
 #include <JSONToDevicesConventer.hpp>
 #include <ModbusStateMapper.hpp>
+#include <ChangeModbusDeviceParameters.hpp>
 
 
 MainGUI::MainGUI(QWidget *parent)
@@ -104,11 +105,19 @@ void MainGUI::handleInterfaceStateChange(const QString& deviceName, const QModbu
     }
 }
 
+void MainGUI::handleLocalhostChangeSettingsButton()
+{
+    changeModbusDeviceParameters(_mbController->GetInterfaceByName("localhost"));
+}
 
 void MainGUI::connectSignalsAndSlots() const
 {
     connect(ui->AddDevice, &QPushButton::clicked, this, &MainGUI::handleAddDeviceClick);
     connect(ui->TestButton, &QPushButton::clicked, this, &MainGUI::handleTestButtonClick);
+
+
+    connect(ui->localhostChangeSettingsButton, &QPushButton::clicked, this, &MainGUI::handleLocalhostChangeSettingsButton);
+
 }
 
 void MainGUI::readDevicesFromFile()
@@ -124,6 +133,31 @@ void MainGUI::readDevicesFromFile()
     }
     _mbController->ConnectAllInterfaces();
     updateDevicesList();
+}
+
+QString MainGUI::createDeviceInfoString(const ModbusStrategy* cInterface) const
+{
+    QString retVal;
+    switch (cInterface->GetInterfaceType())
+    {
+    case ModbusStrategy::ModbusInterfaceType::TCP:
+        retVal = QString("Device Name: %1 | IP Address: %2 | Port: %3 | State: %4")
+                     .arg(cInterface->GetDeviceName(),
+                          cInterface->GetConnectionParameters().GetIpAddress(),
+                          QString::number(cInterface->GetConnectionParameters().GetPort()),
+                          ModbusStateMapper::GetInstance().StateToString(cInterface->GetState()));
+        break;
+
+
+    case ModbusStrategy::ModbusInterfaceType::RTU:
+        // Return RTU-specific info string
+        break;
+
+    case ModbusStrategy::ModbusInterfaceType::ASCII:
+        // Return ASCII-specific info string
+        break;
+    }
+    return retVal;
 }
 
 void MainGUI::updateDevicesList()
@@ -144,30 +178,13 @@ void MainGUI::updateDevicesList()
     }
 }
 
-
-QString MainGUI::createDeviceInfoString(const ModbusStrategy* cInterface) const
+void MainGUI::changeModbusDeviceParameters(ModbusStrategy* interface)
 {
-    QString retVal;
-    switch (cInterface->GetInterfaceType())
+    ChangeModbusDeviceParameters modbusDialog(this, interface);
+    if(modbusDialog.exec() == QDialog::Accepted)
     {
-    case ModbusStrategy::ModbusInterfaceType::TCP:
-        retVal = QString("Device Name: %1 | IP Address: %2 | Port: %3 | State: %4")
-                     .arg(cInterface->GetDeviceName(),
-                          cInterface->GetConnectionParameters().GetIpAddress(),
-                          QString::number(cInterface->GetConnectionParameters().GetPort()),
-                          ModbusStateMapper::GetInstance().StateToString(cInterface->GetState()));
-    break;
-
-
-    case ModbusStrategy::ModbusInterfaceType::RTU:
-        // Return RTU-specific info string
-        break;
-
-    case ModbusStrategy::ModbusInterfaceType::ASCII:
-        // Return ASCII-specific info string
-        break;
+        updateLocalhostDevice(interface);
     }
-    return retVal;
 }
 
 

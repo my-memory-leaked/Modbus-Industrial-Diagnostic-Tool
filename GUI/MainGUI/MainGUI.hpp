@@ -26,6 +26,7 @@ private slots:
     void handleModbusReply();
 
     void handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState);
+    void handleLocalhostChangeSettingsButton();
 
 private:
     Ui::MainGUI *ui;
@@ -39,6 +40,7 @@ private:
 
     void updateDevicesList();
 
+    void changeModbusDeviceParameters(ModbusStrategy* interface);
 
     void updateLocalhostDevice(const ModbusStrategy* cInterface);
 
