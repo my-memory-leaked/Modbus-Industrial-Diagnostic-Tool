@@ -3,6 +3,7 @@
 #include <Logger.hpp>
 #include <ApplicationConstant.hpp>
 #include <QMessageBox>
+#include <QTimer>
 
 const QRegularExpression ChangeModbusDeviceParameters::_ipAddressRegex("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
 
@@ -91,14 +92,39 @@ void ChangeModbusDeviceParameters::accept()
 
             if (validInputs)
             {
-                logger->LogInfo(CLASS_TAG, "Changing Modbus TCP Interface...");
+                /* Logging the action of changing the Modbus TCP Interface */
+                (void)logger->LogInfo(CLASS_TAG, "Changing Modbus TCP Interface...");
 
+                /* Disconnecting from the interface */
+                _interface->Disconnect();
+                /* Checking if the interface has disconnected or is in the process of disconnecting */
+                if (_interface->GetState() == QModbusDevice::UnconnectedState || _interface->GetState() == QModbusDevice::ClosingState)
+                {
+                    logger->LogInfo(CLASS_TAG, "Modbus TCP Interface disconnected successfully.");
+                } else
+                {
+                    logger->LogWarning(CLASS_TAG, "Failed to disconnect Modbus TCP Interface.");
+                }
+
+                /* Updating connection parameters */
                 ModbusConnectionParameters mbParams;
                 mbParams.SetIpAddress(ui->IPAddressLineEdit->text());
                 mbParams.SetPort(static_cast<quint16>(port));
-
                 _interface->SetConnectionParameters(mbParams);
-                logger->LogInfo(CLASS_TAG, QString("Successfully changed Modbus TCP Interface: %1 for IP %2 and Port %3").arg(_interface->GetDeviceName(), ui->IPAddressLineEdit->text()).arg(port));
+
+                /* Attempting to connect with the new parameters */
+                (void)_interface->Connect();
+
+                QTimer::singleShot(1000, this, [&](){
+                    /* Checking if the interface has connected or is in the process of connecting */
+                    if (_interface->GetState() == QModbusDevice::ConnectedState || _interface->GetState() == QModbusDevice::ConnectingState)
+                    {
+                        logger->LogInfo(CLASS_TAG, QString("Successfully changed Modbus TCP Interface: %1 for IP %2 and Port %3").arg(_interface->GetDeviceName(), ui->IPAddressLineEdit->text()).arg(port));
+                    } else
+                    {
+                        logger->LogWarning(CLASS_TAG, "Failed to connect Modbus TCP Interface.");
+                    }
+                });
             }
         }
 
