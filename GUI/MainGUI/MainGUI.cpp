@@ -10,9 +10,9 @@
 #include <ModbusTCPClient.hpp>
 
 #include <LocalHostTest.hpp>
-
-
 #include <JSONToDevicesConventer.hpp>
+#include <ModbusStateMapper.hpp>
+
 
 MainGUI::MainGUI(QWidget *parent)
     : QMainWindow(parent)
@@ -117,6 +117,9 @@ void MainGUI::readDevicesFromFile()
     auto deviceList = deviceConventer.FromJsonFile("JSON/Devices.json");
     for (auto device : deviceList)
     {
+        if (device->GetDeviceName() == "localhost")
+            updateLocalhostDevice(device.get());
+
         _mbController->AddInterface(std::move(device));
     }
     _mbController->ConnectAllInterfaces();
@@ -165,4 +168,21 @@ QString MainGUI::createDeviceInfoString(const ModbusStrategy* cInterface) const
         break;
     }
     return retVal;
+}
+
+
+void MainGUI::updateLocalhostDevice(const ModbusStrategy* cInterface)
+{
+    if (!cInterface->GetDeviceName().isEmpty())
+        ui->localhostGroupBox->setTitle(cInterface->GetDeviceName());
+
+    // Append to existing text
+    QString currentText = ui->localhostTypeLabel->text();
+    ui->localhostTypeLabel->setText(currentText + " " + "TCP");
+
+    currentText = ui->localhostIPLabel->text();
+    ui->localhostIPLabel->setText(currentText + " " + cInterface->GetConnectionParameters().GetIpAddress());
+
+    currentText = ui->localhostPortLabel->text();
+    ui->localhostPortLabel->setText(currentText + " " + QString::number(cInterface->GetConnectionParameters().GetPort()));
 }

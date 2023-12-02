@@ -40,4 +40,6 @@ private:
     void updateDevicesList();
 
 
+    void updateLocalhostDevice(const ModbusStrategy* cInterface);
+
 };

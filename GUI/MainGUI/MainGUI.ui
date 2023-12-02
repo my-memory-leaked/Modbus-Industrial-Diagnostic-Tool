@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>770</width>
-    <height>513</height>
+    <width>1097</width>
+    <height>726</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,12 +19,12 @@
      <rect>
       <x>60</x>
       <y>140</y>
-      <width>80</width>
-      <height>24</height>
+      <width>191</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Add device</string>
+     <string>Add custom device</string>
     </property>
    </widget>
    <widget class="QListWidget" name="DevicesListWidget">
@@ -42,13 +42,104 @@
      <rect>
       <x>580</x>
       <y>150</y>
-      <width>80</width>
-      <height>18</height>
+      <width>91</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>Test</string>
     </property>
+   </widget>
+   <widget class="QGroupBox" name="devicesGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>250</y>
+      <width>681</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Devices:</string>
+    </property>
+    <widget class="QGroupBox" name="localhostGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>651</width>
+       <height>181</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>localhost</string>
+     </property>
+     <widget class="QLabel" name="localhostTypeLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>281</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Type:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="localhostIPLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>281</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>IP Address:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="localhostPortLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>291</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Port:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="localhostChangeSettingsButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>130</y>
+        <width>171</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Change settings</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="localhostTestDeviceButton">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>130</y>
+        <width>141</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Test Device</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -56,8 +147,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>770</width>
-     <height>17</height>
+     <width>1097</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>
