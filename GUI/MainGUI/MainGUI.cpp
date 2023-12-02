@@ -115,12 +115,11 @@ void MainGUI::readDevicesFromFile()
 {
     auto& deviceConventer = JSONToDevicesConventer::GetInstance();
     auto deviceList = deviceConventer.FromJsonFile("JSON/Devices.json");
-    (void)deviceList.sort();
     for (auto device : deviceList)
     {
-        _mbController->AddInterface(device);
-        _mbController->ConnectInterface(device->GetDeviceName());
+        _mbController->AddInterface(std::move(device));
     }
+    _mbController->ConnectAllInterfaces();
     updateDevicesList();
 }
 
