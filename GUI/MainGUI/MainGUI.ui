@@ -50,10 +50,10 @@
      <string>Test</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="devicesGroupBox">
+   <widget class="QGroupBox" name="DevicesGroupBox">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>80</x>
       <y>250</y>
       <width>681</width>
       <height>371</height>
@@ -62,7 +62,7 @@
     <property name="title">
      <string>Devices:</string>
     </property>
-    <widget class="QGroupBox" name="localhostGroupBox">
+    <widget class="QGroupBox" name="LocalhostGroupBox">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -155,7 +155,7 @@
      <widget class="QLabel" name="LocalhostIPInputLabel">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>110</x>
         <y>60</y>
         <width>511</width>
         <height>21</height>

@@ -109,6 +109,7 @@ void MainGUI::handleLocalhostChangeSettingsButton()
 
 void MainGUI::handleLocalhostTestButton()
 {
+    /* TODO Refactor this! */
     LocalHostTest localhostTest;
     localhostTest.RunTest();
 }
@@ -194,7 +195,7 @@ void MainGUI::changeModbusDeviceParameters(ModbusStrategy* interface)
 void MainGUI::updateLocalhostDevice(const ModbusStrategy* cInterface)
 {
     if (!cInterface->GetDeviceName().isEmpty())
-        ui->localhostGroupBox->setTitle(cInterface->GetDeviceName());
+        ui->LocalhostGroupBox->setTitle(cInterface->GetDeviceName());
 
     ui->LocalhostTypeInputLabel->setText("TCP");
     ui->LocalhostIPInputLabel->setText(cInterface->GetConnectionParameters().GetIpAddress());
