@@ -58,9 +58,6 @@ void MainGUI::handleTestButtonClick()
     // {
     //     connect(result, &QModbusReply::finished, this, &MainGUI::handleModbusReply);
     // }
-    LocalHostTest localhostTest;
-
-    localhostTest.RunTest();
 }
 
 void MainGUI::handleModbusReply()
@@ -110,14 +107,20 @@ void MainGUI::handleLocalhostChangeSettingsButton()
     changeModbusDeviceParameters(_mbController->GetInterfaceByName("localhost"));
 }
 
+void MainGUI::handleLocalhostTestButton()
+{
+    LocalHostTest localhostTest;
+    localhostTest.RunTest();
+}
+
 void MainGUI::connectSignalsAndSlots() const
 {
     connect(ui->AddDevice, &QPushButton::clicked, this, &MainGUI::handleAddDeviceClick);
     connect(ui->TestButton, &QPushButton::clicked, this, &MainGUI::handleTestButtonClick);
 
 
-    connect(ui->localhostChangeSettingsButton, &QPushButton::clicked, this, &MainGUI::handleLocalhostChangeSettingsButton);
-
+    connect(ui->LocalhostChangeSettingsButton, &QPushButton::clicked, this, &MainGUI::handleLocalhostChangeSettingsButton);
+    connect(ui->LocalhostTestDeviceButton, &QPushButton::clicked, this, &MainGUI::handleLocalhostTestButton);
 }
 
 void MainGUI::readDevicesFromFile()
@@ -193,13 +196,7 @@ void MainGUI::updateLocalhostDevice(const ModbusStrategy* cInterface)
     if (!cInterface->GetDeviceName().isEmpty())
         ui->localhostGroupBox->setTitle(cInterface->GetDeviceName());
 
-    // Append to existing text
-    QString currentText = ui->localhostTypeLabel->text();
-    ui->localhostTypeLabel->setText(currentText + " " + "TCP");
-
-    currentText = ui->localhostIPLabel->text();
-    ui->localhostIPLabel->setText(currentText + " " + cInterface->GetConnectionParameters().GetIpAddress());
-
-    currentText = ui->localhostPortLabel->text();
-    ui->localhostPortLabel->setText(currentText + " " + QString::number(cInterface->GetConnectionParameters().GetPort()));
+    ui->LocalhostTypeInputLabel->setText("TCP");
+    ui->LocalhostIPInputLabel->setText(cInterface->GetConnectionParameters().GetIpAddress());
+    ui->LocalhostPortInputLabel->setText(QString::number(cInterface->GetConnectionParameters().GetPort()));
 }

@@ -27,6 +27,7 @@ private slots:
 
     void handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState);
     void handleLocalhostChangeSettingsButton();
+    void handleLocalhostTestButton();
 
 private:
     Ui::MainGUI *ui;
