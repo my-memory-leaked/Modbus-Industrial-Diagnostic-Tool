@@ -43,7 +43,6 @@ include_directories(
     Modbus/ModbusTCPClient
     Modbus/ModbusRegisterTypeMapper
     Modbus/ModbusStateMapper
-    Modbus/ModbusParser
     Modbus/ModbusDeviceInterface
 
     Tests
@@ -78,7 +77,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         DeviceInterface/DeviceInterface.cpp
         Modbus/ModbusClientStrategy/ModbusClientStrategy.hpp Modbus/ModbusClientStrategy/ModbusClientStrategy.cpp
         Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.hpp Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.cpp
-        Modbus/ModbusParser/ModbusParser.hpp Modbus/ModbusParser/ModbusParser.cpp
         Modbus/ModbusStateMapper/ModbusStateMapper.hpp Modbus/ModbusStateMapper/ModbusStateMapper.cpp
         JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.hpp JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.cpp
         JSON/TestData.json
