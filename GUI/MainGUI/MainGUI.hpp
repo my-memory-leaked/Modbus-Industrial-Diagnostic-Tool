@@ -22,8 +22,6 @@ public:
 private slots:
 
     void handleAddDeviceClick();
-    void handleTestButtonClick();
-    void handleModbusReply();
 
     void handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState);
 

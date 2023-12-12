@@ -26,10 +26,7 @@ MainGUI::MainGUI(QWidget *parent)
 
     _mbController = &Singleton<ModbusController>::GetInstance();
     (void)readDevicesFromFile();
-
     (void)loadAumaLogo();
-
-
 
 }
 
@@ -45,40 +42,6 @@ void MainGUI::handleAddDeviceClick()
     {
         updateDevicesList();
     }
-}
-
-void MainGUI::handleTestButtonClick()
-{
-    ModbusStrategy* interface = _mbController->GetInterfaceByName("localhost");
-    if(!interface)
-        return;
-
-    int startAddress = 0;
-    int numberOfRegisters = 1;
-
-}
-
-void MainGUI::handleModbusReply()
-{
-    QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
-    if(!reply)
-        return;
-
-    if(reply->error() == QModbusDevice::NoError)
-    {
-        const QModbusDataUnit unit = reply->result();
-        for (uint i = 0; i < unit.valueCount(); i++)
-        {
-            int value = unit.value(i);
-            qDebug() << "Register address:" << unit.startAddress() + i << "Value:" << value;
-        }
-    }
-    else
-    {
-        qDebug() << "Error reading modbus registers:" << reply->errorString();
-    }
-
-    reply->deleteLater();  // Cleanup the reply object
 }
 
 void MainGUI::handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState)
@@ -106,7 +69,7 @@ void MainGUI::handleAumaChangeSettingsButton()
 
 void MainGUI::handleAumaTestButton()
 {
-    /* TODO Refactor this! */
+    /* TODO this! */
 }
 
 void MainGUI::handleLocalhostChangeSettingsButton()
@@ -124,8 +87,6 @@ void MainGUI::handleLocalhostTestButton()
 void MainGUI::connectSignalsAndSlots() const
 {
     connect(ui->AddDevice, &QPushButton::clicked, this, &MainGUI::handleAddDeviceClick);
-    connect(ui->TestButton, &QPushButton::clicked, this, &MainGUI::handleTestButtonClick);
-
 
     connect(ui->AumaChangeSettingsButton, &QPushButton::clicked, this, &MainGUI::handleAumaChangeSettingsButton);
     connect(ui->AumaTestDeviceButton, &QPushButton::clicked, this, &MainGUI::handleAumaTestButton);
