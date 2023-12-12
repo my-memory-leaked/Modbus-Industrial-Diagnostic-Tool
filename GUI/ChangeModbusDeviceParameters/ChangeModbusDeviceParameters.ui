@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddModbusDeviceGUI</class>
- <widget class="QDialog" name="AddModbusDeviceGUI">
+ <class>ChangeModbusDeviceParameters</class>
+ <widget class="QDialog" name="ChangeModbusDeviceParameters">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>571</width>
-    <height>390</height>
+    <width>608</width>
+    <height>266</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="ButtonBox">
+  <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>350</y>
-     <width>341</width>
+     <x>30</x>
+     <y>220</y>
+     <width>551</width>
      <height>32</height>
     </rect>
    </property>
@@ -29,47 +29,11 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QLabel" name="DeviceNameLabel">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>20</y>
-     <width>151</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Type device name:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="DeviceNameLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>10</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="ConnectionInterfaceLabel">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>60</y>
-     <width>191</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Connection interface:</string>
-   </property>
-  </widget>
   <widget class="QComboBox" name="ConnectionInterfaceComboBox">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>60</y>
+     <x>230</x>
+     <y>30</y>
      <width>72</width>
      <height>24</height>
     </rect>
@@ -85,11 +49,24 @@
     </property>
    </item>
   </widget>
+  <widget class="QLabel" name="ConnectionInterfaceLabel">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>30</y>
+     <width>191</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Connection interface:</string>
+   </property>
+  </widget>
   <widget class="QGroupBox" name="TCPInterfaceGroupBox">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>140</y>
+     <x>40</x>
+     <y>60</y>
      <width>541</width>
      <height>141</height>
     </rect>
@@ -148,9 +125,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>ButtonBox</sender>
+   <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>AddModbusDeviceGUI</receiver>
+   <receiver>ChangeModbusDeviceParameters</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -164,9 +141,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>ButtonBox</sender>
+   <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>AddModbusDeviceGUI</receiver>
+   <receiver>ChangeModbusDeviceParameters</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

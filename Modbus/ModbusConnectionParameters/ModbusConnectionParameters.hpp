@@ -8,28 +8,29 @@ class ModbusConnectionParameters
 {
 public:
     ModbusConnectionParameters();
+    ModbusConnectionParameters(const QString& cIpAddress, const quint16& cPort);
 
     void SetDefaultValues();
 
     void SetSerialPort(const QString& serialPort);
     QString GetSerialPort() const;
 
-    void SetBaudRate(const quint32 cBaudRate);
+    void SetBaudRate(const quint32& cBaudRate);
     quint32 GetBaudRate() const;
 
-    void SetDataBits(const QSerialPort::DataBits cDataBits);
+    void SetDataBits(const QSerialPort::DataBits& cDataBits);
     QSerialPort::DataBits GetDataBits() const;
 
-    void SetParity(const QSerialPort::Parity cParity);
+    void SetParity(const QSerialPort::Parity& cParity);
     QSerialPort::Parity GetParity() const;
 
-    void SetStopBits(const QSerialPort::StopBits cStopBits);
+    void SetStopBits(const QSerialPort::StopBits& cStopBits);
     QSerialPort::StopBits GetStopBits() const;
 
-    void SetIpAddress(const QString& ipAddress);
+    void SetIpAddress(const QString& cIpAddress);
     QString GetIpAddress() const;
 
-    void SetPort(const quint16 cPort);
+    void SetPort(const quint16& cPort);
     quint16 GetPort() const;
 
 private:

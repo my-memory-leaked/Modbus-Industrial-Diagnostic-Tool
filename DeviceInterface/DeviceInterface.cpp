@@ -1,11 +1,10 @@
 #include <DeviceInterface.hpp>
 
 
-DeviceInterface::DeviceInterface()
+DeviceInterface::DeviceInterface(): _isConnected(false), _deviceName("DefaultInterface")
 {
     static quint32 deviceID = -1;
     _deviceID = ++deviceID;
-    _deviceName = "DefaultInterface";
 }
 
 DeviceInterface::~DeviceInterface() {}

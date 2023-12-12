@@ -4,6 +4,12 @@ ModbusConnectionParameters::ModbusConnectionParameters()
 {
     SetDefaultValues();
 }
+
+ModbusConnectionParameters::ModbusConnectionParameters(const QString& cIpAddress, const quint16& cPort) : _ipAddress(cIpAddress), _port(cPort)
+{
+
+}
+
 void ModbusConnectionParameters::SetDefaultValues()
 {
     _serialPort = "COM0";
@@ -29,7 +35,7 @@ QString ModbusConnectionParameters::GetSerialPort() const
     return _serialPort;
 }
 
-void ModbusConnectionParameters::SetBaudRate(const quint32 cBaudRate)
+void ModbusConnectionParameters::SetBaudRate(const quint32& cBaudRate)
 {
     _baudRate = cBaudRate;
 }
@@ -39,7 +45,7 @@ quint32 ModbusConnectionParameters::GetBaudRate() const
     return _baudRate;
 }
 
-void ModbusConnectionParameters::SetDataBits(const QSerialPort::DataBits cDataBits)
+void ModbusConnectionParameters::SetDataBits(const QSerialPort::DataBits& cDataBits)
 {
     _dataBits = cDataBits;
 }
@@ -49,7 +55,7 @@ QSerialPort::DataBits ModbusConnectionParameters::GetDataBits() const
     return _dataBits;
 }
 
-void ModbusConnectionParameters::SetParity(const QSerialPort::Parity cParity)
+void ModbusConnectionParameters::SetParity(const QSerialPort::Parity& cParity)
 {
     _parity = cParity;
 }
@@ -59,7 +65,7 @@ QSerialPort::Parity ModbusConnectionParameters::GetParity() const
     return _parity;
 }
 
-void ModbusConnectionParameters::SetStopBits(const QSerialPort::StopBits cStopBits)
+void ModbusConnectionParameters::SetStopBits(const QSerialPort::StopBits& cStopBits)
 {
     _stopBits = cStopBits;
 }
@@ -79,7 +85,7 @@ QString ModbusConnectionParameters::GetIpAddress() const
     return _ipAddress;
 }
 
-void ModbusConnectionParameters::SetPort(const quint16 cPort)
+void ModbusConnectionParameters::SetPort(const quint16& cPort)
 {
     _port = cPort;
 }

@@ -1,0 +1,27 @@
+{
+  "Devices":
+  [
+    {
+      "DeviceName": "localhost",
+      "Parameters":
+      [
+        {
+          "Type": "TCP",
+          "IPAddress": "127.0.0.1",
+          "Port": 5020
+        }
+      ]
+    },
+    {
+      "DeviceName": "Silnik Elektryczny",
+      "Registers":
+      [
+      	{
+          "Type": "TCP",
+          "IPAddress": "192.168.0.1",
+          "Port": 5032
+        }
+      ]
+    }
+  ]
+}

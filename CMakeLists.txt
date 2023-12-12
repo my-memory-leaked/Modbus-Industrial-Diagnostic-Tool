@@ -19,14 +19,23 @@ set(PROJECT_SOURCES
 include_directories(
     GUI/MainGUI
     GUI/AddModbusDeviceGUI
+    GUI/ChangeModbusDeviceParameters
 
     ApplicationConstant
     SystemResult
     Singleton
+    Device
     DeviceInterface
     Logger
     Modbus
 
+
+    JSON
+    JSON/JSONToModbusRegisterConventer
+    JSON/JSONToModbusMapConverter
+    JSON/JSONToDevicesConventer
+
+    Modbus/ModbusRegister
     Modbus/ModbusStrategy
     Modbus/ModbusConnectionParameters
     Modbus/ModbusController
@@ -35,7 +44,13 @@ include_directories(
     Modbus/ModbusRegisterTypeMapper
     Modbus/ModbusStateMapper
     Modbus/ModbusParser
+    Modbus/ModbusDeviceInterface
 
+    Tests
+    Tests/TestInterface
+    Tests/LocalHostTest
+
+    Images
 
     ExceptionHandling/ModbusException
 
@@ -65,10 +80,50 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.hpp Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.cpp
         Modbus/ModbusParser/ModbusParser.hpp Modbus/ModbusParser/ModbusParser.cpp
         Modbus/ModbusStateMapper/ModbusStateMapper.hpp Modbus/ModbusStateMapper/ModbusStateMapper.cpp
+        JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.hpp JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.cpp
+        JSON/TestData.json
+        JSON/Devices.json
 
+        Images/LogoAuma.png
 
+        Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
+        Tests/TestInterface/TestInterface.hpp Tests/TestInterface/TestInterface.cpp
+        Modbus/ModbusDeviceInterface/ModbusDeviceInterface.hpp Modbus/ModbusDeviceInterface/ModbusDeviceInterface.cpp
+        JSON/JSONToModbusRegisterConventer/JSONToModbusRegisterConventer.hpp JSON/JSONToModbusRegisterConventer/JSONToModbusRegisterConventer.cpp
+        Tests/LocalHostTest/LocalHostTest.hpp Tests/LocalHostTest/LocalHostTest.cpp
+        JSON/JSONToDevicesConventer/JSONToDevicesConventer.hpp JSON/JSONToDevicesConventer/JSONToDevicesConventer.cpp
+        GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.hpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.cpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.ui
 
     )
+
+
+# Copy the AumaLogo.png file
+set(AUMA_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/LogoAuma.png")
+set(AUMA_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/LogoAuma.png")
+add_custom_command(
+    TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${AUMA_LOGO_SOURCE} ${AUMA_LOGO_DESTINATION}
+)
+
+# Define a list containing pairs of source and destination paths for each JSON file
+set(JSON_FILES
+    "${CMAKE_SOURCE_DIR}/JSON/TestData.json" "${CMAKE_BINARY_DIR}/JSON/TestData.json"
+    "${CMAKE_SOURCE_DIR}/JSON/Devices.json" "${CMAKE_BINARY_DIR}/JSON/Devices.json"
+)
+
+# Loop through the list and copy each JSON file to the build directory during build
+list(LENGTH JSON_FILES JSON_FILES_COUNT)
+math(EXPR JSON_FILES_COUNT "${JSON_FILES_COUNT} - 1")
+foreach(I RANGE 0 ${JSON_FILES_COUNT} 2)
+    math(EXPR J "${I} + 1")
+    list(GET JSON_FILES ${I} SOURCE_JSON)
+    list(GET JSON_FILES ${J} DESTINATION_JSON)
+    add_custom_command(
+        TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${SOURCE_JSON} ${DESTINATION_JSON}
+    )
+endforeach()
+
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Modbus-Industrial-Diagnostic-Tool APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)

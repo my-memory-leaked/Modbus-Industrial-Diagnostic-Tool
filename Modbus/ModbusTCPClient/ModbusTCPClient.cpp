@@ -6,7 +6,7 @@
 #include <ModbusRegisterTypeMapper.hpp>
 #include <ModbusParser.hpp>
 #include <ModbusStateMapper.hpp>
-
+#include <QTimer>
 
 static auto* logger = &Singleton<Logger>::GetInstance();
 
@@ -81,12 +81,13 @@ SystemResult ModbusTCPClient::Disconnect()
 QModbusReply *ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 {
     QModbusReply* retVal = nullptr;
-    SystemResult result = SystemResult::SYSTEM_ERROR;
+    SystemResult result = SystemResult::SYSTEM_OK;
 
     if (! cData.isValid() )
+    {
         result = SystemResult::SYSTEM_INVALID_ARGUMENT;
-    else
         logger->LogDebug( CLASS_TAG, "Invalid QModbusDataUnit!" );
+    }
 
 
     if ( !IsConnected() )
@@ -158,7 +159,9 @@ void ModbusTCPClient::onModbusConnectionStateChanged(QModbusDevice::State state)
     switch (state)
     {
     case QModbusDevice::UnconnectedState:
-        ( void )reconnect();
+        QTimer::singleShot(2000, this, [&](){ /* Will be executed in 2 seconds */
+            ( void )reconnect();
+        });
         break;
     case QModbusDevice::ConnectingState:
         emitModbusStateUpdated(state);
@@ -205,10 +208,12 @@ void ModbusTCPClient::reconnect()
                                    " IP: " + GetConnectionParameters().GetIpAddress() +
                                    " Port: " + QString::number(GetConnectionParameters().GetPort()));
 
-    /* Now, attempt to reconnect */
-    if (SystemResult::SYSTEM_OK != Connect())
-    {
-        logger->LogWarning(CLASS_TAG, QString("Failed to reconnect to interface: %1").arg(GetDeviceName()));
-    }
+    QTimer::singleShot(500, this, [&](){
+      /* Now, attempt to reconnect */
+      if (SystemResult::SYSTEM_OK != Connect())
+      {
+          logger->LogWarning(CLASS_TAG, QString("Failed to reconnect to interface: %1").arg(GetDeviceName()));
+      }
+    });
 
 }
