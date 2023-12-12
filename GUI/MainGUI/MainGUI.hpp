@@ -40,9 +40,9 @@ private:
     QString createDeviceInfoString(const ModbusStrategy* cInterface) const;
 
     void updateDevicesList();
-
     void changeModbusDeviceParameters(ModbusStrategy* interface);
-
     void updateLocalhostDevice(const ModbusStrategy* cInterface);
+
+    void loadAumaLogo();
 
 };

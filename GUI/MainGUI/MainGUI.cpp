@@ -27,8 +27,9 @@ MainGUI::MainGUI(QWidget *parent)
     _mbController = &Singleton<ModbusController>::GetInstance();
     (void)readDevicesFromFile();
 
-    QPixmap aumaLogoPixmap("/Images/AumaLogo.png");
-    ui->AumaLogoLabel->setPixmap(aumaLogoPixmap);
+    (void)loadAumaLogo();
+
+
 
 }
 
@@ -204,4 +205,20 @@ void MainGUI::updateLocalhostDevice(const ModbusStrategy* cInterface)
     ui->LocalhostTypeInputLabel->setText("TCP");
     ui->LocalhostIPInputLabel->setText(cInterface->GetConnectionParameters().GetIpAddress());
     ui->LocalhostPortInputLabel->setText(QString::number(cInterface->GetConnectionParameters().GetPort()));
+}
+
+
+void MainGUI::loadAumaLogo()
+{
+    QString appDirPath = QCoreApplication::applicationDirPath() + "/Images/LogoAuma.png";
+    QPixmap aumaLogoPixmap(appDirPath);
+    if (!aumaLogoPixmap.isNull())
+    {
+        /* Scale logo */
+        QPixmap scaledPixmap = aumaLogoPixmap.scaled(ui->AumaLogoLabel->size(),
+                                                     Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        ui->AumaLogoLabel->setPixmap(scaledPixmap);
+    }
+
 }

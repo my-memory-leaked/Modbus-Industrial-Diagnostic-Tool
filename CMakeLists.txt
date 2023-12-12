@@ -50,6 +50,8 @@ include_directories(
     Tests/TestInterface
     Tests/LocalHostTest
 
+    Images
+
     ExceptionHandling/ModbusException
 
 )
@@ -82,6 +84,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         JSON/TestData.json
         JSON/Devices.json
 
+        Images/LogoAuma.png
 
         Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
         Tests/TestInterface/TestInterface.hpp Tests/TestInterface/TestInterface.cpp
@@ -92,6 +95,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.hpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.cpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.ui
 
     )
+
+
+# Copy the AumaLogo.png file
+set(AUMA_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/LogoAuma.png")
+set(AUMA_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/LogoAuma.png")
+add_custom_command(
+    TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${AUMA_LOGO_SOURCE} ${AUMA_LOGO_DESTINATION}
+)
 
 # Define a list containing pairs of source and destination paths for each JSON file
 set(JSON_FILES
