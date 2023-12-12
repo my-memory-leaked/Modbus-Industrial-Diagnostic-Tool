@@ -8,7 +8,7 @@
         {
           "Type": "TCP",
           "IPAddress": "127.0.0.1",
-          "Port": 5020
+          "Port": 502
         }
       ]
     },

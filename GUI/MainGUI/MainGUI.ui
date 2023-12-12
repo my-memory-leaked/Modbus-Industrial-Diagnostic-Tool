@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1097</width>
-    <height>777</height>
+    <width>763</width>
+    <height>625</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,10 +29,10 @@
     <widget class="QGroupBox" name="LocalhostGroupBox">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>651</width>
-       <height>181</height>
+       <x>0</x>
+       <y>220</y>
+       <width>671</width>
+       <height>161</height>
       </rect>
      </property>
      <property name="title">
@@ -80,8 +80,8 @@
      <widget class="QPushButton" name="LocalhostChangeSettingsButton">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>130</y>
+        <x>10</x>
+        <y>100</y>
         <width>171</width>
         <height>51</height>
        </rect>
@@ -93,8 +93,8 @@
      <widget class="QPushButton" name="LocalhostTestDeviceButton">
       <property name="geometry">
        <rect>
-        <x>510</x>
-        <y>130</y>
+        <x>530</x>
+        <y>110</y>
         <width>141</width>
         <height>51</height>
        </rect>
@@ -142,12 +142,25 @@
        <string/>
       </property>
      </widget>
+     <widget class="QLabel" name="LocalhostConnectionState">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>90</y>
+        <width>91</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="AumaGroupBox">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>200</y>
+       <x>0</x>
+       <y>20</y>
        <width>671</width>
        <height>191</height>
       </rect>
@@ -158,8 +171,8 @@
      <widget class="QLabel" name="AumaTypeLabel">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>40</y>
+        <x>10</x>
+        <y>20</y>
         <width>61</width>
         <height>21</height>
        </rect>
@@ -171,8 +184,8 @@
      <widget class="QLabel" name="AumaIPLabel">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>60</y>
+        <x>10</x>
+        <y>40</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -184,8 +197,8 @@
      <widget class="QLabel" name="AumaPortLabel">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>80</y>
+        <x>10</x>
+        <y>60</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -197,8 +210,8 @@
      <widget class="QPushButton" name="AumaChangeSettingsButton">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>130</y>
+        <x>10</x>
+        <y>140</y>
         <width>171</width>
         <height>51</height>
        </rect>
@@ -210,8 +223,8 @@
      <widget class="QPushButton" name="AumaTestDeviceButton">
       <property name="geometry">
        <rect>
-        <x>510</x>
-        <y>130</y>
+        <x>530</x>
+        <y>140</y>
         <width>141</width>
         <height>51</height>
        </rect>
@@ -223,9 +236,9 @@
      <widget class="QLabel" name="AumaTypeInputLabel">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>40</y>
-        <width>561</width>
+        <x>40</x>
+        <y>20</y>
+        <width>61</width>
         <height>21</height>
        </rect>
       </property>
@@ -236,9 +249,9 @@
      <widget class="QLabel" name="AumaIPInputLabel">
       <property name="geometry">
        <rect>
-        <x>110</x>
-        <y>60</y>
-        <width>511</width>
+        <x>70</x>
+        <y>40</y>
+        <width>131</width>
         <height>21</height>
        </rect>
       </property>
@@ -249,9 +262,9 @@
      <widget class="QLabel" name="AumaPortInputLabel">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>80</y>
-        <width>571</width>
+        <x>40</x>
+        <y>60</y>
+        <width>61</width>
         <height>21</height>
        </rect>
       </property>
@@ -272,13 +285,26 @@
        <string/>
       </property>
      </widget>
+     <widget class="QLabel" name="AumaConnectionState">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>120</y>
+        <width>91</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QGroupBox" name="CustomDevicesGroup">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>390</y>
+      <x>0</x>
+      <y>400</y>
       <width>641</width>
       <height>151</height>
      </rect>
@@ -316,7 +342,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1097</width>
+     <width>763</width>
      <height>17</height>
     </rect>
    </property>

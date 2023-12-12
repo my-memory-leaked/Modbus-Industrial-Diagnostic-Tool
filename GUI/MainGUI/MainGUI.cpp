@@ -27,6 +27,7 @@ MainGUI::MainGUI(QWidget *parent)
     _mbController = &Singleton<ModbusController>::GetInstance();
     (void)readDevicesFromFile();
     (void)loadAumaLogo();
+    (void)loadDevicesStates();
 
 }
 
@@ -48,6 +49,15 @@ void MainGUI::handleInterfaceStateChange(const QString& deviceName, const QModbu
 {
     ModbusStrategy* interface = _mbController->GetInterfaceByName(deviceName);
     if (!interface) return; // No interface found for given device name
+
+    if (deviceName == "Auma" && newState == QModbusDevice::State::ConnectedState)
+    {
+        ui->AumaConnectionState->setPixmap(GetConnectedImage());
+    }
+    else if(deviceName == "localhost" && newState == QModbusDevice::State::ConnectedState)
+    {
+        ui->LocalhostConnectionState->setPixmap(GetConnectedImage());
+    }
 
     QString updatedInfo = createDeviceInfoString(interface);
 
@@ -209,5 +219,31 @@ void MainGUI::loadAumaLogo()
 
         ui->AumaLogoLabel->setPixmap(scaledPixmap);
     }
+}
 
+void MainGUI::loadDevicesStates()
+{
+    QPixmap disconnectedPixmap = GetDisconnectedImage();
+    ui->AumaConnectionState->setPixmap(disconnectedPixmap);
+    ui->LocalhostConnectionState->setPixmap(disconnectedPixmap);
+}
+
+QPixmap MainGUI::GetConnectedImage()
+{
+    QString appDirPath = QCoreApplication::applicationDirPath() + "/Images/ConnectedState.png";
+    QPixmap connectedPixmap(appDirPath);
+    /* Scale logo */
+    QPixmap scaledPixmap = connectedPixmap.scaled(ui->AumaLogoLabel->size(),
+                                                 Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    return scaledPixmap;
+}
+
+QPixmap MainGUI::GetDisconnectedImage()
+{
+    QString appDirPath = QCoreApplication::applicationDirPath() + "/Images/DisconnectedState.png";
+    QPixmap disconnectedPixmap(appDirPath);
+    /* Scale logo */
+    QPixmap scaledPixmap = disconnectedPixmap.scaled(ui->AumaLogoLabel->size(),
+                                                  Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    return scaledPixmap;
 }

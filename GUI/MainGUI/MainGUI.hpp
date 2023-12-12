@@ -47,5 +47,10 @@ private:
     void updateLocalhostDevice(const ModbusStrategy* cInterface);
 
     void loadAumaLogo();
+    void loadDevicesStates();
+
+    QPixmap GetConnectedImage();
+    QPixmap GetDisconnectedImage();
+
 
 };
