@@ -56,13 +56,6 @@ void MainGUI::handleTestButtonClick()
     int startAddress = 0;
     int numberOfRegisters = 1;
 
-    // QModbusDataUnit query(QModbusDataUnit::HoldingRegisters, startAddress, numberOfRegisters);
-    // QModbusReply* result = interface->ReadData(query);
-
-    // if(result)
-    // {
-    //     connect(result, &QModbusReply::finished, this, &MainGUI::handleModbusReply);
-    // }
 }
 
 void MainGUI::handleModbusReply()
@@ -106,6 +99,15 @@ void MainGUI::handleInterfaceStateChange(const QString& deviceName, const QModbu
         }
     }
 }
+void MainGUI::handleAumaChangeSettingsButton()
+{
+    changeModbusDeviceParameters(_mbController->GetInterfaceByName("Auma"));
+}
+
+void MainGUI::handleAumaTestButton()
+{
+    /* TODO Refactor this! */
+}
 
 void MainGUI::handleLocalhostChangeSettingsButton()
 {
@@ -125,6 +127,9 @@ void MainGUI::connectSignalsAndSlots() const
     connect(ui->TestButton, &QPushButton::clicked, this, &MainGUI::handleTestButtonClick);
 
 
+    connect(ui->AumaChangeSettingsButton, &QPushButton::clicked, this, &MainGUI::handleAumaChangeSettingsButton);
+    connect(ui->AumaTestDeviceButton, &QPushButton::clicked, this, &MainGUI::handleAumaTestButton);
+
     connect(ui->LocalhostChangeSettingsButton, &QPushButton::clicked, this, &MainGUI::handleLocalhostChangeSettingsButton);
     connect(ui->LocalhostTestDeviceButton, &QPushButton::clicked, this, &MainGUI::handleLocalhostTestButton);
 }
@@ -135,8 +140,15 @@ void MainGUI::readDevicesFromFile()
     auto deviceList = deviceConventer.FromJsonFile("JSON/Devices.json");
     for (auto device : deviceList)
     {
-        if (device->GetDeviceName() == "localhost")
+        if (device->GetDeviceName() == "Auma")
+        {
+            updateAumaDevice(device.get());
+        }
+        else if(device->GetDeviceName() == "localhost")
+        {
             updateLocalhostDevice(device.get());
+        }
+
 
         _mbController->AddInterface(std::move(device));
     }
@@ -191,11 +203,27 @@ void MainGUI::changeModbusDeviceParameters(ModbusStrategy* interface)
 {
     ChangeModbusDeviceParameters modbusDialog(this, interface);
     if(modbusDialog.exec() == QDialog::Accepted)
-    {
-        updateLocalhostDevice(interface);
+    {   
+        if (interface->GetDeviceName() == "Auma")
+        {
+            updateAumaDevice(interface);
+        }
+        else if(interface->GetDeviceName() == "localhost")
+        {
+            updateLocalhostDevice(interface);
+        }
     }
 }
 
+void MainGUI::updateAumaDevice(const ModbusStrategy* cInterface)
+{
+    if (!cInterface->GetDeviceName().isEmpty())
+        ui->AumaGroupBox->setTitle(cInterface->GetDeviceName());
+
+    ui->AumaTypeInputLabel->setText("TCP");
+    ui->AumaIPInputLabel->setText(cInterface->GetConnectionParameters().GetIpAddress());
+    ui->AumaPortInputLabel->setText(QString::number(cInterface->GetConnectionParameters().GetPort()));
+}
 
 void MainGUI::updateLocalhostDevice(const ModbusStrategy* cInterface)
 {

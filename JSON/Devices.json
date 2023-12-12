@@ -13,13 +13,13 @@
       ]
     },
     {
-      "DeviceName": "Silnik Elektryczny",
+      "DeviceName": "Auma",
       "Registers":
       [
       	{
           "Type": "TCP",
           "IPAddress": "192.168.0.1",
-          "Port": 5032
+          "Port": 2137
         }
       ]
     }

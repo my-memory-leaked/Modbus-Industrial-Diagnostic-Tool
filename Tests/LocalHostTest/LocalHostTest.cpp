@@ -6,6 +6,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QTimer>
 
 static auto* logger = &Logger::GetInstance();
 
@@ -15,21 +16,24 @@ LocalHostTest::~LocalHostTest() {}
 
 void LocalHostTest::RunTest()
 {
+    SystemResult status = SystemResult::SYSTEM_OK;
+
     auto* mbController = &ModbusController::GetInstance();
     ModbusStrategy* mbStrategy = nullptr;
 
     mbStrategy = mbController->GetInterfaceByName("localhost");
     if ( !mbStrategy )
     {
+        status = SystemResult::SYSTEM_ERROR;
         logger->LogCritical(TAG, "Strategy nullptr returned!");
         return;
     }
 
     logger->LogInfo(TAG, "Startring test for: "+ mbStrategy->GetDeviceName());
 
-
     if ( !mbStrategy->IsConnected() )
     {
+        status = SystemResult::SYSTEM_ERROR;
         logger->LogCritical(TAG, "Can't run test for disconnected device!");
         return;
     }
@@ -39,10 +43,14 @@ void LocalHostTest::RunTest()
     logger->LogInfo(TAG, appDirPath);
     mbStrategy->LoadRegistersFromJSON(appDirPath);
 
-    QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("Siema");
-    mbStrategy->ReadData(data);
 
-    QModbusDataUnit powerQuery = mbStrategy->GetQModbusDataUnitByName("Moc");
+    status = getLanguageFromDevice(mbStrategy);
+    if(SystemResult::SYSTEM_OK != status)
+    {
+
+    }
+
+    QModbusDataUnit powerQuery = mbStrategy->GetQModbusDataUnitByName("FirmwareVersion");
     QModbusReply* powerReply = mbStrategy->ReadData(powerQuery);
 
     if (powerReply)
@@ -82,3 +90,37 @@ void LocalHostTest::onPowerRegisterReceived(QModbusReply* reply)
     }
 }
 
+
+SystemResult LocalHostTest::getLanguageFromDevice(ModbusStrategy *mbStrategy)
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+    QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("Language");
+    QModbusReply *languageReply = mbStrategy->ReadData(data);
+
+    if(languageReply)
+    {
+        if (languageReply->isFinished())
+        {
+        }
+        else
+        {
+            // QTimer::singleShot(timeoutDuration, this, [this, languageReply]() {
+            //     if (!languageReply->isFinished())
+            //     {
+            //         // Handle timeout scenario
+            //         retVal = SystemResult::SYSTEM_ERROR;
+            //         logger->LogCritical(TAG, "Timeout occurred while reading language from device!");
+            //     }
+            // });
+        }
+
+    } else
+    {
+        retVal = SystemResult::SYSTEM_ERROR;
+    }
+
+    if (SystemResult::SYSTEM_OK != retVal)
+        logger->LogCritical(TAG, "Filed to read language from device!");
+
+    return retVal;
+}

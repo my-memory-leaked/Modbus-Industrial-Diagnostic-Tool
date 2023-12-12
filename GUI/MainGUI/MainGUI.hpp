@@ -26,6 +26,10 @@ private slots:
     void handleModbusReply();
 
     void handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState);
+
+    void handleAumaChangeSettingsButton();
+    void handleAumaTestButton();
+
     void handleLocalhostChangeSettingsButton();
     void handleLocalhostTestButton();
 
@@ -41,6 +45,7 @@ private:
 
     void updateDevicesList();
     void changeModbusDeviceParameters(ModbusStrategy* interface);
+    void updateAumaDevice(const ModbusStrategy* cInterface);
     void updateLocalhostDevice(const ModbusStrategy* cInterface);
 
     void loadAumaLogo();

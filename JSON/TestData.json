@@ -1,14 +1,17 @@
 {
-  "Devices":
-  [
+  "Devices": [
     {
-      "DeviceName": "Termometr Przemysłowy",
-      "Registers":
-      [
+      "DeviceName": "AUMA",
+      "Registers": [
         {
-          "RegisterName": "Temperatura",
-          "RegisterType": "InputRegisters",
-          "RegisterNumber": 30001
+          "RegisterName": "Language",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1
+        },
+        {
+          "RegisterName": "FirmwareVersion",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1205
         },
         {
           "RegisterName": "Ciśnienie",
@@ -20,8 +23,7 @@
 
     {
       "DeviceName": "Silnik Elektryczny",
-      "Registers":
-      [
+      "Registers": [
         {
           "RegisterName": "Prędkość Obrotowa",
           "RegisterType": "DiscreteInputs",
@@ -30,11 +32,24 @@
         {
           "RegisterName": "Moc",
           "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 2137
+        }
+      ]
+    },
+    {
+      "DeviceName": "Termometr Przemysłowy",
+      "Registers": [
+        {
+          "RegisterName": "Temperatura",
+          "RegisterType": "InputRegisters",
+          "RegisterNumber": 30001
+        },
+        {
+          "RegisterName": "Ciśnienie",
+          "RegisterType": "HoldingRegisters",
           "RegisterNumber": 40001
         }
       ]
     }
-
   ]
-
 }

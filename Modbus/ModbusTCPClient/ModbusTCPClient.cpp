@@ -4,7 +4,6 @@
 #include <QModbusTcpClient>
 #include <QVariant>
 #include <ModbusRegisterTypeMapper.hpp>
-#include <ModbusParser.hpp>
 #include <ModbusStateMapper.hpp>
 #include <QTimer>
 
