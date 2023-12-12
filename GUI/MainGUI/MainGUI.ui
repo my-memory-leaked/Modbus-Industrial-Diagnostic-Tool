@@ -7,56 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>1097</width>
-    <height>726</height>
+    <height>777</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="AddDevice">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>140</y>
-      <width>191</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add custom device</string>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="DevicesListWidget">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>40</y>
-      <width>621</width>
-      <height>91</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="TestButton">
-    <property name="geometry">
-     <rect>
-      <x>580</x>
-      <y>150</y>
-      <width>91</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Test</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="DevicesGroupBox">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>250</y>
-      <width>681</width>
-      <height>371</height>
+      <x>0</x>
+      <y>0</y>
+      <width>691</width>
+      <height>381</height>
      </rect>
     </property>
     <property name="title">
@@ -65,8 +29,8 @@
     <widget class="QGroupBox" name="LocalhostGroupBox">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>40</y>
+       <x>10</x>
+       <y>20</y>
        <width>651</width>
        <height>181</height>
       </rect>
@@ -179,6 +143,185 @@
       </property>
      </widget>
     </widget>
+    <widget class="QGroupBox" name="AumaGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>200</y>
+       <width>671</width>
+       <height>191</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Auma</string>
+     </property>
+     <widget class="QLabel" name="AumaTypeLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>61</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Type:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="AumaIPLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>IP Address:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="AumaPortLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>51</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Port:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="AumaChangeSettingsButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>130</y>
+        <width>171</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Change settings</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="AumaTestDeviceButton">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>130</y>
+        <width>141</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Test Device</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="AumaTypeInputLabel">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>40</y>
+        <width>561</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="AumaIPInputLabel">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>60</y>
+        <width>511</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="AumaPortInputLabel">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>80</y>
+        <width>571</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="AumaLogoLabel">
+      <property name="geometry">
+       <rect>
+        <x>486</x>
+        <y>31</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="CustomDevicesGroup">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>390</y>
+      <width>641</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Custom devices:</string>
+    </property>
+    <widget class="QListWidget" name="DevicesListWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>621</width>
+       <height>91</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="TestButton">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>110</y>
+       <width>91</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Test</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="AddDevice">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>191</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Add custom device</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -187,7 +330,7 @@
      <x>0</x>
      <y>0</y>
      <width>1097</width>
-     <height>26</height>
+     <height>17</height>
     </rect>
    </property>
   </widget>

@@ -3,6 +3,7 @@
 
 #include <QMessageBox>
 #include <QModbusRtuSerialClient>
+#include <QPixmap>
 
 #include <ApplicationConstant.hpp>
 #include <AddModbusDeviceGUI.hpp>
@@ -25,6 +26,9 @@ MainGUI::MainGUI(QWidget *parent)
 
     _mbController = &Singleton<ModbusController>::GetInstance();
     (void)readDevicesFromFile();
+
+    QPixmap aumaLogoPixmap("/Images/AumaLogo.png");
+    ui->AumaLogoLabel->setPixmap(aumaLogoPixmap);
 
 }
 
