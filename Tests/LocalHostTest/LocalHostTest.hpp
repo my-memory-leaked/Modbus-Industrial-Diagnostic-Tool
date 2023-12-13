@@ -15,14 +15,15 @@ public:
 
     QString GetDeviceName() const;
 private slots:
-    void onPowerRegisterReceived(QModbusReply* reply);
+    void onPowerRegisterReceived(QModbusReply *reply);
+
 private:
     static constexpr const char TAG[] = "[LocalHostTest]";
     static constexpr const char _deviceName[] = "Termometr Przemysłowy";
     inline static const QString _cJsonFilePath = "/JSON/TestData.json";
 
     SystemResult getLanguageFromDevice(ModbusStrategy *mbStrategySystemResult);
+    SystemResult getFirmwareVersion(ModbusStrategy *mbStrategySystemResult);
 
-
+    QString modbusDataUnitToString(const QModbusDataUnit &unit);
 };
-

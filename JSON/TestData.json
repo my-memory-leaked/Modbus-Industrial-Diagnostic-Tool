@@ -11,38 +11,7 @@
         {
           "RegisterName": "FirmwareVersion",
           "RegisterType": "HoldingRegisters",
-          "RegisterNumber": 1205
-        },
-        {
-          "RegisterName": "Ciśnienie",
-          "RegisterType": "HoldingRegisters",
-          "RegisterNumber": 40001
-        }
-      ]
-    },
-
-    {
-      "DeviceName": "Silnik Elektryczny",
-      "Registers": [
-        {
-          "RegisterName": "Prędkość Obrotowa",
-          "RegisterType": "DiscreteInputs",
-          "RegisterNumber": 10001
-        },
-        {
-          "RegisterName": "Moc",
-          "RegisterType": "HoldingRegisters",
-          "RegisterNumber": 2137
-        }
-      ]
-    },
-    {
-      "DeviceName": "Termometr Przemysłowy",
-      "Registers": [
-        {
-          "RegisterName": "Temperatura",
-          "RegisterType": "InputRegisters",
-          "RegisterNumber": 30001
+          "RegisterNumber": 1
         },
         {
           "RegisterName": "Ciśnienie",
