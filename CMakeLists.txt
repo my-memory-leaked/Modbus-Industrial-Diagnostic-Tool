@@ -49,6 +49,7 @@ include_directories(
     Tests
     Tests/TestInterface
     Tests/LocalHostTest
+    Tests/ActuatorResponseValidation
 
     Images
 
@@ -96,6 +97,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         JSON/JSONToDevicesConventer/JSONToDevicesConventer.hpp JSON/JSONToDevicesConventer/JSONToDevicesConventer.cpp
         GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.hpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.cpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.ui
         GUI/AumaTestGUI/AumaTestGUI.hpp GUI/AumaTestGUI/AumaTestGUI.cpp GUI/AumaTestGUI/AumaTestGUI.ui
+        Tests/ActuatorResponseValidation/ActuatorResponseValidation.hpp Tests/ActuatorResponseValidation/ActuatorResponseValidation.cpp
 
 
     )

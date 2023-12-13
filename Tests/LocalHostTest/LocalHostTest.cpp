@@ -199,12 +199,6 @@ bool LocalHostTest::positionReached(int actualPosition, int targetPosition, int 
     return std::abs(actualPosition - targetPosition) <= tolerance;
 }
 
-
-
-
-
-
-
 QString LocalHostTest::modbusDataUnitToString(const QModbusDataUnit &unit)
 {
     QString result;
