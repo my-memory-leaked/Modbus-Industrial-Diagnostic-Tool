@@ -4,19 +4,19 @@
       "DeviceName": "AUMA",
       "Registers": [
         {
-          "RegisterName": "Language",
-          "RegisterType": "HoldingRegisters",
-          "RegisterNumber": 1
-        },
-        {
           "RegisterName": "FirmwareVersion",
           "RegisterType": "HoldingRegisters",
-          "RegisterNumber": 1
+          "RegisterNumber": 1205
         },
         {
-          "RegisterName": "Ciśnienie",
-          "RegisterType": "HoldingRegisters",
-          "RegisterNumber": 40001
+           "RegisterName": "Setpoint",
+           "RegisterType": "HoldingRegisters",
+           "RegisterNumber": 1252
+        },
+        {
+           "RegisterName": "ActualPosition",
+           "RegisterType": "HoldingRegisters",
+           "RegisterNumber": 1252
         }
       ]
     }

@@ -42,30 +42,20 @@ void LocalHostTest::RunTest()
     logger->LogInfo(TAG, appDirPath);
     mbStrategy->LoadRegistersFromJSON(appDirPath);
 
+    status = getFirmwareVersion(mbStrategy);
+    if( status != SystemResult::SYSTEM_OK)
+    {
+        logger->LogCritical(TAG, "Getting firmware version failed!");
+// TODO REACT
+    }
 
+    status = testOpenTo80Percent(mbStrategy);
+    if( status != SystemResult::SYSTEM_OK)
+    {
+        logger->LogCritical(TAG, "Setting actuator to 80% failed!");
+        // TODO REACT
+    }
 
-    getFirmwareVersion(mbStrategy);
-
-    // status = getLanguageFromDevice(mbStrategy);
-    // if (SystemResult::SYSTEM_OK != status)
-    // {
-    // }
-
-    // QModbusDataUnit powerQuery = mbStrategy->GetQModbusDataUnitByName("FirmwareVersion");
-    // QModbusReply *powerReply = mbStrategy->ReadData(powerQuery);
-
-    // if (powerReply)
-    // {
-    //     if (powerReply->isFinished())
-    //     {
-    //         onPowerRegisterReceived(powerReply);
-    //     }
-    //     else
-    //     {
-    //         connect(powerReply, &QModbusReply::finished, this, [this, powerReply]()
-    //                 { onPowerRegisterReceived(powerReply); });
-    //     }
-    // }
 }
 
 QString LocalHostTest::GetDeviceName() const
@@ -85,50 +75,14 @@ void LocalHostTest::onPowerRegisterReceived(QModbusReply *reply)
     }
     else
     {
-        // Handle errors if necessary
         logger->LogDebug(TAG, "Modbus reply error: " + reply->errorString());
     }
-}
-
-SystemResult LocalHostTest::getLanguageFromDevice(ModbusStrategy *mbStrategy)
-{
-    SystemResult retVal = SystemResult::SYSTEM_OK;
-    QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("Language");
-    QModbusReply *languageReply = mbStrategy->ReadData(data);
-
-    if (languageReply)
-    {
-        if (languageReply->isFinished())
-        {
-        }
-        else
-        {
-            // QTimer::singleShot(timeoutDuration, this, [this, languageReply]() {
-            //     if (!languageReply->isFinished())
-            //     {
-            //         // Handle timeout scenario
-            //         retVal = SystemResult::SYSTEM_ERROR;
-            //         logger->LogCritical(TAG, "Timeout occurred while reading language from device!");
-            //     }
-            // });
-        }
-    }
-    else
-    {
-        retVal = SystemResult::SYSTEM_ERROR;
-    }
-
-    if (SystemResult::SYSTEM_OK != retVal)
-        logger->LogCritical(TAG, "Filed to read language from device!");
-
-    return retVal;
 }
 
 SystemResult LocalHostTest::getFirmwareVersion(ModbusStrategy *mbStrategy)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
 
-    // Assuming GetQModbusDataUnitByName is a method that creates a QModbusDataUnit based on a register name
     QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("FirmwareVersion");
 
     /* We need to ask for 20 bytes */
@@ -169,6 +123,83 @@ SystemResult LocalHostTest::getFirmwareVersion(ModbusStrategy *mbStrategy)
     firmwareReply->deleteLater();
     return retVal;
 }
+
+SystemResult LocalHostTest::testOpenTo80Percent(ModbusStrategy *mbStrategy)
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+
+    // 1. Write to Position Setpoint Register
+    QModbusDataUnit setPositionUnit = mbStrategy->GetQModbusDataUnitByName("PositionSetpoint");
+    setPositionUnit.setValue(0, 800);// 80% of 1000
+    mbStrategy->WriteData(setPositionUnit);
+
+    // 2. Monitor Actual Position Register
+    QModbusDataUnit actualPositionUnit = mbStrategy->GetQModbusDataUnitByName("ActualPosition");
+    int actualPosition;
+
+    while (true)
+    {
+        QModbusReply *positionReply = mbStrategy->ReadData(actualPositionUnit);
+
+        QEventLoop loop;
+        connect(positionReply, &QModbusReply::finished, &loop, &QEventLoop::quit);
+        QTimer::singleShot(5000, &loop, &QEventLoop::quit); // Timeout after 5000 ms
+        loop.exec();
+
+        if (positionReply->isFinished())
+        {
+            if (positionReply->error() == QModbusDevice::NoError)
+            {
+                actualPosition = extractPositionValue(positionReply);
+                if (positionReached(actualPosition, 800))
+                    break;
+            }
+            else
+            {
+                logger->LogCritical(TAG, "Modbus Error: " + positionReply->errorString());
+                retVal = SystemResult::SYSTEM_ERROR;
+                break;
+            }
+        }
+        else
+        {
+            logger->LogCritical(TAG, "Timeout waiting for actual position reply!");
+            retVal = SystemResult::SYSTEM_ERROR;
+            break;
+        }
+
+        positionReply->deleteLater();
+    }
+
+    return retVal;
+}
+
+
+int LocalHostTest::extractPositionValue(QModbusReply *reply)
+{
+    const QModbusDataUnit unit = reply->result();
+    if (unit.valueCount() > 0)
+    {
+        quint16 value = unit.value(0);
+        return static_cast<int>(value);
+    }
+    else
+    {
+        logger->LogWarning(TAG, "No data in Modbus reply for position value.");
+        return -1; // Indicate an error or invalid value
+    }
+}
+
+bool LocalHostTest::positionReached(int actualPosition, int targetPosition, int tolerance)
+{
+    return std::abs(actualPosition - targetPosition) <= tolerance;
+}
+
+
+
+
+
+
 
 QString LocalHostTest::modbusDataUnitToString(const QModbusDataUnit &unit)
 {

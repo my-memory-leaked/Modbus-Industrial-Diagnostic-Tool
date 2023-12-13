@@ -22,8 +22,11 @@ private:
     static constexpr const char _deviceName[] = "Termometr Przemysłowy";
     inline static const QString _cJsonFilePath = "/JSON/TestData.json";
 
-    SystemResult getLanguageFromDevice(ModbusStrategy *mbStrategySystemResult);
     SystemResult getFirmwareVersion(ModbusStrategy *mbStrategySystemResult);
+    SystemResult testOpenTo80Percent(ModbusStrategy *mbStrategy);
+
+    int extractPositionValue(QModbusReply *reply);
+    bool positionReached(int actualPosition, int targetPosition, int tolerance = 10);
 
     QString modbusDataUnitToString(const QModbusDataUnit &unit);
 };
