@@ -24,6 +24,7 @@ private:
 
     SystemResult getFirmwareVersion(ModbusStrategy *mbStrategySystemResult);
     SystemResult testOpenTo80Percent(ModbusStrategy *mbStrategy);
+    SystemResult testActuatorPositioning(ModbusStrategy *mbStrategy, int targetPosition);
 
     int extractPositionValue(QModbusReply *reply);
     bool positionReached(int actualPosition, int targetPosition, int tolerance = 10);

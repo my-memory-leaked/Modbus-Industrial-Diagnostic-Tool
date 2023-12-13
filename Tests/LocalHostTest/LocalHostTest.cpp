@@ -83,7 +83,7 @@ SystemResult LocalHostTest::getFirmwareVersion(ModbusStrategy *mbStrategy)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
 
-    QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("FirmwareVersion");
+    QModbusDataUnit data = mbStrategy->GetQModbusDataUnitByName("Version");
 
     /* We need to ask for 20 bytes */
     data.setValueCount(20);
@@ -126,15 +126,19 @@ SystemResult LocalHostTest::getFirmwareVersion(ModbusStrategy *mbStrategy)
 
 SystemResult LocalHostTest::testOpenTo80Percent(ModbusStrategy *mbStrategy)
 {
+    return testActuatorPositioning(mbStrategy, 800);
+}
+
+
+SystemResult LocalHostTest::testActuatorPositioning(ModbusStrategy *mbStrategy, int targetPosition)
+{
     SystemResult retVal = SystemResult::SYSTEM_OK;
 
-    // 1. Write to Position Setpoint Register
-    QModbusDataUnit setPositionUnit = mbStrategy->GetQModbusDataUnitByName("PositionSetpoint");
-    setPositionUnit.setValue(0, 800);// 80% of 1000
+    QModbusDataUnit setPositionUnit = mbStrategy->GetQModbusDataUnitByName("Positioner");
+    QModbusDataUnit actualPositionUnit(setPositionUnit);
+    setPositionUnit.setValue(0, targetPosition); // Set target position
     mbStrategy->WriteData(setPositionUnit);
 
-    // 2. Monitor Actual Position Register
-    QModbusDataUnit actualPositionUnit = mbStrategy->GetQModbusDataUnitByName("ActualPosition");
     int actualPosition;
 
     while (true)
@@ -151,7 +155,7 @@ SystemResult LocalHostTest::testOpenTo80Percent(ModbusStrategy *mbStrategy)
             if (positionReply->error() == QModbusDevice::NoError)
             {
                 actualPosition = extractPositionValue(positionReply);
-                if (positionReached(actualPosition, 800))
+                if (positionReached(actualPosition, targetPosition))
                     break;
             }
             else

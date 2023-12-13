@@ -4,19 +4,280 @@
       "DeviceName": "AUMA",
       "Registers": [
         {
-          "RegisterName": "FirmwareVersion",
+          "RegisterName": "Display",
           "RegisterType": "HoldingRegisters",
-          "RegisterNumber": 1205
+          "RegisterNumber": 1201,
+          "DataLengthBytes": 14
         },
         {
-           "RegisterName": "Setpoint",
-           "RegisterType": "HoldingRegisters",
-           "RegisterNumber": 1252
+          "RegisterName": "Identifications",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1202,
+          "DataLengthBytes": 60
         },
         {
-           "RegisterName": "ActualPosition",
-           "RegisterType": "HoldingRegisters",
-           "RegisterNumber": 1252
+          "RegisterName": "Controls",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1203,
+          "DataLengthBytes": 80
+        },
+        {
+          "RegisterName": "Actuator",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1204,
+          "DataLengthBytes": 60
+        },
+        {
+          "RegisterName": "Version",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1205,
+          "DataLengthBytes": 40
+        },
+        {
+          "RegisterName": "FirmwareDetails",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1206,
+          "DataLengthBytes": 160
+        },
+        {
+          "RegisterName": "HardwareArticleN.",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1207,
+          "DataLengthBytes": 140
+        },
+        {
+          "RegisterName": "TypeOfSeating",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1209,
+          "DataLengthBytes": 4
+        },
+        {
+          "RegisterName": "TorqueSwitching",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1210,
+          "DataLengthBytes": 12
+        },
+        {
+          "RegisterName": "LocalControls",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1211,
+          "DataLengthBytes": 10
+        },
+        {
+          "RegisterName": "I/OInterface",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1212,
+          "DataLengthBytes": 4
+        },
+        {
+          "RegisterName": "Positioner",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1214,
+          "DataLengthBytes": 30
+        },
+        {
+          "RegisterName": "ProcessController",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1267,
+          "DataLengthBytes": 26
+        },
+        {
+          "RegisterName": "FailureBehaviour",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1215,
+          "DataLengthBytes": 12
+        },
+        {
+          "RegisterName": "EMERGENCYBehaviour",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1216,
+          "DataLengthBytes": 26
+        },
+        {
+          "RegisterName": "TimerFunction",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1217,
+          "DataLengthBytes": 20
+        },
+        {
+          "RegisterName": "MonitoringOperationMode",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1223,
+          "DataLengthBytes": 6
+        },
+        {
+          "RegisterName": "MotionDetector",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1224,
+          "DataLengthBytes": 12
+        },
+        {
+          "RegisterName": "OperatingTimeMonitoring",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1225,
+          "DataLengthBytes": 4
+        },
+        {
+          "RegisterName": "ReactionMonitoring",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1226,
+          "DataLengthBytes": 4
+        },
+        {
+          "RegisterName": "Interlock",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1227,
+          "DataLengthBytes": 8
+        },
+        {
+          "RegisterName": "PVST",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1266,
+          "DataLengthBytes": 18
+        },
+        {
+          "RegisterName": "LocalControls",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1228,
+          "DataLengthBytes": 22
+        },
+        {
+          "RegisterName": "FOCableConnection",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1268,
+          "DataLengthBytes": 6
+        },
+        {
+          "RegisterName": "Actuator",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1236,
+          "DataLengthBytes": 12
+        },
+        {
+          "RegisterName": "MWG",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1237,
+          "DataLengthBytes": 44
+        },
+        {
+          "RegisterName": "Potentiometer",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1238,
+          "DataLengthBytes": 8
+        },
+        {
+          "RegisterName": "PhaseFailureMonitoring",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1239,
+          "DataLengthBytes": 4
+        },
+        {
+          "RegisterName": "Switchgear",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1240,
+          "DataLengthBytes": 2
+        },
+        {
+          "RegisterName": "MonitoringFunctions",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1241,
+          "DataLengthBytes": 18
+        },
+        {
+          "RegisterName": "ServiceInterface",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1242,
+          "DataLengthBytes": 22
+        },
+        {
+          "RegisterName": "ServiceFunctions",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1245,
+          "DataLengthBytes": 4
+        },
+        {
+          "RegisterName": "General",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1244,
+          "DataLengthBytes": 48
+        },
+        {
+          "RegisterName": "Positioner",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1252,
+          "DataLengthBytes": 26
+        },
+        {
+          "RegisterName": "OperationMode",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1253,
+          "DataLengthBytes": 8
+        },
+        {
+          "RegisterName": "ProcessController",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1273,
+          "DataLengthBytes": 8
+        },
+        {
+          "RegisterName": "Bluetooth",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1254,
+          "DataLengthBytes": 62
+        },
+        {
+          "RegisterName": "PositionTransmitterPotentiometer",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1269,
+          "DataLengthBytes": 10
+        },
+        {
+          "RegisterName": "FO",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1258,
+          "DataLengthBytes": 28
+        },
+        {
+          "RegisterName": "OperationalInfoTotal",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1259,
+          "DataLengthBytes": 80
+        },
+        {
+          "RegisterName": "OperationalInfo",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1260,
+          "DataLengthBytes": 82
+        },
+        {
+          "RegisterName": "EventReport",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1261,
+          "DataLengthBytes": 10
+        },
+        {
+          "RegisterName": "Characteristics",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1265,
+          "DataLengthBytes": 62
+        },
+        {
+          "RegisterName": "DeviceTemperatures",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1262,
+          "DataLengthBytes": 8
+        },
+        {
+          "RegisterName": "ControlsVersion",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1263,
+          "DataLengthBytes": 6
+        },
+        {
+          "RegisterName": "HardwareEquipment",
+          "RegisterType": "HoldingRegisters",
+          "RegisterNumber": 1264,
+          "DataLengthBytes": 46
         }
       ]
     }
