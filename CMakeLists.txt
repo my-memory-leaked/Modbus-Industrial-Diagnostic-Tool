@@ -20,6 +20,7 @@ include_directories(
     GUI/MainGUI
     GUI/AddModbusDeviceGUI
     GUI/ChangeModbusDeviceParameters
+    GUI/AumaTestGUI
 
     ApplicationConstant
     SystemResult
@@ -94,6 +95,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Tests/LocalHostTest/LocalHostTest.hpp Tests/LocalHostTest/LocalHostTest.cpp
         JSON/JSONToDevicesConventer/JSONToDevicesConventer.hpp JSON/JSONToDevicesConventer/JSONToDevicesConventer.cpp
         GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.hpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.cpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.ui
+        GUI/AumaTestGUI/AumaTestGUI.hpp GUI/AumaTestGUI/AumaTestGUI.cpp GUI/AumaTestGUI/AumaTestGUI.ui
+
 
     )
 

@@ -14,6 +14,7 @@
 #include <JSONToDevicesConventer.hpp>
 #include <ModbusStateMapper.hpp>
 #include <ChangeModbusDeviceParameters.hpp>
+#include <AumaTestGUI.hpp>
 
 
 MainGUI::MainGUI(QWidget *parent)
@@ -80,6 +81,12 @@ void MainGUI::handleAumaChangeSettingsButton()
 void MainGUI::handleAumaTestButton()
 {
     /* TODO this! */
+    AumaTestGUI aumaTestGui(this);
+    if(aumaTestGui.exec() == QDialog::Accepted)
+    {
+
+    }
+
 }
 
 void MainGUI::handleLocalhostChangeSettingsButton()
