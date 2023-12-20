@@ -80,13 +80,13 @@ void MainGUI::handleAumaChangeSettingsButton()
 
 void MainGUI::handleAumaTestButton()
 {
-    /* TODO this! */
-    AumaTestGUI aumaTestGui(this);
+    std::shared_ptr<TestInterface> testInterface;
+    AumaTestGUI aumaTestGui(testInterface, this);
     if(aumaTestGui.exec() == QDialog::Accepted)
     {
-
+        if(testInterface.get())
+            testInterface->RunTest();
     }
-
 }
 
 void MainGUI::handleLocalhostChangeSettingsButton()

@@ -29,7 +29,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QRadioButton" name="Test1RadioButton">
+  <widget class="QRadioButton" name="ARVRadioButton">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -45,7 +45,7 @@
     <string notr="true">TestButtonGroup</string>
    </attribute>
   </widget>
-  <widget class="QRadioButton" name="Test2RadioButton">
+  <widget class="QRadioButton" name="PCOSRadioButton">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -61,7 +61,7 @@
     <string notr="true">TestButtonGroup</string>
    </attribute>
   </widget>
-  <widget class="QRadioButton" name="Test3RadioButton">
+  <widget class="QRadioButton" name="FDVRadioButton">
    <property name="geometry">
     <rect>
      <x>20</x>

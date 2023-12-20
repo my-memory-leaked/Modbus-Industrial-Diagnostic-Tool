@@ -10,7 +10,7 @@ ActuatorResponseValidation::~ActuatorResponseValidation() {}
 
 void ActuatorResponseValidation::RunTest()
 {
-
+    logger->LogInfo(TAG, "Started test...");
 }
 SystemResult ActuatorResponseValidation::testOpenTo80Percent(ModbusStrategy *mbStrategy)
 {
