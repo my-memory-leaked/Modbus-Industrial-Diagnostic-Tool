@@ -4,6 +4,8 @@
 #include <Logger.hpp>
 
 #include <ActuatorResponseValidation.hpp>
+#include <ProcessControllerOperationAndStability.hpp>
+#include <FirmwareDetailVerification.hpp>
 
 static auto* logger = &Singleton<Logger>::GetInstance();
 
@@ -32,11 +34,11 @@ void AumaTestGUI::accept()
     }
     else if(radioButtonText == "Process Controller Operation and Stability")
     {
-        _testInterface = std::make_shared<ActuatorResponseValidation>();
+        _testInterface = std::make_shared<ProcessControllerOperationAndStability>();
     }
     else if(radioButtonText == "Firmware Detail Verification")
     {
-        _testInterface = std::make_shared<ActuatorResponseValidation>();
+        _testInterface = std::make_shared<FirmwareDetailVerification>();
     }
     else
     {

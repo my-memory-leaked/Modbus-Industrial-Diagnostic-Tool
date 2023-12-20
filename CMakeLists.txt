@@ -50,6 +50,8 @@ include_directories(
     Tests/TestInterface
     Tests/LocalHostTest
     Tests/ActuatorResponseValidation
+    Tests/ProcessControllerOperationAndStability
+    Tests/FirmwareDetailVerification
 
     Images
 
@@ -98,6 +100,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.hpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.cpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.ui
         GUI/AumaTestGUI/AumaTestGUI.hpp GUI/AumaTestGUI/AumaTestGUI.cpp GUI/AumaTestGUI/AumaTestGUI.ui
         Tests/ActuatorResponseValidation/ActuatorResponseValidation.hpp Tests/ActuatorResponseValidation/ActuatorResponseValidation.cpp
+        Tests/ProcessControllerOperationAndStability/ProcessControllerOperationAndStability.hpp Tests/ProcessControllerOperationAndStability/ProcessControllerOperationAndStability.cpp
+        Tests/FirmwareDetailVerification/FirmwareDetailVerification.hpp Tests/FirmwareDetailVerification/FirmwareDetailVerification.cpp
 
 
     )
