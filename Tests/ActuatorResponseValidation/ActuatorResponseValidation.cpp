@@ -98,3 +98,22 @@ QString ActuatorResponseValidation::modbusDataUnitToString(const QModbusDataUnit
     }
     return result;
 }
+
+
+SystemResult ActuatorResponseValidation::_FieldbusOpen(ModbusStrategy *mbStrategy, bool state)
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+    QModbusDataUnit query(QModbusDataUnit::Coils, 0, state);
+    mbStrategy->WriteData(query);
+    return retVal;
+}
+
+SystemResult ActuatorResponseValidation::_FieldbusClose(ModbusStrategy *mbStrategy, bool state)
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+     QModbusDataUnit query(QModbusDataUnit::Coils, 1, state);
+    mbStrategy->WriteData(query);
+
+    return retVal;
+}
+

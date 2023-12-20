@@ -13,6 +13,31 @@ static auto *logger = &Logger::GetInstance();
 LocalHostTest::LocalHostTest() {}
 LocalHostTest::~LocalHostTest() {}
 
+SystemResult LocalHostTest::_FieldbusOpen(ModbusStrategy *mbStrategy, bool state)
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+    QModbusDataUnit writeUnit(QModbusDataUnit::Coils, 0, 1);
+    writeUnit.setValue(0, true ? 0xFF00 : 0x0000);
+
+    if (auto *reply = mbStrategy->WriteData(writeUnit)) { // 1 is the server address
+        if (!reply->isFinished()) {
+            // Connect signals to handle the reply
+        }
+    }
+    ;
+
+    return retVal;
+}
+
+SystemResult _FieldbusClose(ModbusStrategy *mbStrategy, bool state)
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+    QModbusDataUnit query(QModbusDataUnit::Coils, 1, state);
+    mbStrategy->WriteData(query);
+
+    return retVal;
+}
+
 void LocalHostTest::RunTest()
 {
     SystemResult status = SystemResult::SYSTEM_OK;
@@ -37,24 +62,25 @@ void LocalHostTest::RunTest()
         return;
     }
 
-    QString appDirPath = QCoreApplication::applicationDirPath() + _cJsonFilePath;
+    // QString appDirPath = QCoreApplication::applicationDirPath() + _cJsonFilePath;
 
-    logger->LogInfo(TAG, appDirPath);
-    mbStrategy->LoadRegistersFromJSON(appDirPath);
+    // logger->LogInfo(TAG, appDirPath);
+    // mbStrategy->LoadRegistersFromJSON(appDirPath);
 
-    status = getFirmwareVersion(mbStrategy);
-    if( status != SystemResult::SYSTEM_OK)
-    {
-        logger->LogCritical(TAG, "Getting firmware version failed!");
-// TODO REACT
-    }
+    _FieldbusOpen(mbStrategy, true);
+//     status = getFirmwareVersion(mbStrategy);
+//     if( status != SystemResult::SYSTEM_OK)
+//     {
+//         logger->LogCritical(TAG, "Getting firmware version failed!");
+// // TODO REACT
+//     }
 
-    status = testOpenTo80Percent(mbStrategy);
-    if( status != SystemResult::SYSTEM_OK)
-    {
-        logger->LogCritical(TAG, "Setting actuator to 80% failed!");
-        // TODO REACT
-    }
+//     status = testOpenTo80Percent(mbStrategy);
+//     if( status != SystemResult::SYSTEM_OK)
+//     {
+//         logger->LogCritical(TAG, "Setting actuator to 80% failed!");
+//         // TODO REACT
+//     }
 
 }
 

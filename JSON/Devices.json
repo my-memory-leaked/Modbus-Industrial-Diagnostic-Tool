@@ -7,7 +7,7 @@
       [
         {
           "Type": "TCP",
-          "IPAddress": "127.0.0.1",
+          "IPAddress": "127.0.0.151",
           "Port": 502
         }
       ]

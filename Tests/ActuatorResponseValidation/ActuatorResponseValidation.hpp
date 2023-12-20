@@ -20,6 +20,9 @@ private:
     static constexpr const char _deviceName[] = "Auma";
     inline static const QString _cJsonFilePath = "/JSON/TestData.json";
 
+    SystemResult _FieldbusOpen(ModbusStrategy *mbStrategy, bool state);
+    SystemResult _FieldbusClose(ModbusStrategy *mbStrategy, bool state);
+
     SystemResult testOpenTo80Percent(ModbusStrategy *mbStrategy);
     SystemResult testActuatorPositioning(ModbusStrategy *mbStrategy, int targetPosition);
     int extractPositionValue(QModbusReply *reply);
