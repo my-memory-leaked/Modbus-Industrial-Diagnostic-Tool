@@ -112,7 +112,7 @@ QModbusReply *ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 QModbusReply *ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
 {
     QModbusReply* retVal = nullptr;
-    SystemResult result = SystemResult::SYSTEM_ERROR;
+    SystemResult result = SystemResult::SYSTEM_OK;
 
     /* Check the validity of the provided data unit */
     if (!cData.isValid())
