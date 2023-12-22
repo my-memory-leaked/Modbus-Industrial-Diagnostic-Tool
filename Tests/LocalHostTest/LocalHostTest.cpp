@@ -17,7 +17,7 @@ SystemResult LocalHostTest::_FieldbusOpen(ModbusStrategy *mbStrategy, bool state
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
     QModbusDataUnit writeUnit(QModbusDataUnit::Coils, 0, 1);
-    writeUnit.setValue(0, true ? 0xFF00 : 0x0000);
+    writeUnit.setValue(0, state ? 0xFF00 : 0x0000);
 
     if (auto *reply = mbStrategy->WriteData(writeUnit)) { // 1 is the server address
         if (!reply->isFinished()) {

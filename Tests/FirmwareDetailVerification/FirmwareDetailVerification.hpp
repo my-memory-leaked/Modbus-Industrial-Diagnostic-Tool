@@ -1,5 +1,6 @@
 #pragma once
 #include <TestInterface.hpp>
+#include <ModbusController.hpp>
 
 class FirmwareDetailVerification : public TestInterface
 {
@@ -11,5 +12,11 @@ public:
 
 private:
     static constexpr const char TAG[] = "[FirmwareDetailVerification]";
+    static constexpr const char _deviceName[] = "Auma";
+    inline static const QString _cJsonFilePath = "/JSON/TestData.json";
+    ModbusController *_mbController;
+    ModbusStrategy *_mbStrategy;
+
+    QString getFirmwareVersion();
 
 };
