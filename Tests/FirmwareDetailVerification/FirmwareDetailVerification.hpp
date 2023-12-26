@@ -2,6 +2,7 @@
 #include <TestInterface.hpp>
 #include <ModbusController.hpp>
 #include <FirmwareDetailGUI.hpp>
+#include <QPair>
 
 class FirmwareDetailVerification : public TestInterface
 {
@@ -28,4 +29,9 @@ private:
     QString getFirmwareVersion();
     QString extractFirwareVersion(QModbusReply *firmwareReply);
 
+    QString getLanguage();
+    QString extractLanguage(QModbusReply *firmwareReply);
+
+    QPair<QString, int>getServiceInterface();
+    QPair<QString, int>parseServiceInterface(QModbusReply *firmwareReply);
 };
