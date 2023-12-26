@@ -38,21 +38,20 @@ FirmwareDetailVerification::~FirmwareDetailVerification() {}
 
 void FirmwareDetailVerification::RunTest()
 {
-    logger->LogCritical(TAG, "TEST NOT IMPLEMENTED");
+    logger->LogCritical(TAG, "Starting test...");
     _gui.SetProgressBar(0);
     // Create a QThread object
-    QThread* testThread = new QThread();
+    QThread *testThread = new QThread(this);
 
     // Connect the thread's started signal to the slot where you'll run your test
     connect(testThread, &QThread::started, this, &FirmwareDetailVerification::executeTest);
-    connect(testThread, &QThread::finished, testThread, &QThread::deleteLater);
+    // connect(testThread, &QThread::finished, testThread, &QThread::deleteLater);
 
     // Start the thread
     testThread->start();
 
     (void)handleGUI();
-
-    delete testThread;
+    /* I don;t have to delete because i pass the object to parent */
 }
 
 void FirmwareDetailVerification::testCompletedSuccessfully()
