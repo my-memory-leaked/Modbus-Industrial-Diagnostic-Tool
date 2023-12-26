@@ -5,16 +5,11 @@
 
 class FirmwareDetailVerification : public TestInterface
 {
-    Q_OBJECT
 public:
     FirmwareDetailVerification();
     ~FirmwareDetailVerification();
 
     void RunTest() override;
-
-signals:
-    void testCompletedSuccessfully();
-    void testFailed();
 
 private:
     static constexpr const char TAG[] = "[FirmwareDetailVerification]";
@@ -27,7 +22,9 @@ private:
     void executeTest();
     void handleGUI();
 
-    void handleTestFailure();
+    void testCompletedSuccessfully();
+    void testFailed();
+
     QString getFirmwareVersion();
     QString extractFirwareVersion(QModbusReply *firmwareReply);
 

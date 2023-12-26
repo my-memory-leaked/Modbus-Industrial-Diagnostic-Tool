@@ -15,14 +15,14 @@ FirmwareDetailVerification::FirmwareDetailVerification()
     if(!_mbController)
     {
         logger->LogCritical(TAG, "Modbus controller nullptr returned!");
-        emit testFailed();
+        testFailed();
     }
 
     _mbStrategy = _mbController->GetInterfaceByName(_deviceName);
     if (!_mbStrategy)
     {
         logger->LogCritical(TAG, "Strategy nullptr returned!");
-        emit testFailed();
+        testFailed();
     }
     else
     {
@@ -39,45 +39,38 @@ FirmwareDetailVerification::~FirmwareDetailVerification() {}
 void FirmwareDetailVerification::RunTest()
 {
     logger->LogCritical(TAG, "TEST NOT IMPLEMENTED");
-
+    _gui.SetProgressBar(0);
     // Create a QThread object
     QThread* testThread = new QThread();
 
-    // Move this object to the new thread
-    this->moveToThread(testThread);
-
     // Connect the thread's started signal to the slot where you'll run your test
     connect(testThread, &QThread::started, this, &FirmwareDetailVerification::executeTest);
-
-    // Connect any necessary cleanup after the test is done
-    connect(this, &FirmwareDetailVerification::testCompletedSuccessfully, testThread, &QThread::quit);
-    connect(this, &FirmwareDetailVerification::testFailed, testThread, &QThread::quit);
     connect(testThread, &QThread::finished, testThread, &QThread::deleteLater);
 
     // Start the thread
     testThread->start();
 
     (void)handleGUI();
+
+    delete testThread;
 }
 
-void testCompletedSuccessfully()
+void FirmwareDetailVerification::testCompletedSuccessfully()
 {
-    logger->LogCritical("[FirmwareDetailVerification]", "Test successful!");
+    logger->LogCritical(TAG, "Test successful!");
 
-    QMessageBox::critical(nullptr, "Test Success", "The firmware test was successful.");
+    QMessageBox::information(nullptr, "Test Success", "The firmware test was successful.");
 }
 
-void testFailed()
+void FirmwareDetailVerification::testFailed()
 {
-    logger->LogCritical("[FirmwareDetailVerification]", "Test failed!");
+    logger->LogCritical(TAG, "Test failed!");
 
     QMessageBox::critical(nullptr, "Test Failure", "The firmware test failed. Please check the logs for more information.");
 }
 
 void FirmwareDetailVerification::executeTest()
 {
-
-
     SystemResult status = SystemResult::SYSTEM_OK;
 
     logger->LogInfo(TAG, "Starting test for: " + _mbStrategy->GetDeviceName());
@@ -85,19 +78,37 @@ void FirmwareDetailVerification::executeTest()
     if (!_mbStrategy->IsConnected())
     {
         logger->LogCritical(TAG, "Can't run test for disconnected device!");
-        emit testFailed();
+        testFailed();
         return;
     }
+    _gui.SetProgressBar(10);
 
-    // QString firmwareVersion = getFirmwareVersion();
+    QString firmwareVersion = getFirmwareVersion();
 
+    if (firmwareVersion.isEmpty())
+    {
+        testFailed();
+        return;
+    }
+    else
+    {
+        _gui.SetFirmwareVersionLabel(firmwareVersion);
+    }
+    _gui.SetProgressBar(35);
+
+
+
+    _gui.SetProgressBar(100);
     // Complete the test and notify
-    emit testCompletedSuccessfully();
+    testCompletedSuccessfully();
 }
 
 void FirmwareDetailVerification::handleGUI()
 {
-    _gui.exec();
+    if(_gui.exec() == QDialog::Accepted)
+    {
+
+    }
 }
 
 QString FirmwareDetailVerification::getFirmwareVersion()
@@ -126,27 +137,23 @@ QString FirmwareDetailVerification::getFirmwareVersion()
         if (firmwareReply->error() == QModbusDevice::NoError)
         {
             QString firmwareVersion = extractFirwareVersion(firmwareReply);
-
             logger->LogDebug(TAG, "Firmware Version: " + firmwareVersion);
+            retVal = firmwareVersion;
         }
         else
         {
             logger->LogCritical(TAG, "Failed to read firmware version from device: " + firmwareReply->errorString());
-            emit testFailed();
+            testFailed();
         }
     }
     else
     {
         logger->LogCritical(TAG, "Timeout waiting for firmware version reply!");
-        emit testFailed();
+        testFailed();
     }
 
     firmwareReply->deleteLater();
     return retVal;
-
-
-
-    return QString();
 }
 
 QString FirmwareDetailVerification::extractFirwareVersion(QModbusReply *firmwareReply)
@@ -158,7 +165,7 @@ QString FirmwareDetailVerification::extractFirwareVersion(QModbusReply *firmware
     if (payload.size() < MAX_VERSION_LEN) // Since each register is 2 bytes, 20 bytes are 10 registers
     {
         logger->LogCritical(TAG, "Incomplete data received for firmware version!");
-        emit testFailed();
+        testFailed();
         return QString();
     }
 
