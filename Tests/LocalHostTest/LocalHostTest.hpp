@@ -30,8 +30,5 @@ private:
     bool positionReached(int actualPosition, int targetPosition, int tolerance = 10);
 
     QString modbusDataUnitToString(const QModbusDataUnit &unit);
-
-
     SystemResult _FieldbusOpen(ModbusStrategy *mbStrategy, bool state);
-
 };

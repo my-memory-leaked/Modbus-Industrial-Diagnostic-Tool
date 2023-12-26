@@ -17,6 +17,8 @@ private:
     ModbusController *_mbController;
     ModbusStrategy *_mbStrategy;
 
+    void handleTestFailure();
     QString getFirmwareVersion();
+    QString extractFirwareVersion(QModbusReply *firmwareReply);
 
 };
