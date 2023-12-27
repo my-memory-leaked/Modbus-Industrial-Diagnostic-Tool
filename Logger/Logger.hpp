@@ -2,6 +2,7 @@
 
 #include <Singleton.hpp>
 #include <QString>
+#include <QDir>
 
 class Logger : public Singleton<Logger>
 {
@@ -17,6 +18,9 @@ private:
     Logger();
     ~Logger();
 
+    QDir _logDir;
+    QFile _logFile;
+
     QString _currentTime;
     static const QString TIME_STAMP_FORMAT;
 
@@ -25,5 +29,11 @@ private:
     static const QString WARNING_TAG;
     static const QString CRITICAL_TAG;
     static const QString FATAL_TAG;
+
+    static constexpr int MAX_LOG_FILE_ROTATION = 10;
+
+    void openLogFile();
+    void rotateLogs();
+    void saveLogToFile(QString& log);
 };
 

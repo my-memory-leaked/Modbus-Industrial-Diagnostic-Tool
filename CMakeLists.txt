@@ -20,6 +20,8 @@ include_directories(
     GUI/MainGUI
     GUI/AddModbusDeviceGUI
     GUI/ChangeModbusDeviceParameters
+    GUI/AumaTestGUI
+    GUI/FirmwareDetailGUI
 
     ApplicationConstant
     SystemResult
@@ -43,12 +45,14 @@ include_directories(
     Modbus/ModbusTCPClient
     Modbus/ModbusRegisterTypeMapper
     Modbus/ModbusStateMapper
-    Modbus/ModbusParser
     Modbus/ModbusDeviceInterface
 
     Tests
     Tests/TestInterface
     Tests/LocalHostTest
+    Tests/ActuatorResponseValidation
+    Tests/ProcessControllerOperationAndStability
+    Tests/FirmwareDetailVerification
 
     Images
 
@@ -78,13 +82,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         DeviceInterface/DeviceInterface.cpp
         Modbus/ModbusClientStrategy/ModbusClientStrategy.hpp Modbus/ModbusClientStrategy/ModbusClientStrategy.cpp
         Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.hpp Modbus/ModbusRegisterTypeMapper/ModbusRegisterTypeMapper.cpp
-        Modbus/ModbusParser/ModbusParser.hpp Modbus/ModbusParser/ModbusParser.cpp
         Modbus/ModbusStateMapper/ModbusStateMapper.hpp Modbus/ModbusStateMapper/ModbusStateMapper.cpp
         JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.hpp JSON/JSONToModbusMapConverter/JSONToModbusMapConverter.cpp
         JSON/TestData.json
         JSON/Devices.json
 
         Images/LogoAuma.png
+        Images/ConnectedState.png
+        Images/DisconnectedState.png
+
 
         Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
         Tests/TestInterface/TestInterface.hpp Tests/TestInterface/TestInterface.cpp
@@ -93,6 +99,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Tests/LocalHostTest/LocalHostTest.hpp Tests/LocalHostTest/LocalHostTest.cpp
         JSON/JSONToDevicesConventer/JSONToDevicesConventer.hpp JSON/JSONToDevicesConventer/JSONToDevicesConventer.cpp
         GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.hpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.cpp GUI/ChangeModbusDeviceParameters/ChangeModbusDeviceParameters.ui
+        GUI/AumaTestGUI/AumaTestGUI.hpp GUI/AumaTestGUI/AumaTestGUI.cpp GUI/AumaTestGUI/AumaTestGUI.ui
+        Tests/ActuatorResponseValidation/ActuatorResponseValidation.hpp Tests/ActuatorResponseValidation/ActuatorResponseValidation.cpp
+        Tests/ProcessControllerOperationAndStability/ProcessControllerOperationAndStability.hpp Tests/ProcessControllerOperationAndStability/ProcessControllerOperationAndStability.cpp
+        Tests/FirmwareDetailVerification/FirmwareDetailVerification.hpp Tests/FirmwareDetailVerification/FirmwareDetailVerification.cpp
+        GUI/FirmwareDetailGUI/FirmwareDetailGUI.hpp GUI/FirmwareDetailGUI/FirmwareDetailGUI.cpp GUI/FirmwareDetailGUI/FirmwareDetailGUI.ui
+
 
     )
 
@@ -100,9 +112,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 # Copy the AumaLogo.png file
 set(AUMA_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/LogoAuma.png")
 set(AUMA_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/LogoAuma.png")
+set(CONNECTED_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/ConnectedState.png")
+set(CONNECTED_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/ConnectedState.png")
+set(DISCONNECTED_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/DisconnectedState.png")
+set(DISCONNECTED_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/DisconnectedState.png")
 add_custom_command(
     TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${AUMA_LOGO_SOURCE} ${AUMA_LOGO_DESTINATION}
+    COMMAND ${CMAKE_COMMAND} -E copy ${CONNECTED_LOGO_SOURCE} ${CONNECTED_LOGO_DESTINATION}
+    COMMAND ${CMAKE_COMMAND} -E copy ${DISCONNECTED_LOGO_SOURCE} ${DISCONNECTED_LOGO_DESTINATION}
 )
 
 # Define a list containing pairs of source and destination paths for each JSON file

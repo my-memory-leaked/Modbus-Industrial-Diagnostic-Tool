@@ -4,7 +4,6 @@
 #include <QModbusTcpClient>
 #include <QVariant>
 #include <ModbusRegisterTypeMapper.hpp>
-#include <ModbusParser.hpp>
 #include <ModbusStateMapper.hpp>
 #include <QTimer>
 
@@ -50,7 +49,6 @@ SystemResult ModbusTCPClient::Connect()
             logger->LogInfo( CLASS_TAG, "Connecting to device ID: " + QString::number(GetDeviceID())
                              + " IP: " + GetConnectionParameters().GetIpAddress()
                              + " Port: " + QString::number(GetConnectionParameters().GetPort()) );
-        _isConnected = true;
     }
 
     return retVal;
@@ -114,7 +112,7 @@ QModbusReply *ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 QModbusReply *ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
 {
     QModbusReply* retVal = nullptr;
-    SystemResult result = SystemResult::SYSTEM_ERROR;
+    SystemResult result = SystemResult::SYSTEM_OK;
 
     /* Check the validity of the provided data unit */
     if (!cData.isValid())
@@ -167,6 +165,7 @@ void ModbusTCPClient::onModbusConnectionStateChanged(QModbusDevice::State state)
         emitModbusStateUpdated(state);
         break;
     case QModbusDevice::ConnectedState:
+        _isConnected = true;
         emitModbusStateUpdated(state);
         break;
     case QModbusDevice::ClosingState:

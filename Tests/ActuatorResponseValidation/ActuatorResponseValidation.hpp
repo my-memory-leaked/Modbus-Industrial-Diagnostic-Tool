@@ -5,30 +5,29 @@
 #include <SystemResult.hpp>
 #include <ModbusStrategy.hpp>
 
-class LocalHostTest : public TestInterface
+
+class ActuatorResponseValidation : public TestInterface
 {
 public:
-    LocalHostTest();
-    ~LocalHostTest();
+    ActuatorResponseValidation();
+    ~ActuatorResponseValidation();
 
     void RunTest() override;
 
-    QString GetDeviceName() const;
-private slots:
-    void onPowerRegisterReceived(QModbusReply *reply);
 
 private:
     static constexpr const char TAG[] = "[LocalHostTest]";
     static constexpr const char _deviceName[] = "Auma";
     inline static const QString _cJsonFilePath = "/JSON/TestData.json";
 
-    SystemResult getFirmwareVersion(ModbusStrategy *mbStrategySystemResult);
+    SystemResult _FieldbusOpen(ModbusStrategy *mbStrategy, bool state);
+    SystemResult _FieldbusClose(ModbusStrategy *mbStrategy, bool state);
+
     SystemResult testOpenTo80Percent(ModbusStrategy *mbStrategy);
     SystemResult testActuatorPositioning(ModbusStrategy *mbStrategy, int targetPosition);
-
     int extractPositionValue(QModbusReply *reply);
-    bool positionReached(int actualPosition, int targetPosition, int tolerance = 10);
-
+    bool positionReached(int actualPosition, int targetPosition, int tolerance = 10); // Tolerance can be adjusted
     QString modbusDataUnitToString(const QModbusDataUnit &unit);
-    SystemResult _FieldbusOpen(ModbusStrategy *mbStrategy, bool state);
+
 };
+

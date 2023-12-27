@@ -14,6 +14,7 @@
 #include <JSONToDevicesConventer.hpp>
 #include <ModbusStateMapper.hpp>
 #include <ChangeModbusDeviceParameters.hpp>
+#include <AumaTestGUI.hpp>
 
 
 MainGUI::MainGUI(QWidget *parent)
@@ -26,10 +27,8 @@ MainGUI::MainGUI(QWidget *parent)
 
     _mbController = &Singleton<ModbusController>::GetInstance();
     (void)readDevicesFromFile();
-
     (void)loadAumaLogo();
-
-
+    (void)loadDevicesStates();
 
 }
 
@@ -47,51 +46,19 @@ void MainGUI::handleAddDeviceClick()
     }
 }
 
-void MainGUI::handleTestButtonClick()
-{
-    ModbusStrategy* interface = _mbController->GetInterfaceByName("localhost");
-    if(!interface)
-        return;
-
-    int startAddress = 0;
-    int numberOfRegisters = 1;
-
-    // QModbusDataUnit query(QModbusDataUnit::HoldingRegisters, startAddress, numberOfRegisters);
-    // QModbusReply* result = interface->ReadData(query);
-
-    // if(result)
-    // {
-    //     connect(result, &QModbusReply::finished, this, &MainGUI::handleModbusReply);
-    // }
-}
-
-void MainGUI::handleModbusReply()
-{
-    QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
-    if(!reply)
-        return;
-
-    if(reply->error() == QModbusDevice::NoError)
-    {
-        const QModbusDataUnit unit = reply->result();
-        for (uint i = 0; i < unit.valueCount(); i++)
-        {
-            int value = unit.value(i);
-            qDebug() << "Register address:" << unit.startAddress() + i << "Value:" << value;
-        }
-    }
-    else
-    {
-        qDebug() << "Error reading modbus registers:" << reply->errorString();
-    }
-
-    reply->deleteLater();  // Cleanup the reply object
-}
-
 void MainGUI::handleInterfaceStateChange(const QString& deviceName, const QModbusDevice::State& newState)
 {
     ModbusStrategy* interface = _mbController->GetInterfaceByName(deviceName);
     if (!interface) return; // No interface found for given device name
+
+    if (deviceName == "Auma" && newState == QModbusDevice::State::ConnectedState)
+    {
+        ui->AumaConnectionState->setPixmap(GetConnectedImage());
+    }
+    else if(deviceName == "localhost" && newState == QModbusDevice::State::ConnectedState)
+    {
+        ui->LocalhostConnectionState->setPixmap(GetConnectedImage());
+    }
 
     QString updatedInfo = createDeviceInfoString(interface);
 
@@ -104,6 +71,21 @@ void MainGUI::handleInterfaceStateChange(const QString& deviceName, const QModbu
             item->setText(updatedInfo); // Update the text of the specific item
             break;
         }
+    }
+}
+void MainGUI::handleAumaChangeSettingsButton()
+{
+    changeModbusDeviceParameters(_mbController->GetInterfaceByName("Auma"));
+}
+
+void MainGUI::handleAumaTestButton()
+{
+    std::shared_ptr<TestInterface> testInterface;
+    AumaTestGUI aumaTestGui(testInterface, this);
+    if(aumaTestGui.exec() == QDialog::Accepted)
+    {
+        if(testInterface.get())
+            testInterface->RunTest();
     }
 }
 
@@ -122,8 +104,9 @@ void MainGUI::handleLocalhostTestButton()
 void MainGUI::connectSignalsAndSlots() const
 {
     connect(ui->AddDevice, &QPushButton::clicked, this, &MainGUI::handleAddDeviceClick);
-    connect(ui->TestButton, &QPushButton::clicked, this, &MainGUI::handleTestButtonClick);
 
+    connect(ui->AumaChangeSettingsButton, &QPushButton::clicked, this, &MainGUI::handleAumaChangeSettingsButton);
+    connect(ui->AumaTestDeviceButton, &QPushButton::clicked, this, &MainGUI::handleAumaTestButton);
 
     connect(ui->LocalhostChangeSettingsButton, &QPushButton::clicked, this, &MainGUI::handleLocalhostChangeSettingsButton);
     connect(ui->LocalhostTestDeviceButton, &QPushButton::clicked, this, &MainGUI::handleLocalhostTestButton);
@@ -135,8 +118,15 @@ void MainGUI::readDevicesFromFile()
     auto deviceList = deviceConventer.FromJsonFile("JSON/Devices.json");
     for (auto device : deviceList)
     {
-        if (device->GetDeviceName() == "localhost")
+        if (device->GetDeviceName() == "Auma")
+        {
+            updateAumaDevice(device.get());
+        }
+        else if(device->GetDeviceName() == "localhost")
+        {
             updateLocalhostDevice(device.get());
+        }
+
 
         _mbController->AddInterface(std::move(device));
     }
@@ -191,11 +181,27 @@ void MainGUI::changeModbusDeviceParameters(ModbusStrategy* interface)
 {
     ChangeModbusDeviceParameters modbusDialog(this, interface);
     if(modbusDialog.exec() == QDialog::Accepted)
-    {
-        updateLocalhostDevice(interface);
+    {   
+        if (interface->GetDeviceName() == "Auma")
+        {
+            updateAumaDevice(interface);
+        }
+        else if(interface->GetDeviceName() == "localhost")
+        {
+            updateLocalhostDevice(interface);
+        }
     }
 }
 
+void MainGUI::updateAumaDevice(const ModbusStrategy* cInterface)
+{
+    if (!cInterface->GetDeviceName().isEmpty())
+        ui->AumaGroupBox->setTitle(cInterface->GetDeviceName());
+
+    ui->AumaTypeInputLabel->setText("TCP");
+    ui->AumaIPInputLabel->setText(cInterface->GetConnectionParameters().GetIpAddress());
+    ui->AumaPortInputLabel->setText(QString::number(cInterface->GetConnectionParameters().GetPort()));
+}
 
 void MainGUI::updateLocalhostDevice(const ModbusStrategy* cInterface)
 {
@@ -220,5 +226,31 @@ void MainGUI::loadAumaLogo()
 
         ui->AumaLogoLabel->setPixmap(scaledPixmap);
     }
+}
 
+void MainGUI::loadDevicesStates()
+{
+    QPixmap disconnectedPixmap = GetDisconnectedImage();
+    ui->AumaConnectionState->setPixmap(disconnectedPixmap);
+    ui->LocalhostConnectionState->setPixmap(disconnectedPixmap);
+}
+
+QPixmap MainGUI::GetConnectedImage()
+{
+    QString appDirPath = QCoreApplication::applicationDirPath() + "/Images/ConnectedState.png";
+    QPixmap connectedPixmap(appDirPath);
+    /* Scale logo */
+    QPixmap scaledPixmap = connectedPixmap.scaled(ui->AumaLogoLabel->size(),
+                                                 Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    return scaledPixmap;
+}
+
+QPixmap MainGUI::GetDisconnectedImage()
+{
+    QString appDirPath = QCoreApplication::applicationDirPath() + "/Images/DisconnectedState.png";
+    QPixmap disconnectedPixmap(appDirPath);
+    /* Scale logo */
+    QPixmap scaledPixmap = disconnectedPixmap.scaled(ui->AumaLogoLabel->size(),
+                                                  Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    return scaledPixmap;
 }

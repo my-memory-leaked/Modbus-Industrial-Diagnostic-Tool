@@ -7,19 +7,19 @@
       [
         {
           "Type": "TCP",
-          "IPAddress": "127.0.0.1",
-          "Port": 5020
+          "IPAddress": "127.0.0.13",
+          "Port": 5022
         }
       ]
     },
     {
-      "DeviceName": "Silnik Elektryczny",
+      "DeviceName": "Auma",
       "Registers":
       [
       	{
           "Type": "TCP",
-          "IPAddress": "192.168.0.1",
-          "Port": 5032
+          "IPAddress": "127.0.0.1",
+          "Port": 502
         }
       ]
     }
