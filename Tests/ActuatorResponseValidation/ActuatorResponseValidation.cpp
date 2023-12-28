@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QThread>
 #include <QCoreApplication>
+#include <QPair>
 
 static auto* logger = &Logger::GetInstance();
 
@@ -54,8 +55,31 @@ void ActuatorResponseValidation::RunTest()
 
 void ActuatorResponseValidation::executeTest()
 {
+    bool isTestFinished = false;
+    SystemResult result = SystemResult::SYSTEM_OK;
+    // Otworzyć i zamknąć 2 razy
+    // 3 setpointy randomowe, sprawdzanie coilsów oraz statusów błędów, wyświetlanie diod dostępnych na urządzeniu
 
+    // Stany do czytania: 1000 coil 5 bajt: 7 bit , 6 bit, 2 ,1 || 6 bajt 4 bit
+    // 1002
+    for (quint16 i = 0; i < 3 ; ++i)
+    {
+        result = getActualPositionAndTorque();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Getting actual position and torque failed!");
 
+        result = readWarnings();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Warnings read failed!");
+
+        result = readErrors();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Error read failed!");
+
+        result = positionerTest();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Positioner test failed!");
+    }
 }
 
 void ActuatorResponseValidation::handleGUI()
@@ -72,6 +96,113 @@ void ActuatorResponseValidation::testFailed()
 {
 
 }
+
+void ActuatorResponseValidation::toggleWarningDiode()
+{
+    static bool isToggled = false;
+
+    isToggled ? _gui.SetWarningDiode(true) :
+        _gui.SetWarningDiode(false);
+
+    isToggled = !isToggled;
+}
+
+void ActuatorResponseValidation::toggleErrorDiode()
+{
+    static bool isToggled = false;
+
+    isToggled ? _gui.SetErrorDiode(true) :
+        _gui.SetErrorDiode(false);
+
+    isToggled = !isToggled;
+}
+
+SystemResult ActuatorResponseValidation::readWarnings()
+{
+
+}
+
+SystemResult ActuatorResponseValidation::readErrors()
+{
+
+}
+
+SystemResult ActuatorResponseValidation::positionerTest()
+{
+
+}
+
+SystemResult ActuatorResponseValidation::checkPositionerRunning()
+{
+
+}
+
+
+
+SystemResult ActuatorResponseValidation::setPositioner(quint32 position)
+{
+
+    // Set Fieldbus SETPOINT
+    // Byte commands
+}
+
+
+SystemResult ActuatorResponseValidation::resetPositioner(quint32 position)
+{
+    // Set Fieldbus RESET
+    //
+}
+
+
+SystemResult ActuatorResponseValidation::getActualPositionAndTorque()
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+
+    QModbusDataUnit data = _mbStrategy->GetQModbusDataUnitByName("General");
+
+    QModbusReply *firmwareReply = _mbStrategy->ReadData(data);
+    if (!firmwareReply)
+    {
+        logger->LogCritical(TAG, "Failed to send read request for actual position and torque version!");
+        retVal = SystemResult::SYSTEM_ERROR;
+        testFailed();
+    }
+
+    if (SystemResult::SYSTEM_OK != retVal && firmwareReply)
+    {
+        QEventLoop loop;
+        connect(firmwareReply, &QModbusReply::finished, &loop, &QEventLoop::quit);
+        QTimer::singleShot(2500, &loop, &QEventLoop::quit); // Timeout after 5000 ms
+        loop.exec();
+
+        if (firmwareReply->isFinished())
+        {
+            if (firmwareReply->error() == QModbusDevice::NoError)
+            {
+                const QModbusDataUnit unit = firmwareReply->result();
+                QPair<QString, QString> posNTorq = parsePositionAndTorque(unit);
+                logger->LogDebug(TAG, "Read position: " + posNTorq.first + " torque: " + posNTorq.second);
+            }
+            else
+            {
+                logger->LogCritical(TAG, "Failed to read position and torque from device: " + firmwareReply->errorString());
+                retVal = SystemResult::SYSTEM_ERROR;
+                testFailed();
+            }
+        }
+        else
+        {
+            logger->LogCritical(TAG, "Timeout waiting for postion and torque reply!");
+            retVal = SystemResult::SYSTEM_ERROR;
+            testFailed();
+        }
+
+        firmwareReply->deleteLater();
+    }
+
+    return retVal;
+}
+
 
 SystemResult ActuatorResponseValidation::testOpenTo80Percent(ModbusStrategy *mbStrategy)
 {
@@ -148,6 +279,12 @@ bool ActuatorResponseValidation::positionReached(int actualPosition, int targetP
 {
     return std::abs(actualPosition - targetPosition) <= tolerance;
 }
+
+QPair<QString, QString> ActuatorResponseValidation::parsePositionAndTorque(const QModbusDataUnit &unit)
+{
+
+}
+
 
 QString ActuatorResponseValidation::modbusDataUnitToString(const QModbusDataUnit &unit)
 {
