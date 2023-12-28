@@ -2,16 +2,77 @@
 #include <Logger.hpp>
 #include <QEventLoop>
 #include <QTimer>
+#include <QThread>
+#include <QCoreApplication>
 
 static auto* logger = &Logger::GetInstance();
 
-ActuatorResponseValidation::ActuatorResponseValidation() {}
+ActuatorResponseValidation::ActuatorResponseValidation()
+{
+    _mbController =  &ModbusController::GetInstance();
+    if(!_mbController)
+    {
+        logger->LogCritical(TAG, "Modbus controller nullptr returned!");
+        testFailed();
+    }
+
+    _mbStrategy = _mbController->GetInterfaceByName(_deviceName);
+    if (!_mbStrategy)
+    {
+        logger->LogCritical(TAG, "Strategy nullptr returned!");
+        testFailed();
+    }
+    else
+    {
+        QString appDirPath = QCoreApplication::applicationDirPath() + _cJsonFilePath;
+
+        logger->LogInfo(TAG, appDirPath);
+        _mbStrategy->LoadRegistersFromJSON(appDirPath);
+    }
+}
+
 ActuatorResponseValidation::~ActuatorResponseValidation() {}
 
 void ActuatorResponseValidation::RunTest()
 {
-    logger->LogInfo(TAG, "Started test...");
+    logger->LogInfo(TAG, "Starting test...");
+    _gui.SetProgressBar(0);
+    // Create a QThread object
+    QThread *testThread = new QThread(this);
+
+    // Connect the thread's started signal to the slot where you'll run your test
+    connect(testThread, &QThread::started, this, &ActuatorResponseValidation::executeTest);
+    // connect(testThread, &QThread::finished, testThread, &QThread::deleteLater);
+
+    // Start the thread
+    testThread->start();
+
+    (void)handleGUI();
+    /* I don't have to delete because i pass the object to parent */
 }
+
+
+void ActuatorResponseValidation::executeTest()
+{
+
+
+}
+
+void ActuatorResponseValidation::handleGUI()
+{
+    _gui.exec();
+}
+
+void ActuatorResponseValidation::testCompletedSuccessfully()
+{
+
+}
+
+void ActuatorResponseValidation::testFailed()
+{
+
+}
+
 SystemResult ActuatorResponseValidation::testOpenTo80Percent(ModbusStrategy *mbStrategy)
 {
     return testActuatorPositioning(mbStrategy, 800); // 80% of a scale of 1000

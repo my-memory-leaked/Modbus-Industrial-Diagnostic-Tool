@@ -51,7 +51,7 @@ void FirmwareDetailVerification::RunTest()
     testThread->start();
 
     (void)handleGUI();
-    /* I don;t have to delete because i pass the object to parent */
+    /* I don't have to delete because i pass the object to parent */
 }
 
 void FirmwareDetailVerification::testCompletedSuccessfully()

@@ -22,6 +22,7 @@ include_directories(
     GUI/ChangeModbusDeviceParameters
     GUI/AumaTestGUI
     GUI/FirmwareDetailGUI
+    GUI/ActuatorResponseGUI
 
     ApplicationConstant
     SystemResult
@@ -104,6 +105,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Tests/ProcessControllerOperationAndStability/ProcessControllerOperationAndStability.hpp Tests/ProcessControllerOperationAndStability/ProcessControllerOperationAndStability.cpp
         Tests/FirmwareDetailVerification/FirmwareDetailVerification.hpp Tests/FirmwareDetailVerification/FirmwareDetailVerification.cpp
         GUI/FirmwareDetailGUI/FirmwareDetailGUI.hpp GUI/FirmwareDetailGUI/FirmwareDetailGUI.cpp GUI/FirmwareDetailGUI/FirmwareDetailGUI.ui
+        GUI/ActuatorResponseGUI/ActuatorResponseGUI.hpp GUI/ActuatorResponseGUI/ActuatorResponseGUI.cpp GUI/ActuatorResponseGUI/ActuatorResponseGUI.ui
+
+
 
 
     )

@@ -3,8 +3,9 @@
 #include <QString>
 #include <QModbusReply>
 #include <SystemResult.hpp>
+#include <ModbusController.hpp>
 #include <ModbusStrategy.hpp>
-
+#include <ActuatorResponseGUI.hpp>
 
 class ActuatorResponseValidation : public TestInterface
 {
@@ -14,11 +15,20 @@ public:
 
     void RunTest() override;
 
-
 private:
     static constexpr const char TAG[] = "[LocalHostTest]";
     static constexpr const char _deviceName[] = "Auma";
     inline static const QString _cJsonFilePath = "/JSON/TestData.json";
+
+    ModbusController *_mbController;
+    ModbusStrategy *_mbStrategy;
+    ActuatorResponseGUI _gui;
+
+    void executeTest();
+    void handleGUI();
+
+    void testCompletedSuccessfully();
+    void testFailed();
 
     SystemResult _FieldbusOpen(ModbusStrategy *mbStrategy, bool state);
     SystemResult _FieldbusClose(ModbusStrategy *mbStrategy, bool state);
