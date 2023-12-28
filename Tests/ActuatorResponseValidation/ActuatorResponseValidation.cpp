@@ -1,17 +1,18 @@
 #include <ActuatorResponseValidation.hpp>
 #include <Logger.hpp>
+#include <ErrorMask.hpp>
 #include <QEventLoop>
 #include <QTimer>
 #include <QThread>
 #include <QCoreApplication>
 #include <QPair>
 
-static auto* logger = &Logger::GetInstance();
+static auto *logger = &Logger::GetInstance();
 
 ActuatorResponseValidation::ActuatorResponseValidation()
 {
-    _mbController =  &ModbusController::GetInstance();
-    if(!_mbController)
+    _mbController = &ModbusController::GetInstance();
+    if (!_mbController)
     {
         logger->LogCritical(TAG, "Modbus controller nullptr returned!");
         testFailed();
@@ -99,7 +100,7 @@ void ActuatorResponseValidation::executeTest()
 
     // Stany do czytania: 1000 coil 5 bajt: 7 bit , 6 bit, 2 ,1 || 6 bajt 4 bit
     // 1002
-    for (quint16 i = 0; i < 3 ; ++i)
+    for (quint16 i = 0; i < 3; ++i)
     {
         result = getActualPositionAndTorque();
         if (SystemResult::SYSTEM_OK != result)
@@ -116,7 +117,6 @@ void ActuatorResponseValidation::executeTest()
         result = positionerTest();
         if (SystemResult::SYSTEM_OK != result)
             logger->LogCritical(TAG, "Positioner test failed!");
-
     }
 }
 
@@ -127,20 +127,17 @@ void ActuatorResponseValidation::handleGUI()
 
 void ActuatorResponseValidation::testCompletedSuccessfully()
 {
-
 }
 
 void ActuatorResponseValidation::testFailed()
 {
-
 }
 
 void ActuatorResponseValidation::toggleWarningDiode()
 {
     static bool isToggled = false;
 
-    isToggled ? _gui.SetWarningDiode(true) :
-        _gui.SetWarningDiode(false);
+    isToggled ? _gui.SetWarningDiode(true) : _gui.SetWarningDiode(false);
 
     isToggled = !isToggled;
 }
@@ -149,8 +146,7 @@ void ActuatorResponseValidation::toggleErrorDiode()
 {
     static bool isToggled = false;
 
-    isToggled ? _gui.SetErrorDiode(true) :
-        _gui.SetErrorDiode(false);
+    isToggled ? _gui.SetErrorDiode(true) : _gui.SetErrorDiode(false);
 
     isToggled = !isToggled;
 }
@@ -170,7 +166,7 @@ SystemResult ActuatorResponseValidation::readWarnings()
 
     (void)query.setStartAddress(1009);
 
-    auto * reply1009 = getMBReply(query);
+    auto *reply1009 = getMBReply(query);
 
     if (reply1009)
         retVal = parseWarnings(reply1009);
@@ -189,8 +185,6 @@ SystemResult ActuatorResponseValidation::readWarnings()
 
 SystemResult ActuatorResponseValidation::parseWarnings(QModbusReply *reply)
 {
-
-
 }
 
 SystemResult ActuatorResponseValidation::readErrors()
@@ -206,28 +200,68 @@ SystemResult ActuatorResponseValidation::readErrors()
     if (retVal != SystemResult::SYSTEM_OK)
         logger->LogCritical(TAG, "Failed to parse errors!");
 
-    if(reply1007)
+    if (reply1007)
         reply1007->deleteLater();
 }
 
 SystemResult ActuatorResponseValidation::parseErrors(QModbusReply *reply)
 {
+    SystemResult retVal = SystemResult::SYSTEM_OK;
 
+    if (!reply)
+        retVal = SystemResult::SYSTEM_ERROR;
 
+    if (reply->error() == QModbusDevice::NoError)
+    {
+        const QModbusDataUnit unit = reply->result();
 
+        uint16_t value = unit.value(0);
+
+        // High byte (Fault 1)
+        uint8_t highByte = value >> 8;
+        // Low byte (Fault 2)
+        uint8_t lowByte = value & 0xFF;
+
+        if (lowByte & ErrorMask::NO_REACTION)
+            logger->LogCritical(TAG, "No reaction error occurred.");
+        if (lowByte & ErrorMask::INTERNAL_ERROR)
+            logger->LogCritical(TAG, "Internal error occurred.");
+        if (lowByte & ErrorMask::TORQUE_FAULT_CLOSE)
+            logger->LogCritical(TAG, "Torque fault close error occurred.");
+        if (lowByte & ErrorMask::TORQUE_FAULT_OPEN)
+            logger->LogCritical(TAG, "Torque fault open error occurred.");
+        if (lowByte & ErrorMask::PHASE_FAILURE)
+            logger->LogCritical(TAG, "Phase failure error occurred.");
+        if (lowByte & ErrorMask::THERMAL_FAULT)
+            logger->LogCritical(TAG, "Thermal fault error occurred.");
+        if (lowByte & ErrorMask::MAINS_FAULT)
+            logger->LogCritical(TAG, "Mains fault error occurred.");
+        if (lowByte & ErrorMask::CONFIGURATION_ERROR)
+            logger->LogCritical(TAG, "Configuration error occurred.");
+
+        // Check for Fault 2 errors
+        if (highByte & ErrorMask::INCORRECT_PHASE_SEQ)
+            logger->LogCritical(TAG, "Incorrect phase sequence error occurred.");
+        if (highByte & ErrorMask::CONT_ERROR_REMOTE)
+            logger->LogCritical(TAG, "Continuous error remote occurred.");
+        if (highByte & ErrorMask::INCORRECT_ROTATION)
+            logger->LogCritical(TAG, "Incorrect rotation error occurred.");
+    }
+    else
+    {
+        retVal = SystemResult::SYSTEM_ERROR;
+        testFailed();
+    }
+    return retVal;
 }
 
 SystemResult ActuatorResponseValidation::positionerTest()
 {
-
 }
 
 SystemResult ActuatorResponseValidation::checkPositionerRunning()
 {
-
 }
-
-
 
 SystemResult ActuatorResponseValidation::setPositioner(quint32 position)
 {
@@ -236,13 +270,11 @@ SystemResult ActuatorResponseValidation::setPositioner(quint32 position)
     // Byte commands
 }
 
-
 SystemResult ActuatorResponseValidation::resetPositioner(quint32 position)
 {
     // Set Fieldbus RESET
     //
 }
-
 
 SystemResult ActuatorResponseValidation::getActualPositionAndTorque()
 {
@@ -292,7 +324,6 @@ SystemResult ActuatorResponseValidation::getActualPositionAndTorque()
 
     return retVal;
 }
-
 
 SystemResult ActuatorResponseValidation::testOpenTo80Percent(ModbusStrategy *mbStrategy)
 {
@@ -372,9 +403,7 @@ bool ActuatorResponseValidation::positionReached(int actualPosition, int targetP
 
 QPair<QString, QString> ActuatorResponseValidation::parsePositionAndTorque(const QModbusDataUnit &unit)
 {
-
 }
-
 
 QString ActuatorResponseValidation::modbusDataUnitToString(const QModbusDataUnit &unit)
 {
@@ -387,7 +416,6 @@ QString ActuatorResponseValidation::modbusDataUnitToString(const QModbusDataUnit
     return result;
 }
 
-
 SystemResult ActuatorResponseValidation::_FieldbusOpen(ModbusStrategy *mbStrategy, bool state)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
@@ -399,9 +427,8 @@ SystemResult ActuatorResponseValidation::_FieldbusOpen(ModbusStrategy *mbStrateg
 SystemResult ActuatorResponseValidation::_FieldbusClose(ModbusStrategy *mbStrategy, bool state)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
-     QModbusDataUnit query(QModbusDataUnit::Coils, 1, state);
+    QModbusDataUnit query(QModbusDataUnit::Coils, 1, state);
     mbStrategy->WriteData(query);
 
     return retVal;
 }
-
