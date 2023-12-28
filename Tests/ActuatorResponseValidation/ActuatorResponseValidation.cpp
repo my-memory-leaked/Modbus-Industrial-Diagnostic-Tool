@@ -52,6 +52,43 @@ void ActuatorResponseValidation::RunTest()
     /* I don't have to delete because i pass the object to parent */
 }
 
+QModbusReply *ActuatorResponseValidation::getMBReply(const QModbusDataUnit query)
+{
+    SystemResult status = SystemResult::SYSTEM_OK;
+    QModbusReply *replay = _mbStrategy->ReadData(query);
+
+    if (!replay)
+    {
+        logger->LogCritical(TAG, "Failed to send read request for warnings!");
+        status = SystemResult::SYSTEM_ERROR;
+        testFailed();
+    }
+
+    if (SystemResult::SYSTEM_OK != status && replay)
+    {
+        QEventLoop loop;
+        connect(replay, &QModbusReply::finished, &loop, &QEventLoop::quit);
+        QTimer::singleShot(2500, &loop, &QEventLoop::quit); // Timeout after 5000 ms
+        loop.exec();
+
+        if (replay->isFinished())
+        {
+            if (replay->error() != QModbusDevice::NoError)
+            {
+                status = SystemResult::SYSTEM_ERROR;
+                testFailed();
+            }
+        }
+        else
+        {
+            logger->LogCritical(TAG, "Timeout waiting for reply!");
+            status = SystemResult::SYSTEM_ERROR;
+            testFailed();
+        }
+    }
+
+    return replay;
+}
 
 void ActuatorResponseValidation::executeTest()
 {
@@ -79,6 +116,7 @@ void ActuatorResponseValidation::executeTest()
         result = positionerTest();
         if (SystemResult::SYSTEM_OK != result)
             logger->LogCritical(TAG, "Positioner test failed!");
+
     }
 }
 
@@ -119,10 +157,60 @@ void ActuatorResponseValidation::toggleErrorDiode()
 
 SystemResult ActuatorResponseValidation::readWarnings()
 {
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+    QModbusDataUnit query(QModbusDataUnit::Coils, 1008, 1);
+
+    QModbusReply *reply1008 = getMBReply(query);
+
+    if (reply1008)
+        retVal = parseWarnings(reply1008);
+
+    if (SystemResult::SYSTEM_OK != retVal)
+        logger->LogCritical(TAG, "Failed parsing warnings!");
+
+    (void)query.setStartAddress(1009);
+
+    auto * reply1009 = getMBReply(query);
+
+    if (reply1009)
+        retVal = parseWarnings(reply1009);
+
+    if (SystemResult::SYSTEM_OK != retVal)
+        logger->LogCritical(TAG, "Failed parsing warnings!");
+
+    if (reply1008)
+        reply1008->deleteLater();
+
+    if (reply1009)
+        reply1009->deleteLater();
+
+    return retVal;
+}
+
+SystemResult ActuatorResponseValidation::parseWarnings(QModbusReply *reply)
+{
+
 
 }
 
 SystemResult ActuatorResponseValidation::readErrors()
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+    QModbusDataUnit query(QModbusDataUnit::Coils, 1007, 1);
+
+    auto *reply1007 = getMBReply(query);
+
+    if (reply1007)
+        retVal = parseErrors(reply1007);
+
+    if (retVal != SystemResult::SYSTEM_OK)
+        logger->LogCritical(TAG, "Failed to parse errors!");
+
+    if(reply1007)
+        reply1007->deleteLater();
+}
+
+SystemResult ActuatorResponseValidation::parseErrors(QModbusReply *reply)
 {
 
 }

@@ -7,6 +7,7 @@
 #include <ModbusStrategy.hpp>
 #include <ActuatorResponseGUI.hpp>
 #include <QPair>
+#include <QModbusDataUnit>
 
 class ActuatorResponseValidation : public TestInterface
 {
@@ -25,6 +26,8 @@ private:
     ModbusStrategy *_mbStrategy;
     ActuatorResponseGUI _gui;
 
+    QModbusReply *getMBReply(const QModbusDataUnit query);
+
     void executeTest();
     void handleGUI();
 
@@ -35,7 +38,9 @@ private:
     void toggleErrorDiode();
 
     SystemResult readWarnings();
+    SystemResult parseWarnings(QModbusReply *reply);
     SystemResult readErrors();
+    SystemResult parseErrors(QModbusReply *reply);
 
     SystemResult positionerTest();
     SystemResult checkPositionerRunning();
