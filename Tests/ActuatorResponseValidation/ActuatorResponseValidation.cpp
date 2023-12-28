@@ -213,6 +213,8 @@ SystemResult ActuatorResponseValidation::readErrors()
 SystemResult ActuatorResponseValidation::parseErrors(QModbusReply *reply)
 {
 
+
+
 }
 
 SystemResult ActuatorResponseValidation::positionerTest()

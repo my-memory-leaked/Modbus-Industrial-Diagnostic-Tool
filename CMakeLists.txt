@@ -57,6 +57,7 @@ include_directories(
 
     Images
 
+    ErrorMask
     ExceptionHandling/ModbusException
 
 )
@@ -106,6 +107,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Tests/FirmwareDetailVerification/FirmwareDetailVerification.hpp Tests/FirmwareDetailVerification/FirmwareDetailVerification.cpp
         GUI/FirmwareDetailGUI/FirmwareDetailGUI.hpp GUI/FirmwareDetailGUI/FirmwareDetailGUI.cpp GUI/FirmwareDetailGUI/FirmwareDetailGUI.ui
         GUI/ActuatorResponseGUI/ActuatorResponseGUI.hpp GUI/ActuatorResponseGUI/ActuatorResponseGUI.cpp GUI/ActuatorResponseGUI/ActuatorResponseGUI.ui
+        ErrorMask/ErrorMask.hpp ErrorMask/ErrorMask.cpp
 
 
 
