@@ -70,7 +70,7 @@ QModbusReply *ActuatorResponseValidation::getMBReply(const QModbusDataUnit query
     {
         QEventLoop loop;
         connect(replay, &QModbusReply::finished, &loop, &QEventLoop::quit);
-        QTimer::singleShot(2500, &loop, &QEventLoop::quit); // Timeout after 5000 ms
+        QTimer::singleShot(2500, &loop, &QEventLoop::quit); // Timeout after 2500 ms
         loop.exec();
 
         if (replay->isFinished())
@@ -111,17 +111,15 @@ void ActuatorResponseValidation::executeTest()
         // result = readErrors();
         // if (SystemResult::SYSTEM_OK != result)
         //     logger->LogCritical(TAG, "Error read failed!");
-
-
-    // TODO
-        result = readWarnings();
-        if (SystemResult::SYSTEM_OK != result)
-            logger->LogCritical(TAG, "Warnings read failed!");
-
-
-        // result = positionerTest();
+        // result = readWarnings();
         // if (SystemResult::SYSTEM_OK != result)
-        //     logger->LogCritical(TAG, "Positioner test failed!");
+        //     logger->LogCritical(TAG, "Warnings read failed!");
+    // TODO
+
+
+        result = positionerTest();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Positioner test failed!");
     // }
 }
 
@@ -327,6 +325,20 @@ SystemResult ActuatorResponseValidation::parseErrors(QModbusReply *reply)
 
 SystemResult ActuatorResponseValidation::positionerTest()
 {
+    // Otworz do 100
+    fullyOpenAndCheckPosition();
+
+    fullyCloseAndCheckPosition();
+    // getActualPositionAndTorque();
+    // sprawdz czy 100
+    // zamknij
+    // sprawdz czy 0
+
+    //otworz do 20
+    // sprawdz
+    // otworz do 80
+    // sprawdz
+    //do 0 i sprawdz
 }
 
 SystemResult ActuatorResponseValidation::checkPositionerRunning()
@@ -373,6 +385,81 @@ SystemResult ActuatorResponseValidation::getActualPositionAndTorque()
 
     return retVal;
 }
+
+SystemResult ActuatorResponseValidation::fullyOpenAndCheckPosition()
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+
+    retVal = fieldbusOpen(true);
+
+    if (retVal != SystemResult::SYSTEM_OK)
+        logger->LogCritical(TAG, "Failed to open fieldbus!");
+
+
+    QEventLoop loop;
+    QTimer::singleShot(15000, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    if(!checkIfPositionReached(100))
+    {
+        logger->LogCritical(TAG, "Failed to reach assigned position!");
+        retVal = SystemResult::SYSTEM_ERROR;
+    }
+
+    retVal = fieldbusOpen(false);
+
+    return retVal;
+}
+SystemResult ActuatorResponseValidation::fullyCloseAndCheckPosition()
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+
+    retVal = fieldbusClose(true);
+
+    if (retVal != SystemResult::SYSTEM_OK)
+        logger->LogCritical(TAG, "Failed to open fieldbus!");
+
+
+    QEventLoop loop;
+    QTimer::singleShot(15000, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    if(!checkIfPositionReached(0))
+    {
+        logger->LogCritical(TAG, "Failed to reach assigned position!");
+        retVal = SystemResult::SYSTEM_ERROR;
+    }
+
+    retVal = fieldbusClose(false);
+
+    return retVal;
+}
+
+bool ActuatorResponseValidation::checkIfPositionReached(int position)
+{
+    bool retVal = false;
+    QModbusDataUnit query = _mbStrategy->GetQModbusDataUnitByName("General");
+    QModbusReply *reply = getMBReply(query);
+
+    if(reply)
+    {
+        const QModbusDataUnit unit = reply->result();
+        auto posNTorq = parsePositionAndTorqueInt(unit);
+
+        if(posNTorq.first == position)
+        {
+            retVal = true;
+            logger->LogDebug(TAG, "Position reached!");
+        }
+    }
+    else
+    {
+        logger->LogCritical(TAG, "Failed to read position and torque from device: " + reply->errorString());
+    }
+    reply->deleteLater();
+    return retVal;
+}
+
 
 SystemResult ActuatorResponseValidation::testOpenTo80Percent(ModbusStrategy *mbStrategy)
 {
@@ -475,6 +562,34 @@ QPair<QString, QString> ActuatorResponseValidation::parsePositionAndTorque(const
     return retVal;
 }
 
+QPair<int, int> ActuatorResponseValidation::parsePositionAndTorqueInt(const QModbusDataUnit &unit)
+{
+    constexpr uint8_t MINIMAL_LENGTH = 5;
+    constexpr uint8_t POSITION_SHIFT = 3;
+    constexpr uint8_t TORQUE_SHIFT = 4;
+
+    QVector<quint16> payload = unit.values();
+    QPair<int, int> retVal;
+
+    if (payload.size() < MINIMAL_LENGTH) // Since each register is 2 bytes, 20 bytes are 10 registers
+    {
+        logger->LogCritical(TAG, "Incomplete data received for Service Interface!");
+        testFailed();
+        return QPair<int, int>();
+    }
+
+    int position = payload[POSITION_SHIFT] / 10;
+    retVal.first = position;
+
+    int torque = payload[TORQUE_SHIFT] / 10;
+    retVal.second = torque;
+
+    _gui.SetActualPosition(QString::number(position) + " %");
+    _gui.SetActualTorque(QString::number(torque) + " Nm");
+
+    return retVal;
+}
+
 QString ActuatorResponseValidation::modbusDataUnitToString(const QModbusDataUnit &unit)
 {
     QString result;
@@ -486,19 +601,23 @@ QString ActuatorResponseValidation::modbusDataUnitToString(const QModbusDataUnit
     return result;
 }
 
-SystemResult ActuatorResponseValidation::_FieldbusOpen(ModbusStrategy *mbStrategy, bool state)
+SystemResult ActuatorResponseValidation::fieldbusOpen(bool state)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
-    QModbusDataUnit query(QModbusDataUnit::Coils, 0, state);
-    mbStrategy->WriteData(query);
+    QModbusDataUnit writeUnit(QModbusDataUnit::Coils, 0, 1);
+    writeUnit.setValue(0, state ? 0xFF00 : 0x0000);
+
+    _mbStrategy->WriteData(writeUnit);
     return retVal;
 }
 
-SystemResult ActuatorResponseValidation::_FieldbusClose(ModbusStrategy *mbStrategy, bool state)
+SystemResult ActuatorResponseValidation::fieldbusClose(bool state)
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
-    QModbusDataUnit query(QModbusDataUnit::Coils, 1, state);
-    mbStrategy->WriteData(query);
+    QModbusDataUnit writeUnit(QModbusDataUnit::Coils, 1, 1);
+    writeUnit.setValue(0,  state ? 0xFF00 : 0x0000);
+
+    _mbStrategy->WriteData(writeUnit);
 
     return retVal;
 }

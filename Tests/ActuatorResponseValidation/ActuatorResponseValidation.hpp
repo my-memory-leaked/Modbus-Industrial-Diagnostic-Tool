@@ -47,11 +47,14 @@ private:
 
     SystemResult setPositioner(quint32 position);
     SystemResult resetPositioner(quint32 position);
-
     SystemResult getActualPositionAndTorque();
 
-    SystemResult _FieldbusOpen(ModbusStrategy *mbStrategy, bool state);
-    SystemResult _FieldbusClose(ModbusStrategy *mbStrategy, bool state);
+    SystemResult fullyOpenAndCheckPosition();
+    SystemResult fullyCloseAndCheckPosition();
+    bool checkIfPositionReached(int position);
+
+    SystemResult fieldbusOpen(bool state);
+    SystemResult fieldbusClose(bool state);
 
     SystemResult testOpenTo80Percent(ModbusStrategy *mbStrategy);
     SystemResult testActuatorPositioning(ModbusStrategy *mbStrategy, int targetPosition);
@@ -62,6 +65,8 @@ private:
 
 
     QPair<QString, QString> parsePositionAndTorque(const QModbusDataUnit &unit);
+    QPair<int, int> parsePositionAndTorqueInt(const QModbusDataUnit &unit);
+
 
     QString modbusDataUnitToString(const QModbusDataUnit &unit);
 };
