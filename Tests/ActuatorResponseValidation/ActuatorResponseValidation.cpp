@@ -1,6 +1,7 @@
 #include <ActuatorResponseValidation.hpp>
 #include <Logger.hpp>
 #include <ErrorMask.hpp>
+#include <WarningMask.hpp>
 #include <QEventLoop>
 #include <QTimer>
 #include <QThread>
@@ -158,37 +159,102 @@ void ActuatorResponseValidation::toggleErrorDiode()
 SystemResult ActuatorResponseValidation::readWarnings()
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
-    QModbusDataUnit query(QModbusDataUnit::InputRegisters, 1008, 1);
+    QModbusDataUnit query(QModbusDataUnit::InputRegisters, 1008, 2);
 
-    QModbusReply *reply1008 = getMBReply(query);
+    QModbusReply *reply = getMBReply(query);
 
-    if (reply1008)
-        retVal = parseWarnings(reply1008);
-
-    if (SystemResult::SYSTEM_OK != retVal)
-        logger->LogCritical(TAG, "Failed parsing warnings!");
-
-    (void)query.setStartAddress(1009);
-
-    auto *reply1009 = getMBReply(query);
-
-    if (reply1009)
-        retVal = parseWarnings(reply1009);
+    if (reply)
+        retVal = parseWarnings(reply);
 
     if (SystemResult::SYSTEM_OK != retVal)
         logger->LogCritical(TAG, "Failed parsing warnings!");
 
-    if (reply1008)
-        reply1008->deleteLater();
-
-    if (reply1009)
-        reply1009->deleteLater();
+    if (reply)
+        reply->deleteLater();
 
     return retVal;
 }
 
 SystemResult ActuatorResponseValidation::parseWarnings(QModbusReply *reply)
 {
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+
+    if (!reply)
+        retVal = SystemResult::SYSTEM_ERROR;
+
+    if (reply->error() == QModbusDevice::NoError)
+    {
+        const QModbusDataUnit unit = reply->result();
+
+        uint16_t unit1008 = unit.value(0);
+        uint16_t unit1009 = unit.value(1);
+
+        uint8_t highByteUnit1008 = unit1008 >> 8;
+        uint8_t lowByteUnit1008 = unit1008 & 0xFF;
+
+        uint8_t highByteUnit1009 = unit1009 >> 8;
+        uint8_t lowByteUnit1009 = unit1009 & 0xFF;
+
+        /* Parse 1008 register warnings */
+        if (highByteUnit1008 & WarningMask::NO_REACTION)
+            logger->LogWarning(TAG, "No reaction warning occurred.");
+        if (highByteUnit1008 & WarningMask::SIL_FAULT)
+            logger->LogWarning(TAG, "SIL fault warning occurred.");
+        if (highByteUnit1008 & WarningMask::TORQUE_WARN_OPEN)
+            logger->LogWarning(TAG, "Torque warn open warning occurred.");
+        if (highByteUnit1008 & WarningMask::TORQUE_WARN_CLOSE)
+            logger->LogWarning(TAG, "Torque warn close warning occurred.");
+        if (highByteUnit1008 & WarningMask::FQM_STATE_FAULT)
+            logger->LogWarning(TAG, "FQM state fault warning occurred.");
+        if (highByteUnit1008 & WarningMask::MAINTENANCE_REQUIRED)
+            logger->LogWarning(TAG, "Maintenance required warning occurred.");
+
+        if (lowByteUnit1008 & WarningMask::CONFIG_WARNING)
+            logger->LogWarning(TAG, "Configuration warning occurred.");
+        if (lowByteUnit1008 & WarningMask::RTC_NOT_SET)
+            logger->LogWarning(TAG, "RTC not set warning occurred.");
+        if (lowByteUnit1008 & WarningMask::RTC_BUTTON_CELL)
+            logger->LogWarning(TAG, "RTC button cell warning occurred.");
+        if (lowByteUnit1008 & WarningMask::DC_EXTERNAL)
+            logger->LogWarning(TAG, "DC external warning occurred.");
+        if (lowByteUnit1008 & WarningMask::CONTROLS_TEMP)
+            logger->LogWarning(TAG, "Controls temperature warning occurred.");
+
+        /* Parse 1009 register warnings */
+        if (highByteUnit1009 & WarningMask::OP_TIME_WARNING)
+            logger->LogWarning(TAG, "Operation time warning occurred.");
+        if (highByteUnit1009 & WarningMask::WRM_RUNNING)
+            logger->LogWarning(TAG, "WRM running warning occurred.");
+        if (highByteUnit1009 & WarningMask::WRM_STARTS)
+            logger->LogWarning(TAG, "WRM starts warning occurred.");
+        if (highByteUnit1009 & WarningMask::INTERNAL_WARNING)
+            logger->LogWarning(TAG, "Internal warning occurred.");
+        if (highByteUnit1009 & WarningMask::INPUT_AIN1)
+            logger->LogWarning(TAG, "Input AIN1 warning occurred.");
+        if (highByteUnit1009 & WarningMask::INPUT_AIN2)
+            logger->LogWarning(TAG, "Input AIN2 warning occurred.");
+        if (highByteUnit1009 & WarningMask::WRM_FOC_CABLE_BUDGET)
+            logger->LogWarning(TAG, "WRM FOC cable budget warning occurred.");
+
+        if (lowByteUnit1009 & WarningMask::PVST_FAULT)
+            logger->LogWarning(TAG, "PVST fault warning occurred.");
+        if (lowByteUnit1009 & WarningMask::PVST_ABORT)
+            logger->LogWarning(TAG, "PVST abort warning occurred.");
+        if (lowByteUnit1009 & WarningMask::FAILURE_BEHAV_ACTIVE)
+            logger->LogWarning(TAG, "Failure behavior active warning occurred.");
+        if (lowByteUnit1009 & WarningMask::FOC_CONNECTION_REQUIRED)
+            logger->LogWarning(TAG, "FOC connection required warning occurred.");
+        if (lowByteUnit1009 & WarningMask::PVST_REQUIRED)
+            logger->LogWarning(TAG, "PVST required warning occurred.");
+        if (lowByteUnit1009 & WarningMask::SETPOINT_POS)
+            logger->LogWarning(TAG, "Setpoint position warning occurred.");
+    }
+    else
+    {
+        retVal = SystemResult::SYSTEM_ERROR;
+        testFailed();
+    }
+    return retVal;
 }
 
 SystemResult ActuatorResponseValidation::readErrors()
