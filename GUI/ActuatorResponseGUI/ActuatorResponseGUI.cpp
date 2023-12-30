@@ -13,14 +13,14 @@ ActuatorResponseGUI::~ActuatorResponseGUI()
 }
 
 
-void ActuatorResponseGUI::SetActualPosition(int val)
+void ActuatorResponseGUI::SetActualPosition(QString val)
 {
-    ui->ActualPosLabelInput->setText(QString::number(val));
+    ui->ActualPosLabelInput->setText(val);
 }
 
-void ActuatorResponseGUI::SetActualTorque(int val)
+void ActuatorResponseGUI::SetActualTorque(QString val)
 {
-    ui->ActualTorqLabelInput->setText(QString::number(val));
+    ui->ActualTorqLabelInput->setText(val);
 }
 
 void ActuatorResponseGUI::SetProgressBar(int val)

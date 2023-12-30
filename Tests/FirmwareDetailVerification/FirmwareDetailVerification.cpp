@@ -56,7 +56,7 @@ void FirmwareDetailVerification::RunTest()
 
 void FirmwareDetailVerification::testCompletedSuccessfully()
 {
-    logger->LogCritical(TAG, "Test successful!");
+    logger->LogInfo(TAG, "Test successful!");
     _gui.SetProgressBar(100);
 
     QMessageBox::information(nullptr, "Test Success", "The firmware test was successful.");

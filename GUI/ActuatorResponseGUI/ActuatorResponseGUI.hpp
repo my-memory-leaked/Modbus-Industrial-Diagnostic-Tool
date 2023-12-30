@@ -15,8 +15,8 @@ public:
     explicit ActuatorResponseGUI(QWidget *parent = nullptr);
     ~ActuatorResponseGUI();
 
-    void SetActualPosition(int val);
-    void SetActualTorque(int val);
+    void SetActualPosition(QString val);
+    void SetActualTorque(QString val);
     void SetProgressBar(int val);
 
     void SetActuatorRunningDiode(bool state);

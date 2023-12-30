@@ -65,7 +65,7 @@ QModbusReply *ActuatorResponseValidation::getMBReply(const QModbusDataUnit query
         testFailed();
     }
 
-    if (SystemResult::SYSTEM_OK != status && replay)
+    if (SystemResult::SYSTEM_OK == status && replay)
     {
         QEventLoop loop;
         connect(replay, &QModbusReply::finished, &loop, &QEventLoop::quit);
@@ -93,31 +93,35 @@ QModbusReply *ActuatorResponseValidation::getMBReply(const QModbusDataUnit query
 
 void ActuatorResponseValidation::executeTest()
 {
-    bool isTestFinished = false;
+    logger->LogInfo(TAG, "Executing test...");
     SystemResult result = SystemResult::SYSTEM_OK;
     // Otworzyć i zamknąć 2 razy
     // 3 setpointy randomowe, sprawdzanie coilsów oraz statusów błędów, wyświetlanie diod dostępnych na urządzeniu
 
     // Stany do czytania: 1000 coil 5 bajt: 7 bit , 6 bit, 2 ,1 || 6 bajt 4 bit
     // 1002
-    for (quint16 i = 0; i < 3; ++i)
-    {
-        result = getActualPositionAndTorque();
-        if (SystemResult::SYSTEM_OK != result)
-            logger->LogCritical(TAG, "Getting actual position and torque failed!");
+    // for (quint16 i = 0; i < 3; ++i)
+    // {
+    //Gotowe
+        // result = getActualPositionAndTorque();
+        // if (SystemResult::SYSTEM_OK != result)
+        //     logger->LogCritical(TAG, "Getting actual position and torque failed!");
 
+        // result = readErrors();
+        // if (SystemResult::SYSTEM_OK != result)
+        //     logger->LogCritical(TAG, "Error read failed!");
+
+
+    // TODO
         result = readWarnings();
         if (SystemResult::SYSTEM_OK != result)
             logger->LogCritical(TAG, "Warnings read failed!");
 
-        result = readErrors();
-        if (SystemResult::SYSTEM_OK != result)
-            logger->LogCritical(TAG, "Error read failed!");
 
-        result = positionerTest();
-        if (SystemResult::SYSTEM_OK != result)
-            logger->LogCritical(TAG, "Positioner test failed!");
-    }
+        // result = positionerTest();
+        // if (SystemResult::SYSTEM_OK != result)
+        //     logger->LogCritical(TAG, "Positioner test failed!");
+    // }
 }
 
 void ActuatorResponseValidation::handleGUI()
@@ -154,7 +158,7 @@ void ActuatorResponseValidation::toggleErrorDiode()
 SystemResult ActuatorResponseValidation::readWarnings()
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
-    QModbusDataUnit query(QModbusDataUnit::Coils, 1008, 1);
+    QModbusDataUnit query(QModbusDataUnit::InputRegisters, 1008, 1);
 
     QModbusReply *reply1008 = getMBReply(query);
 
@@ -190,7 +194,7 @@ SystemResult ActuatorResponseValidation::parseWarnings(QModbusReply *reply)
 SystemResult ActuatorResponseValidation::readErrors()
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
-    QModbusDataUnit query(QModbusDataUnit::Coils, 1007, 1);
+    QModbusDataUnit query(QModbusDataUnit::InputRegisters, 1007, 1);
 
     auto *reply1007 = getMBReply(query);
 
@@ -222,29 +226,29 @@ SystemResult ActuatorResponseValidation::parseErrors(QModbusReply *reply)
         // Low byte (Fault 2)
         uint8_t lowByte = value & 0xFF;
 
-        if (lowByte & ErrorMask::NO_REACTION)
+        if (highByte & ErrorMask::NO_REACTION)
             logger->LogCritical(TAG, "No reaction error occurred.");
-        if (lowByte & ErrorMask::INTERNAL_ERROR)
+        if (highByte & ErrorMask::INTERNAL_ERROR)
             logger->LogCritical(TAG, "Internal error occurred.");
-        if (lowByte & ErrorMask::TORQUE_FAULT_CLOSE)
+        if (highByte & ErrorMask::TORQUE_FAULT_CLOSE)
             logger->LogCritical(TAG, "Torque fault close error occurred.");
-        if (lowByte & ErrorMask::TORQUE_FAULT_OPEN)
+        if (highByte & ErrorMask::TORQUE_FAULT_OPEN)
             logger->LogCritical(TAG, "Torque fault open error occurred.");
-        if (lowByte & ErrorMask::PHASE_FAILURE)
+        if (highByte & ErrorMask::PHASE_FAILURE)
             logger->LogCritical(TAG, "Phase failure error occurred.");
-        if (lowByte & ErrorMask::THERMAL_FAULT)
+        if (highByte & ErrorMask::THERMAL_FAULT)
             logger->LogCritical(TAG, "Thermal fault error occurred.");
-        if (lowByte & ErrorMask::MAINS_FAULT)
+        if (highByte & ErrorMask::MAINS_FAULT)
             logger->LogCritical(TAG, "Mains fault error occurred.");
-        if (lowByte & ErrorMask::CONFIGURATION_ERROR)
+        if (highByte & ErrorMask::CONFIGURATION_ERROR)
             logger->LogCritical(TAG, "Configuration error occurred.");
 
         // Check for Fault 2 errors
-        if (highByte & ErrorMask::INCORRECT_PHASE_SEQ)
+        if (lowByte & ErrorMask::INCORRECT_PHASE_SEQ)
             logger->LogCritical(TAG, "Incorrect phase sequence error occurred.");
-        if (highByte & ErrorMask::CONT_ERROR_REMOTE)
+        if (lowByte & ErrorMask::CONT_ERROR_REMOTE)
             logger->LogCritical(TAG, "Continuous error remote occurred.");
-        if (highByte & ErrorMask::INCORRECT_ROTATION)
+        if (lowByte & ErrorMask::INCORRECT_ROTATION)
             logger->LogCritical(TAG, "Incorrect rotation error occurred.");
     }
     else
@@ -280,47 +284,26 @@ SystemResult ActuatorResponseValidation::getActualPositionAndTorque()
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
 
-    QModbusDataUnit data = _mbStrategy->GetQModbusDataUnitByName("General");
+    QModbusDataUnit query = _mbStrategy->GetQModbusDataUnitByName("General");
+    QModbusReply *reply = getMBReply(query);
 
-    QModbusReply *firmwareReply = _mbStrategy->ReadData(data);
-    if (!firmwareReply)
+    if(reply)
     {
-        logger->LogCritical(TAG, "Failed to send read request for actual position and torque version!");
+        const QModbusDataUnit unit = reply->result();
+        QPair<QString, QString> posNTorq = parsePositionAndTorque(unit);
+        logger->LogDebug(TAG, "Read position: " + posNTorq.first + " torque: " + posNTorq.second);
+
+        _gui.SetActualPosition(posNTorq.first);
+        _gui.SetActualTorque(posNTorq.second);
+    }
+    else
+    {
+        logger->LogCritical(TAG, "Failed to read position and torque from device: " + reply->errorString());
         retVal = SystemResult::SYSTEM_ERROR;
         testFailed();
     }
 
-    if (SystemResult::SYSTEM_OK != retVal && firmwareReply)
-    {
-        QEventLoop loop;
-        connect(firmwareReply, &QModbusReply::finished, &loop, &QEventLoop::quit);
-        QTimer::singleShot(2500, &loop, &QEventLoop::quit); // Timeout after 5000 ms
-        loop.exec();
-
-        if (firmwareReply->isFinished())
-        {
-            if (firmwareReply->error() == QModbusDevice::NoError)
-            {
-                const QModbusDataUnit unit = firmwareReply->result();
-                QPair<QString, QString> posNTorq = parsePositionAndTorque(unit);
-                logger->LogDebug(TAG, "Read position: " + posNTorq.first + " torque: " + posNTorq.second);
-            }
-            else
-            {
-                logger->LogCritical(TAG, "Failed to read position and torque from device: " + firmwareReply->errorString());
-                retVal = SystemResult::SYSTEM_ERROR;
-                testFailed();
-            }
-        }
-        else
-        {
-            logger->LogCritical(TAG, "Timeout waiting for postion and torque reply!");
-            retVal = SystemResult::SYSTEM_ERROR;
-            testFailed();
-        }
-
-        firmwareReply->deleteLater();
-    }
+    reply->deleteLater();
 
     return retVal;
 }
@@ -403,6 +386,27 @@ bool ActuatorResponseValidation::positionReached(int actualPosition, int targetP
 
 QPair<QString, QString> ActuatorResponseValidation::parsePositionAndTorque(const QModbusDataUnit &unit)
 {
+    constexpr uint8_t MINIMAL_LENGTH = 5;
+    constexpr uint8_t POSITION_SHIFT = 3;
+    constexpr uint8_t TORQUE_SHIFT = 4;
+
+    QVector<quint16> payload = unit.values();
+    QPair<QString, QString> retVal;
+
+    if (payload.size() < MINIMAL_LENGTH) // Since each register is 2 bytes, 20 bytes are 10 registers
+    {
+        logger->LogCritical(TAG, "Incomplete data received for Service Interface!");
+        testFailed();
+        return QPair<QString, QString>();
+    }
+
+    quint32 position = payload[POSITION_SHIFT] / 10;
+    retVal.first.append(QString::number(position) + " %");
+
+    quint32 torque = payload[TORQUE_SHIFT] / 10;
+    retVal.second.append(QString::number(torque) + " Nm");
+
+    return retVal;
 }
 
 QString ActuatorResponseValidation::modbusDataUnitToString(const QModbusDataUnit &unit)
