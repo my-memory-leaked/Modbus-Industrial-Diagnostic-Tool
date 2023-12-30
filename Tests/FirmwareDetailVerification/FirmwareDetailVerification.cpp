@@ -143,7 +143,7 @@ QString FirmwareDetailVerification::getFirmwareVersion()
     QModbusDataUnit data = _mbStrategy->GetQModbusDataUnitByName("Version");
 
     /* We don't need to ask for 20 bytes, the device will reply with data */
-    data.setValueCount(9); // For debug purposes
+    // data.setValueCount(9); // For debug purposes
 
     QModbusReply *firmwareReply = _mbStrategy->ReadData(data);
     if (!firmwareReply)
@@ -196,9 +196,15 @@ QString FirmwareDetailVerification::extractFirwareVersion(QModbusReply *firmware
 
     // Assuming firmware version is stored in ASCII format
     QString firmwareVersion;
+    quint8 lowerByte;
+    quint8 upperByte;
     for (int i = 0; i < MAX_VERSION_LEN; ++i)
     {
-        firmwareVersion.append(QChar(payload[i]));
+        upperByte = payload[i] >> 8;
+        lowerByte = payload[i] & 0xFF;
+
+        firmwareVersion.append(QChar(upperByte));
+        firmwareVersion.append(QChar(lowerByte));
     }
 
     return firmwareVersion.trimmed(); // Trim any whitespace
@@ -362,9 +368,15 @@ std::pair<QString, int>FirmwareDetailVerification::parseServiceInterface(QModbus
     }
 
     std::pair<QString, int> result;
+    quint8 upperByte;
+    quint8 lowerByte;
     for (int i = 0; i < DEVICE_ID_LEN; ++i)
     {
-        result.first.append(QChar(payload[i]));
+        upperByte = payload[i] >> 8;
+        lowerByte = payload[i] & 0xFF;
+
+        result.first.append(QChar(upperByte));
+        result.first.append(QChar(lowerByte));
     }
 
     result.second = payload[MAX_VERSION_LEN - 1];

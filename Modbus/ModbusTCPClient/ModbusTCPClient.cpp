@@ -97,7 +97,7 @@ QModbusReply *ModbusTCPClient::ReadData(const QModbusDataUnit &cData)
 
     if (SystemResult::SYSTEM_OK == result)
     {
-        retVal = _modbusClient->sendReadRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
+        retVal = _modbusClient->sendReadRequest(cData, AUMA_UNIT_ID);
 
         logger->LogDebug( CLASS_TAG,
                           "Requested reading: RegisterType: " +
@@ -133,7 +133,7 @@ QModbusReply *ModbusTCPClient::WriteData(const QModbusDataUnit &cData)
     if (SystemResult::SYSTEM_OK == result)
     {
         /* Send the write request */
-        retVal = _modbusClient->sendWriteRequest(cData, GetConnectionParameters().GetIpAddress().toInt());
+        retVal = _modbusClient->sendWriteRequest(cData, AUMA_UNIT_ID);
 
         /* Log the write request */
         logger->LogDebug(CLASS_TAG,

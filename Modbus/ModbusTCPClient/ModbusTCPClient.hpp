@@ -21,6 +21,8 @@ private:
     static constexpr const char* const MODBUS_TCP_DEVICE_NAME {"ModbusTCPDevice"};
     static constexpr const char* const CLASS_TAG {"[ModbusTCPClient]"};
 
+    static constexpr const quint8 AUMA_UNIT_ID = 11;
+
     void initializeModbusClient();
     void connectSignalsAndSlots() const;
     void reconnect();
