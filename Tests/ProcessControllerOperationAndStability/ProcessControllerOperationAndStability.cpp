@@ -8,6 +8,7 @@
 #include <QCoreApplication>
 #include <QPair>
 #include <QMessageBox>
+#include <QRandomGenerator>
 
 static auto *logger = &Logger::GetInstance();
 
@@ -98,43 +99,46 @@ void ProcessControllerOperationAndStability::executeTest()
     logger->LogInfo(TAG, "Executing test...");
     SystemResult result = SystemResult::SYSTEM_OK;
 
-    const float progressIncrement = 100.0f / 12; // 12 tasks in total
-    float currentProgress = 0;
 
-    // for (quint16 i = 0; i < 3; ++i)
-    // {
-    //     result = getActualPositionAndTorque();
-    //     if (SystemResult::SYSTEM_OK != result)
-    //         logger->LogCritical(TAG, "Getting actual position and torque failed!");
+    result = getActualPositionAndTorque();
+    if (SystemResult::SYSTEM_OK != result)
+        logger->LogCritical(TAG, "Getting actual position and torque failed!");
 
-    //     currentProgress += progressIncrement;
-    //     _gui.SetProgressBar(static_cast<int>(currentProgress));
+    result = getActualPositionAndTorque();
+    if (SystemResult::SYSTEM_OK != result)
+        logger->LogCritical(TAG, "Getting actual position and torque failed!");
 
-    //     result = readErrors();
-    //     if (SystemResult::SYSTEM_OK != result)
-    //         logger->LogCritical(TAG, "Error read failed!");
+    result = readErrors();
+    if (SystemResult::SYSTEM_OK != result)
+        logger->LogCritical(TAG, "Error read failed!");
 
-    //     currentProgress += progressIncrement;
-    //     _gui.SetProgressBar(static_cast<int>(currentProgress));
+    result = readWarnings();
+    if (SystemResult::SYSTEM_OK != result)
+        logger->LogCritical(TAG, "Warnings read failed!");
 
-    //     result = readWarnings();
-    //     if (SystemResult::SYSTEM_OK != result)
-    //         logger->LogCritical(TAG, "Warnings read failed!");
+    (void) positionerTest();
+    if (SystemResult::SYSTEM_OK != result)
+        logger->LogCritical(TAG, "Positioner test failed!");
 
-    //     currentProgress += progressIncrement;
-    //     _gui.SetProgressBar(static_cast<int>(currentProgress));
+    for (quint16 i = 0; i < 3; ++i)
+    {
+        result = testActuatorPositioning(QRandomGenerator::global()->bounded(1001));
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Error positioning!");
 
-    //     (void) positionerTest();
-    //     if (SystemResult::SYSTEM_OK != result)
-    //         logger->LogCritical(TAG, "Positioner test failed!");
+        result = readErrors();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Error read failed!");
 
-    //     currentProgress += progressIncrement;
-    //     _gui.SetProgressBar(static_cast<int>(currentProgress));
-    // }
+        result = readWarnings();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Warnings read failed!");
+    }
 
-    // testActuatorPositioning()
+    testActuatorPositioning(200);
 
-    writePosition(200);
+
+
     testCompletedSuccessfully();
 }
 
@@ -476,9 +480,7 @@ SystemResult ProcessControllerOperationAndStability::parseErrors(QModbusReply *r
 
 void ProcessControllerOperationAndStability::positionerTest()
 {
-    // Otworz do 100
     fullyOpenAndCheckPosition();
-
     fullyCloseAndCheckPosition();
     getActualPositionAndTorque();
 }
@@ -617,49 +619,37 @@ SystemResult ProcessControllerOperationAndStability::testActuatorPositioning(int
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
 
-    // Get the Modbus data unit for setting the actuator position
-    QModbusDataUnit setPositionUnit = _mbStrategy->GetQModbusDataUnitByName("Positioner");
+    retVal = writePosition(200);
 
-    // Prepare a data unit for reading the actual position
-    QModbusDataUnit actualPositionUnit(setPositionUnit);
-    setPositionUnit.setValue(0, targetPosition); // Set target position
-    _mbStrategy->WriteData(setPositionUnit);
+    if(SystemResult::SYSTEM_OK == retVal)
+        retVal = setFieldbusSetpoint(true);
+    else
+        logger->LogCritical(TAG, "Failed to write position " + QString::number(targetPosition));
 
-    int actualPosition;
+    // Create a QTimer
+    QTimer timer;
+    timer.setInterval(1500); // 1.5 seconds
 
-    while (true)
+    // Connect the QTimer's timeout signal to getActualPositionAndTorque
+    connect(&timer, &QTimer::timeout, this, &ProcessControllerOperationAndStability::getActualPositionAndTorque);
+
+    // Start the timer
+    timer.start();
+
+    QEventLoop loop;
+    QTimer::singleShot(15000, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    // Stop the timer after exiting the loop
+    timer.stop();
+
+    if (!checkIfPositionReached(targetPosition))
     {
-        QModbusReply *positionReply = _mbStrategy->ReadData(actualPositionUnit);
-
-        QEventLoop loop;
-        connect(positionReply, &QModbusReply::finished, &loop, &QEventLoop::quit);
-        QTimer::singleShot(5000, &loop, &QEventLoop::quit); // Timeout after 5000 ms
-        loop.exec();
-
-        if (positionReply->isFinished())
-        {
-            if (positionReply->error() == QModbusDevice::NoError)
-            {
-                actualPosition = extractPositionValue(positionReply);
-                if (checkIfPositionReached(targetPosition))
-                    break;
-            }
-            else
-            {
-                logger->LogCritical(TAG, "Modbus Error: " + positionReply->errorString());
-                retVal = SystemResult::SYSTEM_ERROR;
-                break;
-            }
-        }
-        else
-        {
-            logger->LogCritical(TAG, "Timeout waiting for actual position reply!");
-            retVal = SystemResult::SYSTEM_ERROR;
-            break;
-        }
-
-        positionReply->deleteLater();
+        logger->LogCritical(TAG, "Failed to reach assigned position!");
+        retVal = SystemResult::SYSTEM_ERROR;
     }
+
+    _gui.SetActuatorRunningDiode(false);
 
     return retVal;
 }
@@ -702,6 +692,16 @@ SystemResult ProcessControllerOperationAndStability::writePosition(int position)
         retVal = SystemResult::SYSTEM_ERROR;
     }
 
+    return retVal;
+}
+
+SystemResult ProcessControllerOperationAndStability::setFieldbusSetpoint(bool state)
+{
+    SystemResult retVal = SystemResult::SYSTEM_OK;
+    QModbusDataUnit writeUnit(QModbusDataUnit::Coils, 2, 1);
+    writeUnit.setValue(0, state ? 0xFF00 : 0x0000);
+
+    _mbStrategy->WriteData(writeUnit);
     return retVal;
 }
 

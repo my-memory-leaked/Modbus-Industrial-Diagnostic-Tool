@@ -49,6 +49,8 @@ private:
     SystemResult testActuatorPositioning(int targetPosition);
     SystemResult writePosition(int position);
 
+    SystemResult setFieldbusSetpoint(bool state);
+
     int extractPositionValue(QModbusReply *reply);
 
     QPair<QString, QString> parsePositionAndTorque(const QModbusDataUnit &unit);
