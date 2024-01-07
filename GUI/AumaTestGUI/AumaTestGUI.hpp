@@ -19,7 +19,7 @@ public:
 
 private slots:
     void accept() override;
-
+    void onButtonClicked();
 private:
     std::unique_ptr<Ui::AumaTestGUI> ui;
     std::shared_ptr<TestInterface> &_testInterface;

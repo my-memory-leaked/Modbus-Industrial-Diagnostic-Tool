@@ -2,23 +2,12 @@
   "Devices":
   [
     {
-      "DeviceName": "localhost",
-      "Parameters":
-      [
-        {
-          "Type": "TCP",
-          "IPAddress": "127.0.0.13",
-          "Port": 5022
-        }
-      ]
-    },
-    {
       "DeviceName": "Auma",
       "Registers":
       [
       	{
-          "Type": "TCP",
-          "IPAddress": "127.0.0.1",
+          "Type": "Modbus TCP",
+          "IPAddress": "192.168.255.10",
           "Port": 502
         }
       ]

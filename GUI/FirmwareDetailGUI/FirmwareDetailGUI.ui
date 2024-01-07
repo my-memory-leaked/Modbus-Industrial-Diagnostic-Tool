@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AumaTestGUI</class>
- <widget class="QDialog" name="AumaTestGUI">
+ <class>FirmwareDetailGUI</class>
+ <widget class="QDialog" name="FirmwareDetailGUI">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>383</width>
-    <height>202</height>
+    <width>400</width>
+    <height>193</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="ButtonBox">
+  <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>160</y>
+     <y>150</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -29,113 +29,130 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QRadioButton" name="ARVRadioButton">
+  <widget class="QProgressBar" name="TestProgressBar">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>20</y>
+     <width>118</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>24</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="LanguageLabel">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>30</y>
-     <width>351</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Actuator Response Validation</string>
-   </property>
-   <attribute name="buttonGroup">
-    <string notr="true">TestButtonGroup</string>
-   </attribute>
-  </widget>
-  <widget class="QRadioButton" name="PCOSRadioButton">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>60</y>
-     <width>351</width>
+     <width>71</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Process Controller Operation and Stability</string>
-   </property>
-   <attribute name="buttonGroup">
-    <string notr="true">TestButtonGroup</string>
-   </attribute>
-  </widget>
-  <widget class="QRadioButton" name="FDVRadioButton">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>90</y>
-     <width>351</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Firmware Detail Verification</string>
-   </property>
-   <attribute name="buttonGroup">
-    <string notr="true">TestButtonGroup</string>
-   </attribute>
-  </widget>
-  <widget class="QLabel" name="SelectTestLabel">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>10</y>
-     <width>91</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Select test:</string>
+    <string>Language:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="FirmwareDetailInfoButton">
+  <widget class="QLabel" name="LanguageLabelInput">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>90</y>
-     <width>51</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Info</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="FCOSInfoButton">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>60</y>
-     <width>51</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Info</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="ARVInfoButton">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
+     <x>90</x>
      <y>30</y>
-     <width>51</width>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="FirmwareVersionLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>60</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Firmware version:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="FirmwareVersionLabelInput">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>60</y>
+     <width>131</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Info</string>
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="DeviceIDLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>90</y>
+     <width>61</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Device ID:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="DeviceIDLabelInput">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>90</y>
+     <width>201</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="OperatingModeLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>120</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Operating mode:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="OperatingModeLabelInput">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>120</y>
+     <width>231</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>ButtonBox</sender>
+   <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>AumaTestGUI</receiver>
+   <receiver>FirmwareDetailGUI</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -149,9 +166,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>ButtonBox</sender>
+   <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>AumaTestGUI</receiver>
+   <receiver>FirmwareDetailGUI</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -165,7 +182,4 @@
    </hints>
   </connection>
  </connections>
- <buttongroups>
-  <buttongroup name="TestButtonGroup"/>
- </buttongroups>
 </ui>

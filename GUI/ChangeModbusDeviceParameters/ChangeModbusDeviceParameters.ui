@@ -59,7 +59,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Connection interface:</string>
+    <string>Protocol interface:</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="TCPInterfaceGroupBox">

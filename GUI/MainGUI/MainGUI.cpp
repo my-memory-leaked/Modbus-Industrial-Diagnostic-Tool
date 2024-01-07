@@ -23,7 +23,9 @@ MainGUI::MainGUI(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle(ApplicationConstant::MAIN_APPLICATION_NAME);
-    connectSignalsAndSlots();
+    (void)connectSignalsAndSlots();
+
+    (void)hideDebugFeatures();
 
     _mbController = &Singleton<ModbusController>::GetInstance();
     (void)readDevicesFromFile();
@@ -124,7 +126,7 @@ void MainGUI::readDevicesFromFile()
         }
         else if(device->GetDeviceName() == "localhost")
         {
-            updateLocalhostDevice(device.get());
+            // updateLocalhostDevice(device.get());
         }
 
 
@@ -198,7 +200,7 @@ void MainGUI::updateAumaDevice(const ModbusStrategy* cInterface)
     if (!cInterface->GetDeviceName().isEmpty())
         ui->AumaGroupBox->setTitle(cInterface->GetDeviceName());
 
-    ui->AumaTypeInputLabel->setText("TCP");
+    ui->AumaTypeInputLabel->setText("Modbus TCP");
     ui->AumaIPInputLabel->setText(cInterface->GetConnectionParameters().GetIpAddress());
     ui->AumaPortInputLabel->setText(QString::number(cInterface->GetConnectionParameters().GetPort()));
 }
@@ -254,3 +256,10 @@ QPixmap MainGUI::GetDisconnectedImage()
                                                   Qt::KeepAspectRatio, Qt::SmoothTransformation);
     return scaledPixmap;
 }
+
+void MainGUI::hideDebugFeatures()
+{
+    ui->CustomDevicesGroup->setVisible(false);
+    ui->LocalhostGroupBox->setVisible(false);
+}
+

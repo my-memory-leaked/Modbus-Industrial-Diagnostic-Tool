@@ -22,6 +22,8 @@ include_directories(
     GUI/ChangeModbusDeviceParameters
     GUI/AumaTestGUI
     GUI/FirmwareDetailGUI
+    GUI/ActuatorResponseGUI
+    GUI/ProcessControlerGUI
 
     ApplicationConstant
     SystemResult
@@ -56,6 +58,8 @@ include_directories(
 
     Images
 
+    ErrorMask
+    WarningMask
     ExceptionHandling/ModbusException
 
 )
@@ -90,6 +94,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Images/LogoAuma.png
         Images/ConnectedState.png
         Images/DisconnectedState.png
+        Images/InfoIcon.png
 
 
         Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
@@ -104,6 +109,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Tests/ProcessControllerOperationAndStability/ProcessControllerOperationAndStability.hpp Tests/ProcessControllerOperationAndStability/ProcessControllerOperationAndStability.cpp
         Tests/FirmwareDetailVerification/FirmwareDetailVerification.hpp Tests/FirmwareDetailVerification/FirmwareDetailVerification.cpp
         GUI/FirmwareDetailGUI/FirmwareDetailGUI.hpp GUI/FirmwareDetailGUI/FirmwareDetailGUI.cpp GUI/FirmwareDetailGUI/FirmwareDetailGUI.ui
+        GUI/ActuatorResponseGUI/ActuatorResponseGUI.hpp GUI/ActuatorResponseGUI/ActuatorResponseGUI.cpp GUI/ActuatorResponseGUI/ActuatorResponseGUI.ui
+        ErrorMask/ErrorMask.hpp ErrorMask/ErrorMask.cpp
+        WarningMask/WarningMask.hpp WarningMask/WarningMask.cpp
+        GUI/ProcessControlerGUI/ProcessControlerGUI.hpp GUI/ProcessControlerGUI/ProcessControlerGUI.cpp GUI/ProcessControlerGUI/ProcessControlerGUI.ui
+
+
 
 
     )
@@ -116,11 +127,14 @@ set(CONNECTED_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/ConnectedState.png")
 set(CONNECTED_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/ConnectedState.png")
 set(DISCONNECTED_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/DisconnectedState.png")
 set(DISCONNECTED_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/DisconnectedState.png")
+set(INFO_ICON_SOURCE "${CMAKE_SOURCE_DIR}/Images/InfoIcon.png")
+set(INFO_ICON_DESTINATION "${CMAKE_BINARY_DIR}/Images/InfoIcon.png")
 add_custom_command(
     TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${AUMA_LOGO_SOURCE} ${AUMA_LOGO_DESTINATION}
     COMMAND ${CMAKE_COMMAND} -E copy ${CONNECTED_LOGO_SOURCE} ${CONNECTED_LOGO_DESTINATION}
     COMMAND ${CMAKE_COMMAND} -E copy ${DISCONNECTED_LOGO_SOURCE} ${DISCONNECTED_LOGO_DESTINATION}
+    COMMAND ${CMAKE_COMMAND} -E copy ${INFO_ICON_SOURCE} ${INFO_ICON_DESTINATION}
 )
 
 # Define a list containing pairs of source and destination paths for each JSON file

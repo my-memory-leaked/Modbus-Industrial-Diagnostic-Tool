@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>763</width>
-    <height>625</height>
+    <width>707</width>
+    <height>247</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -166,7 +166,7 @@
       </rect>
      </property>
      <property name="title">
-      <string>Auma</string>
+      <string>Auma AC.2</string>
      </property>
      <widget class="QLabel" name="AumaTypeLabel">
       <property name="geometry">
@@ -238,7 +238,7 @@
        <rect>
         <x>40</x>
         <y>20</y>
-        <width>61</width>
+        <width>81</width>
         <height>21</height>
        </rect>
       </property>
@@ -298,6 +298,19 @@
        <string/>
       </property>
      </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>100</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>AC. 2</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QGroupBox" name="CustomDevicesGroup">
@@ -313,6 +326,9 @@
      <string>Custom devices:</string>
     </property>
     <widget class="QListWidget" name="DevicesListWidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -320,6 +336,9 @@
        <width>621</width>
        <height>91</height>
       </rect>
+     </property>
+     <property name="selectionRectVisible">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="AddDevice">
@@ -342,7 +361,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>763</width>
+     <width>707</width>
      <height>17</height>
     </rect>
    </property>
