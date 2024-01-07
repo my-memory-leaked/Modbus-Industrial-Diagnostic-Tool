@@ -20,8 +20,10 @@ public:
     void SetProgressBar(int val);
 
     void SetActuatorRunningDiode(bool state);
-    void SetWarningDiode(bool state);
-    void SetErrorDiode(bool state);
+    void SetWarningInfo(int value);
+    void SetErrorInfo(int value);
+
+    void AddLog(QString log);
 private:
     std::unique_ptr<Ui::ActuatorResponseGUI> ui;
 };

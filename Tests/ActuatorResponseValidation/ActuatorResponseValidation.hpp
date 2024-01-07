@@ -26,6 +26,9 @@ private:
     ModbusStrategy *_mbStrategy;
     ActuatorResponseGUI _gui;
 
+    int _warningCounter = 0;
+    int _errorCounter = 0;
+
     QModbusReply *getMBReply(const QModbusDataUnit query);
 
     void executeTest();
@@ -34,16 +37,12 @@ private:
     void testCompletedSuccessfully();
     void testFailed();
 
-    void toggleWarningDiode();
-    void toggleErrorDiode();
-
     SystemResult readWarnings();
     SystemResult parseWarnings(QModbusReply *reply);
     SystemResult readErrors();
     SystemResult parseErrors(QModbusReply *reply);
 
     SystemResult positionerTest();
-    SystemResult checkPositionerRunning();
 
     SystemResult setPositioner(quint32 position);
     SystemResult resetPositioner(quint32 position);

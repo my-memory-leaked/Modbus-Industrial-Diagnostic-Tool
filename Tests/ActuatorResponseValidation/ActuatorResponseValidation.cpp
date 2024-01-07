@@ -7,6 +7,7 @@
 #include <QThread>
 #include <QCoreApplication>
 #include <QPair>
+#include <QMessageBox>
 
 static auto *logger = &Logger::GetInstance();
 
@@ -96,31 +97,42 @@ void ActuatorResponseValidation::executeTest()
 {
     logger->LogInfo(TAG, "Executing test...");
     SystemResult result = SystemResult::SYSTEM_OK;
-    // Otworzyć i zamknąć 2 razy
-    // 3 setpointy randomowe, sprawdzanie coilsów oraz statusów błędów, wyświetlanie diod dostępnych na urządzeniu
 
-    // Stany do czytania: 1000 coil 5 bajt: 7 bit , 6 bit, 2 ,1 || 6 bajt 4 bit
-    // 1002
-    // for (quint16 i = 0; i < 3; ++i)
-    // {
-    //Gotowe
-        // result = getActualPositionAndTorque();
-        // if (SystemResult::SYSTEM_OK != result)
-        //     logger->LogCritical(TAG, "Getting actual position and torque failed!");
+    const float progressIncrement = 100.0f / 12; // 12 tasks in total
+    float currentProgress = 0;
 
-        // result = readErrors();
-        // if (SystemResult::SYSTEM_OK != result)
-        //     logger->LogCritical(TAG, "Error read failed!");
-        // result = readWarnings();
-        // if (SystemResult::SYSTEM_OK != result)
-        //     logger->LogCritical(TAG, "Warnings read failed!");
-    // TODO
+    for (quint16 i = 0; i < 3; ++i)
+    {
+        result = getActualPositionAndTorque();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Getting actual position and torque failed!");
 
+        currentProgress += progressIncrement;
+        _gui.SetProgressBar(static_cast<int>(currentProgress));
+
+        result = readErrors();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Error read failed!");
+
+        currentProgress += progressIncrement;
+        _gui.SetProgressBar(static_cast<int>(currentProgress));
+
+        result = readWarnings();
+        if (SystemResult::SYSTEM_OK != result)
+            logger->LogCritical(TAG, "Warnings read failed!");
+
+        currentProgress += progressIncrement;
+        _gui.SetProgressBar(static_cast<int>(currentProgress));
 
         result = positionerTest();
         if (SystemResult::SYSTEM_OK != result)
             logger->LogCritical(TAG, "Positioner test failed!");
-    // }
+
+        currentProgress += progressIncrement;
+        _gui.SetProgressBar(static_cast<int>(currentProgress));
+    }
+
+    testCompletedSuccessfully();
 }
 
 void ActuatorResponseValidation::handleGUI()
@@ -130,28 +142,18 @@ void ActuatorResponseValidation::handleGUI()
 
 void ActuatorResponseValidation::testCompletedSuccessfully()
 {
+    logger->LogInfo(TAG, "Test successful!");
+    _gui.SetProgressBar(100);
+
+    QMessageBox::information(nullptr, "Test Success", "The firmware test was successful.");
 }
 
 void ActuatorResponseValidation::testFailed()
 {
-}
+    logger->LogCritical(TAG, "Test failed!");
+    _gui.SetProgressBar(100);
 
-void ActuatorResponseValidation::toggleWarningDiode()
-{
-    static bool isToggled = false;
-
-    isToggled ? _gui.SetWarningDiode(true) : _gui.SetWarningDiode(false);
-
-    isToggled = !isToggled;
-}
-
-void ActuatorResponseValidation::toggleErrorDiode()
-{
-    static bool isToggled = false;
-
-    isToggled ? _gui.SetErrorDiode(true) : _gui.SetErrorDiode(false);
-
-    isToggled = !isToggled;
+    QMessageBox::critical(nullptr, "Test Failure", "The firmware test failed. Please check the logs for more information.");
 }
 
 SystemResult ActuatorResponseValidation::readWarnings()
@@ -195,57 +197,155 @@ SystemResult ActuatorResponseValidation::parseWarnings(QModbusReply *reply)
 
         /* Parse 1008 register warnings */
         if (highByteUnit1008 & WarningMask::NO_REACTION)
+        {
             logger->LogWarning(TAG, "No reaction warning occurred.");
+            _gui.AddLog("No reaction warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1008 & WarningMask::SIL_FAULT)
+        {
             logger->LogWarning(TAG, "SIL fault warning occurred.");
+            _gui.AddLog("SIL fault warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1008 & WarningMask::TORQUE_WARN_OPEN)
+        {
             logger->LogWarning(TAG, "Torque warn open warning occurred.");
+            _gui.AddLog("Torque warn open warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1008 & WarningMask::TORQUE_WARN_CLOSE)
+        {
             logger->LogWarning(TAG, "Torque warn close warning occurred.");
+            _gui.AddLog("Torque warn close warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1008 & WarningMask::FQM_STATE_FAULT)
+        {
             logger->LogWarning(TAG, "FQM state fault warning occurred.");
+            _gui.AddLog("FQM state fault warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1008 & WarningMask::MAINTENANCE_REQUIRED)
+        {
             logger->LogWarning(TAG, "Maintenance required warning occurred.");
+            _gui.AddLog("Maintenance required warning occurred.");
+            _warningCounter++;
+        }
 
         if (lowByteUnit1008 & WarningMask::CONFIG_WARNING)
+        {
             logger->LogWarning(TAG, "Configuration warning occurred.");
+            _gui.AddLog("Configuration warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1008 & WarningMask::RTC_NOT_SET)
+        {
             logger->LogWarning(TAG, "RTC not set warning occurred.");
+            _gui.AddLog("RTC not set warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1008 & WarningMask::RTC_BUTTON_CELL)
+        {
             logger->LogWarning(TAG, "RTC button cell warning occurred.");
+            _gui.AddLog("RTC button cell warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1008 & WarningMask::DC_EXTERNAL)
+        {
             logger->LogWarning(TAG, "DC external warning occurred.");
+            _gui.AddLog("DC external warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1008 & WarningMask::CONTROLS_TEMP)
+        {
             logger->LogWarning(TAG, "Controls temperature warning occurred.");
+            _gui.AddLog("Controls temperature warning occurred.");
+            _warningCounter++;
+        }
 
         /* Parse 1009 register warnings */
         if (highByteUnit1009 & WarningMask::OP_TIME_WARNING)
+        {
             logger->LogWarning(TAG, "Operation time warning occurred.");
+            _gui.AddLog("Operation time warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1009 & WarningMask::WRM_RUNNING)
+        {
             logger->LogWarning(TAG, "WRM running warning occurred.");
+            _gui.AddLog("WRM running warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1009 & WarningMask::WRM_STARTS)
+        {
             logger->LogWarning(TAG, "WRM starts warning occurred.");
+            _gui.AddLog("WRM starts warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1009 & WarningMask::INTERNAL_WARNING)
+        {
             logger->LogWarning(TAG, "Internal warning occurred.");
+            _gui.AddLog("Internal warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1009 & WarningMask::INPUT_AIN1)
+        {
             logger->LogWarning(TAG, "Input AIN1 warning occurred.");
+            _gui.AddLog("Input AIN1 warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1009 & WarningMask::INPUT_AIN2)
+        {
             logger->LogWarning(TAG, "Input AIN2 warning occurred.");
+            _gui.AddLog("Input AIN2 warning occurred.");
+            _warningCounter++;
+        }
         if (highByteUnit1009 & WarningMask::WRM_FOC_CABLE_BUDGET)
+        {
             logger->LogWarning(TAG, "WRM FOC cable budget warning occurred.");
+            _gui.AddLog("WRM FOC cable budget warning occurred.");
+            _warningCounter++;
+        }
 
         if (lowByteUnit1009 & WarningMask::PVST_FAULT)
+        {
             logger->LogWarning(TAG, "PVST fault warning occurred.");
+            _gui.AddLog("PVST fault warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1009 & WarningMask::PVST_ABORT)
+        {
             logger->LogWarning(TAG, "PVST abort warning occurred.");
+            _gui.AddLog("PVST abort warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1009 & WarningMask::FAILURE_BEHAV_ACTIVE)
+        {
             logger->LogWarning(TAG, "Failure behavior active warning occurred.");
+            _gui.AddLog("Failure behavior active warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1009 & WarningMask::FOC_CONNECTION_REQUIRED)
+        {
             logger->LogWarning(TAG, "FOC connection required warning occurred.");
+            _gui.AddLog("FOC connection required warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1009 & WarningMask::PVST_REQUIRED)
+        {
             logger->LogWarning(TAG, "PVST required warning occurred.");
+            _gui.AddLog("PVST required warning occurred.");
+            _warningCounter++;
+        }
         if (lowByteUnit1009 & WarningMask::SETPOINT_POS)
+        {
             logger->LogWarning(TAG, "Setpoint position warning occurred.");
+            _gui.AddLog("Setpoint position warning occurred.");
+            _warningCounter++;
+        }
+
+        _gui.SetWarningInfo(_warningCounter);
     }
     else
     {
@@ -291,29 +391,75 @@ SystemResult ActuatorResponseValidation::parseErrors(QModbusReply *reply)
         uint8_t lowByte = value & 0xFF;
 
         if (highByte & ErrorMask::NO_REACTION)
+        {
             logger->LogCritical(TAG, "No reaction error occurred.");
+            _gui.AddLog("No reaction error occurred.");
+            _errorCounter++;
+        }
         if (highByte & ErrorMask::INTERNAL_ERROR)
+        {
             logger->LogCritical(TAG, "Internal error occurred.");
+            _gui.AddLog("Internal error occurred.");
+            _errorCounter++;
+        }
         if (highByte & ErrorMask::TORQUE_FAULT_CLOSE)
+        {
             logger->LogCritical(TAG, "Torque fault close error occurred.");
+            _gui.AddLog("Torque fault close error occurred.");
+            _errorCounter++;
+        }
         if (highByte & ErrorMask::TORQUE_FAULT_OPEN)
+        {
             logger->LogCritical(TAG, "Torque fault open error occurred.");
+            _gui.AddLog("Torque fault open error occurred");
+            _errorCounter++;
+        }
         if (highByte & ErrorMask::PHASE_FAILURE)
+        {
             logger->LogCritical(TAG, "Phase failure error occurred.");
+            _gui.AddLog("Phase failure error occurred.");
+            _errorCounter++;
+        }
         if (highByte & ErrorMask::THERMAL_FAULT)
+        {
             logger->LogCritical(TAG, "Thermal fault error occurred.");
+            _gui.AddLog("Thermal fault error occurred.");
+            _errorCounter++;
+        }
         if (highByte & ErrorMask::MAINS_FAULT)
+        {
             logger->LogCritical(TAG, "Mains fault error occurred.");
+            _gui.AddLog("Mains fault error occurred.");
+            _errorCounter++;
+        }
         if (highByte & ErrorMask::CONFIGURATION_ERROR)
+        {
             logger->LogCritical(TAG, "Configuration error occurred.");
+            _gui.AddLog("Configuration error occurred.");
+            _errorCounter++;
+        }
 
         // Check for Fault 2 errors
         if (lowByte & ErrorMask::INCORRECT_PHASE_SEQ)
+        {
             logger->LogCritical(TAG, "Incorrect phase sequence error occurred.");
+            _gui.AddLog("Incorrect phase sequence error occurred.");
+            _errorCounter++;
+        }
         if (lowByte & ErrorMask::CONT_ERROR_REMOTE)
+        {
             logger->LogCritical(TAG, "Continuous error remote occurred.");
+            _gui.AddLog("Continuous error remote occurred.");
+            _errorCounter++;
+        }
         if (lowByte & ErrorMask::INCORRECT_ROTATION)
+        {
             logger->LogCritical(TAG, "Incorrect rotation error occurred.");
+            _gui.AddLog("Incorrect rotation error occurred.");
+            _errorCounter++;
+        }
+
+        _gui.SetErrorInfo(_errorCounter);
     }
     else
     {
@@ -329,20 +475,14 @@ SystemResult ActuatorResponseValidation::positionerTest()
     fullyOpenAndCheckPosition();
 
     fullyCloseAndCheckPosition();
-    // getActualPositionAndTorque();
-    // sprawdz czy 100
-    // zamknij
-    // sprawdz czy 0
+    getActualPositionAndTorque();
+
 
     //otworz do 20
     // sprawdz
     // otworz do 80
     // sprawdz
     //do 0 i sprawdz
-}
-
-SystemResult ActuatorResponseValidation::checkPositionerRunning()
-{
 }
 
 SystemResult ActuatorResponseValidation::setPositioner(quint32 position)
@@ -389,16 +529,29 @@ SystemResult ActuatorResponseValidation::getActualPositionAndTorque()
 SystemResult ActuatorResponseValidation::fullyOpenAndCheckPosition()
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
-
+    _gui.SetActuatorRunningDiode(true);
     retVal = fieldbusOpen(true);
 
     if (retVal != SystemResult::SYSTEM_OK)
         logger->LogCritical(TAG, "Failed to open fieldbus!");
 
 
+    // Create a QTimer
+    QTimer timer;
+    timer.setInterval(1500); // 1.5 seconds
+
+    // Connect the QTimer's timeout signal to getActualPositionAndTorque
+    connect(&timer, &QTimer::timeout, this, &ActuatorResponseValidation::getActualPositionAndTorque);
+
+    // Start the timer
+    timer.start();
+
     QEventLoop loop;
     QTimer::singleShot(15000, &loop, &QEventLoop::quit);
     loop.exec();
+
+    // Stop the timer after exiting the loop
+    timer.stop();
 
     if(!checkIfPositionReached(100))
     {
@@ -407,22 +560,36 @@ SystemResult ActuatorResponseValidation::fullyOpenAndCheckPosition()
     }
 
     retVal = fieldbusOpen(false);
-
+    _gui.SetActuatorRunningDiode(false);
     return retVal;
 }
 SystemResult ActuatorResponseValidation::fullyCloseAndCheckPosition()
 {
     SystemResult retVal = SystemResult::SYSTEM_OK;
 
+    _gui.SetActuatorRunningDiode(true);
     retVal = fieldbusClose(true);
 
     if (retVal != SystemResult::SYSTEM_OK)
         logger->LogCritical(TAG, "Failed to open fieldbus!");
 
 
+    // Create a QTimer
+    QTimer timer;
+    timer.setInterval(1500); // 1.5 seconds
+
+    // Connect the QTimer's timeout signal to getActualPositionAndTorque
+    connect(&timer, &QTimer::timeout, this, &ActuatorResponseValidation::getActualPositionAndTorque);
+
+    // Start the timer
+    timer.start();
+
     QEventLoop loop;
     QTimer::singleShot(15000, &loop, &QEventLoop::quit);
     loop.exec();
+
+    // Stop the timer after exiting the loop
+    timer.stop();
 
     if(!checkIfPositionReached(0))
     {
@@ -431,6 +598,7 @@ SystemResult ActuatorResponseValidation::fullyCloseAndCheckPosition()
     }
 
     retVal = fieldbusClose(false);
+    _gui.SetActuatorRunningDiode(false);
 
     return retVal;
 }

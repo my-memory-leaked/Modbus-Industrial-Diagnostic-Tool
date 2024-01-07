@@ -6,6 +6,8 @@ ActuatorResponseGUI::ActuatorResponseGUI(QWidget *parent)
     , ui(new Ui::ActuatorResponseGUI)
 {
     ui->setupUi(this);
+    setWindowTitle("Actuator response diagnose");
+
 }
 
 ActuatorResponseGUI::~ActuatorResponseGUI()
@@ -30,21 +32,22 @@ void ActuatorResponseGUI::SetProgressBar(int val)
 
 void ActuatorResponseGUI::SetActuatorRunningDiode(bool state)
 {
-    // (state)?
-    // ui->ActuatorRunning->setPixmap() :
-    // ui->ActuatorRunning->setPixmap();
+    (state)?
+    ui->ActuatorRunning->setText("Running") :
+    ui->ActuatorRunning->setText("Idle");
 }
 
-void ActuatorResponseGUI::SetWarningDiode(bool state)
+void ActuatorResponseGUI::SetWarningInfo(int value)
 {
-    // (state)?
-    // ui->WarningLabel->setPixmap() :
-    // ui->WarningLabel->setPixmap();
+    ui->WarningLabel->setText(QString::number(value));
 }
 
-void ActuatorResponseGUI::SetErrorDiode(bool state)
+void ActuatorResponseGUI::SetErrorInfo(int value)
 {
-    // (state)?
-    // ui->ErrorLabel->setPixmap() :
-    // ui->ErrorLabel->setPixmap();
+    ui->ErrorLabel->setText(QString::number(value));
+}
+
+void ActuatorResponseGUI::AddLog(QString log)
+{
+    ui->ErrorWarningList->addItem(log);
 }
