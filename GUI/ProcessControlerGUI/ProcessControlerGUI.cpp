@@ -7,7 +7,7 @@ ProcessControlerGUI::ProcessControlerGUI(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Process controller diagnose");
-
+    ui->TestProgressBar->setMaximum(16);
 }
 
 ProcessControlerGUI::~ProcessControlerGUI()

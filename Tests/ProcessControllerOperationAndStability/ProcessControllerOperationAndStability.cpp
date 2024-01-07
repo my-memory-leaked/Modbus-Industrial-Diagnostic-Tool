@@ -98,47 +98,62 @@ void ProcessControllerOperationAndStability::executeTest()
 {
     logger->LogInfo(TAG, "Executing test...");
     SystemResult result = SystemResult::SYSTEM_OK;
+    int currentStep = 0;
 
+    logger->LogInfo(TAG, "Executing test...");
+    _gui.SetProgressBar(++currentStep); // Update the progress bar for the logging step
 
+    // First check of position and torque
     result = getActualPositionAndTorque();
+    _gui.SetProgressBar(++currentStep); // Update the progress bar after checking position and torque
     if (SystemResult::SYSTEM_OK != result)
         logger->LogCritical(TAG, "Getting actual position and torque failed!");
 
+    // Second check of position and torque
     result = getActualPositionAndTorque();
+    _gui.SetProgressBar(++currentStep); // Update the progress bar after checking position and torque again
     if (SystemResult::SYSTEM_OK != result)
         logger->LogCritical(TAG, "Getting actual position and torque failed!");
 
+    // Read errors
     result = readErrors();
+    _gui.SetProgressBar(++currentStep); // Update the progress bar after reading errors
     if (SystemResult::SYSTEM_OK != result)
         logger->LogCritical(TAG, "Error read failed!");
 
+    // Read warnings
     result = readWarnings();
+    _gui.SetProgressBar(++currentStep); // Update the progress bar after reading warnings
     if (SystemResult::SYSTEM_OK != result)
         logger->LogCritical(TAG, "Warnings read failed!");
 
+    // Perform positioner test
     (void) positionerTest();
+    _gui.SetProgressBar(++currentStep); // Update the progress bar after positioner test
     if (SystemResult::SYSTEM_OK != result)
         logger->LogCritical(TAG, "Positioner test failed!");
 
+    // Loop to test actuator positioning and read errors/warnings
     for (quint16 i = 0; i < 3; ++i)
     {
+        // Test actuator positioning
         result = testActuatorPositioning(QRandomGenerator::global()->bounded(1001));
+        _gui.SetProgressBar(++currentStep); // Update the progress bar after testing actuator positioning
         if (SystemResult::SYSTEM_OK != result)
             logger->LogCritical(TAG, "Error positioning!");
 
+        // Read errors after actuator positioning
         result = readErrors();
+        _gui.SetProgressBar(++currentStep); // Update the progress bar after reading errors
         if (SystemResult::SYSTEM_OK != result)
             logger->LogCritical(TAG, "Error read failed!");
 
+        // Read warnings after actuator positioning
         result = readWarnings();
+        _gui.SetProgressBar(++currentStep); // Update the progress bar after reading warnings
         if (SystemResult::SYSTEM_OK != result)
             logger->LogCritical(TAG, "Warnings read failed!");
     }
-
-    testActuatorPositioning(200);
-
-
-
     testCompletedSuccessfully();
 }
 
@@ -150,7 +165,7 @@ void ProcessControllerOperationAndStability::handleGUI()
 void ProcessControllerOperationAndStability::testCompletedSuccessfully()
 {
     logger->LogInfo(TAG, "Test successful!");
-    _gui.SetProgressBar(100);
+    _gui.SetProgressBar(16);
 
     QMessageBox::information(nullptr, "Test Success", "The firmware test was successful.");
 }
@@ -637,7 +652,7 @@ SystemResult ProcessControllerOperationAndStability::testActuatorPositioning(int
     timer.start();
 
     QEventLoop loop;
-    QTimer::singleShot(15000, &loop, &QEventLoop::quit);
+    QTimer::singleShot(35000, &loop, &QEventLoop::quit);
     loop.exec();
 
     // Stop the timer after exiting the loop
