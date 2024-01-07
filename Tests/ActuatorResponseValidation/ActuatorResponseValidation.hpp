@@ -58,11 +58,8 @@ private:
     int extractPositionValue(QModbusReply *reply);
     bool positionReached(int actualPosition, int targetPosition, int tolerance = 10); // Tolerance can be adjusted
 
-
-
     QPair<QString, QString> parsePositionAndTorque(const QModbusDataUnit &unit);
     QPair<int, int> parsePositionAndTorqueInt(const QModbusDataUnit &unit);
-
 
     QString modbusDataUnitToString(const QModbusDataUnit &unit);
 };

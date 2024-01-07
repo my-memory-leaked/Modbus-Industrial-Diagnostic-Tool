@@ -23,6 +23,7 @@ include_directories(
     GUI/AumaTestGUI
     GUI/FirmwareDetailGUI
     GUI/ActuatorResponseGUI
+    GUI/ProcessControlerGUI
 
     ApplicationConstant
     SystemResult
@@ -111,6 +112,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         GUI/ActuatorResponseGUI/ActuatorResponseGUI.hpp GUI/ActuatorResponseGUI/ActuatorResponseGUI.cpp GUI/ActuatorResponseGUI/ActuatorResponseGUI.ui
         ErrorMask/ErrorMask.hpp ErrorMask/ErrorMask.cpp
         WarningMask/WarningMask.hpp WarningMask/WarningMask.cpp
+        GUI/ProcessControlerGUI/ProcessControlerGUI.hpp GUI/ProcessControlerGUI/ProcessControlerGUI.cpp GUI/ProcessControlerGUI/ProcessControlerGUI.ui
 
 
 
