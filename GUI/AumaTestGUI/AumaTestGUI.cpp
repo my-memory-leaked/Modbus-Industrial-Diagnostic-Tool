@@ -79,7 +79,7 @@ void AumaTestGUI::onButtonClicked()
         } else if (button == ui->FCOSInfoButton) {
             infoText = "Information about FCOS";
         } else if (button == ui->ARVInfoButton) {
-            infoText = "Information about ARV";
+            infoText = "The primary objective of this test is to assess the functionality and reliability of an actuator by executing a complete open-close cycle. During this cycle, the actuator's positioner response will be monitored, and any warnings or errors encountered will be recorded.";
         }
 
         QMessageBox::information(this, "Information", infoText);
