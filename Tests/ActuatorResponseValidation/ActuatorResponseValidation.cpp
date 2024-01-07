@@ -124,7 +124,7 @@ void ActuatorResponseValidation::executeTest()
         currentProgress += progressIncrement;
         _gui.SetProgressBar(static_cast<int>(currentProgress));
 
-        result = positionerTest();
+        (void) positionerTest();
         if (SystemResult::SYSTEM_OK != result)
             logger->LogCritical(TAG, "Positioner test failed!");
 
@@ -370,6 +370,8 @@ SystemResult ActuatorResponseValidation::readErrors()
 
     if (reply1007)
         reply1007->deleteLater();
+
+    return retVal;
 }
 
 SystemResult ActuatorResponseValidation::parseErrors(QModbusReply *reply)
@@ -469,33 +471,13 @@ SystemResult ActuatorResponseValidation::parseErrors(QModbusReply *reply)
     return retVal;
 }
 
-SystemResult ActuatorResponseValidation::positionerTest()
+void ActuatorResponseValidation::positionerTest()
 {
     // Otworz do 100
     fullyOpenAndCheckPosition();
 
     fullyCloseAndCheckPosition();
     getActualPositionAndTorque();
-
-
-    //otworz do 20
-    // sprawdz
-    // otworz do 80
-    // sprawdz
-    //do 0 i sprawdz
-}
-
-SystemResult ActuatorResponseValidation::setPositioner(quint32 position)
-{
-
-    // Set Fieldbus SETPOINT
-    // Byte commands
-}
-
-SystemResult ActuatorResponseValidation::resetPositioner(quint32 position)
-{
-    // Set Fieldbus RESET
-    //
 }
 
 SystemResult ActuatorResponseValidation::getActualPositionAndTorque()

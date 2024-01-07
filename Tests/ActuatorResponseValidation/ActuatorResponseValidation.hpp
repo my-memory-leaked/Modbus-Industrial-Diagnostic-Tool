@@ -42,10 +42,7 @@ private:
     SystemResult readErrors();
     SystemResult parseErrors(QModbusReply *reply);
 
-    SystemResult positionerTest();
-
-    SystemResult setPositioner(quint32 position);
-    SystemResult resetPositioner(quint32 position);
+    void positionerTest();
     SystemResult getActualPositionAndTorque();
 
     SystemResult fullyOpenAndCheckPosition();
