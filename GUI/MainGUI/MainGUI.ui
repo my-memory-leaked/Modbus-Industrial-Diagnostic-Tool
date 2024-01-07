@@ -166,7 +166,7 @@
       </rect>
      </property>
      <property name="title">
-      <string>Auma</string>
+      <string>Auma AC.2</string>
      </property>
      <widget class="QLabel" name="AumaTypeLabel">
       <property name="geometry">
@@ -238,7 +238,7 @@
        <rect>
         <x>40</x>
         <y>20</y>
-        <width>61</width>
+        <width>81</width>
         <height>21</height>
        </rect>
       </property>
@@ -296,6 +296,19 @@
       </property>
       <property name="text">
        <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>100</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>AC. 2</string>
       </property>
      </widget>
     </widget>

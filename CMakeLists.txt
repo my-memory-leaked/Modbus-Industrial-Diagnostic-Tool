@@ -93,6 +93,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Images/LogoAuma.png
         Images/ConnectedState.png
         Images/DisconnectedState.png
+        Images/InfoIcon.png
 
 
         Modbus/ModbusRegister/ModbusRegister.hpp Modbus/ModbusRegister/ModbusRegister.cpp
@@ -124,11 +125,14 @@ set(CONNECTED_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/ConnectedState.png")
 set(CONNECTED_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/ConnectedState.png")
 set(DISCONNECTED_LOGO_SOURCE "${CMAKE_SOURCE_DIR}/Images/DisconnectedState.png")
 set(DISCONNECTED_LOGO_DESTINATION "${CMAKE_BINARY_DIR}/Images/DisconnectedState.png")
+set(INFO_ICON_SOURCE "${CMAKE_SOURCE_DIR}/Images/InfoIcon.png")
+set(INFO_ICON_DESTINATION "${CMAKE_BINARY_DIR}/Images/InfoIcon.png")
 add_custom_command(
     TARGET Modbus-Industrial-Diagnostic-Tool POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${AUMA_LOGO_SOURCE} ${AUMA_LOGO_DESTINATION}
     COMMAND ${CMAKE_COMMAND} -E copy ${CONNECTED_LOGO_SOURCE} ${CONNECTED_LOGO_DESTINATION}
     COMMAND ${CMAKE_COMMAND} -E copy ${DISCONNECTED_LOGO_SOURCE} ${DISCONNECTED_LOGO_DESTINATION}
+    COMMAND ${CMAKE_COMMAND} -E copy ${INFO_ICON_SOURCE} ${INFO_ICON_DESTINATION}
 )
 
 # Define a list containing pairs of source and destination paths for each JSON file

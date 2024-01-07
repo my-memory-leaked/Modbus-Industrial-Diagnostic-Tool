@@ -6,7 +6,7 @@
       "Registers":
       [
       	{
-          "Type": "TCP",
+          "Type": "Modbus TCP",
           "IPAddress": "192.168.255.10",
           "Port": 502
         }

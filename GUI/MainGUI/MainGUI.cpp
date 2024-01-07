@@ -200,7 +200,7 @@ void MainGUI::updateAumaDevice(const ModbusStrategy* cInterface)
     if (!cInterface->GetDeviceName().isEmpty())
         ui->AumaGroupBox->setTitle(cInterface->GetDeviceName());
 
-    ui->AumaTypeInputLabel->setText("TCP");
+    ui->AumaTypeInputLabel->setText("Modbus TCP");
     ui->AumaIPInputLabel->setText(cInterface->GetConnectionParameters().GetIpAddress());
     ui->AumaPortInputLabel->setText(QString::number(cInterface->GetConnectionParameters().GetPort()));
 }
