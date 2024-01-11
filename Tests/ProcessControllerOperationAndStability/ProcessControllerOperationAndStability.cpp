@@ -2,6 +2,7 @@
 #include <Logger.hpp>
 #include <ErrorMask.hpp>
 #include <WarningMask.hpp>
+#include <ApplicationConstant.hpp>
 #include <QEventLoop>
 #include <QTimer>
 #include <QThread>
@@ -134,7 +135,7 @@ void ProcessControllerOperationAndStability::executeTest()
         logger->LogCritical(TAG, "Positioner test failed!");
 
     // Loop to test actuator positioning and read errors/warnings
-    for (quint16 i = 0; i < 3; ++i)
+    for (quint16 i = 0; i < ApplicationConstant::TestCycles ; ++i)
     {
         // Test actuator positioning
         result = testActuatorPositioning(QRandomGenerator::global()->bounded(1001));

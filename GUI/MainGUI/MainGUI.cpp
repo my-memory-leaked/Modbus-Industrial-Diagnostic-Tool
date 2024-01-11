@@ -187,6 +187,7 @@ void MainGUI::changeModbusDeviceParameters(ModbusStrategy* interface)
         if (interface->GetDeviceName() == "Auma")
         {
             updateAumaDevice(interface);
+            ApplicationConstant::TestCycles = modbusDialog.GetTestCycles();
         }
         else if(interface->GetDeviceName() == "localhost")
         {

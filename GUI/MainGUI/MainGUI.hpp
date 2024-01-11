@@ -53,6 +53,5 @@ private:
     QPixmap GetDisconnectedImage();
 
 
-
     void hideDebugFeatures();
 };

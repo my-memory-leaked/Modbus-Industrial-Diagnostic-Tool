@@ -17,6 +17,8 @@ public:
     explicit ChangeModbusDeviceParameters(QWidget *parent = nullptr, ModbusStrategy *interface = nullptr);
     ~ChangeModbusDeviceParameters();
 
+    int GetTestCycles();
+
 private slots:
     void onConnectionInterfaceComboBox(int index);
     void accept() override;

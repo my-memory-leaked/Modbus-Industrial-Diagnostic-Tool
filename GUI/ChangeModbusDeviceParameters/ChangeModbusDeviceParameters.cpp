@@ -47,9 +47,14 @@ ChangeModbusDeviceParameters::~ChangeModbusDeviceParameters()
 {
 }
 
+int ChangeModbusDeviceParameters::GetTestCycles()
+{
+    return ui->TestCyclesSpinBox->value();
+}
+
 void ChangeModbusDeviceParameters::onConnectionInterfaceComboBox(int index)
 {
-    if (ui->ConnectionInterfaceComboBox->currentText() == "TCP")
+    if (ui->ConnectionInterfaceComboBox->currentText() == "Modbus TCP/IP")
     {
         ui->TCPInterfaceGroupBox->setVisible(true);
     }
@@ -66,11 +71,11 @@ void ChangeModbusDeviceParameters::accept()
 {
     bool validInputs = true;  /* A flag to track input validity */
 
-    if (ui->ConnectionInterfaceComboBox->currentText() == "TCP")
+    if (ui->ConnectionInterfaceComboBox->currentText() == "Modbus TCP/IP")
     {
         bool validInputs = true;
 
-        if (ui->ConnectionInterfaceComboBox->currentText() == "TCP")
+        if (ui->ConnectionInterfaceComboBox->currentText() == "Modbus TCP/IP")
         {
             /* Validate the IP address */
             if (!_ipAddressRegex.match(ui->IPAddressLineEdit->text()).hasMatch())

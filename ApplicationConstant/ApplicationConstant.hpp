@@ -13,7 +13,7 @@ class ApplicationConstant : private Singleton<ApplicationConstant>
     inline static QString CHANGE_DEVICE_SETTINGS_GUI_NAME{"Change device settings"};
     inline static QString AUMA_TEST_GUI_NAME{"Auma test"};
 
-
+    inline static int TestCycles;
 
     private:
     friend class Singleton<ApplicationConstant>;
