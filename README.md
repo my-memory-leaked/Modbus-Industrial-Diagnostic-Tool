@@ -17,3 +17,7 @@ This project involves the development of specialized software for industrial dev
 - **Change Settings**: Allows users to configure the connection settings such as IP address and port, essential for communication with the diagnostic device.
 - **Select Test**: Provides a variety of diagnostic tests that can be performed on the selected device. Users can choose the desired test and view detailed descriptions before execution.
 - **Diagnostic Results**: Shows the results of the diagnostic tests. The results are displayed clearly, indicating whether the test was successful or if any issues were detected.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
