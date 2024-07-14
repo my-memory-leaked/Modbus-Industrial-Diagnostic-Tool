@@ -20,4 +20,4 @@ This project involves the development of specialized software for industrial dev
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed - see the [LICENSE](LICENSE) file for details.
